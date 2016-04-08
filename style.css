@@ -1,0 +1,15 @@
+/*
+Theme Name: Calyx
+Theme URI: https://www.blossomcreative.co/
+Author: Blossom Creative, Inc.
+Author URI: http://www.blossomcreative.co/
+Description: Calyx, as in, the sepals of a flower, typically forming a whorl that encloses the petals and forms a protective layer around a flower in bud.
+Version: 0.0.1
+*/
+
+* {
+	margin: 0;
+	padding: 0;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
