@@ -19,4 +19,10 @@ function theme_action_wp_enqueue_scripts() {
 	//$wp_styles->add_data('fonts','noscript',true);
 }
 
+function theme_shutdown_function() {
+	$error = error_get_last();
+	if (!current_user_can('administrator') && NULL !== $error && is_array($error) && array_key_exists('type',$error) && E_ERROR === $error['type'] && file_exists(ABSPATH . 'error.php'))
+		echo '<script type="text/javascript">window.location="' . get_bloginfo('url') . '/error.php";</script>';
+}
+
 ?>

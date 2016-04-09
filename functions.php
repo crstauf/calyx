@@ -24,6 +24,7 @@ if (is_admin()) {
 	add_action('wp_head',				array('enhance_wp_enqueues','tags'),9);
 	add_action('wp_footer',				array('enhance_wp_enqueues','tags'),8);
 	add_action('wp_footer',				array('enhance_wp_enqueues','tags'),9);
+	register_shutdown_function('theme_shutdown_function');
 
 }
 
