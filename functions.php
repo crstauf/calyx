@@ -7,7 +7,7 @@ add_theme_support('post-thumbnails');
 require_once('inc/class.base_cpt.php');
 require_once('inc/functions.' . (is_admin() ? 'admin' : 'public') . '.php');
 
-add_filter('http_request_args',		'theme_filter_http_request_args',5,2);
+add_filter('http_request_args',			'theme_filter_http_request_args',5,2);
 
 if (is_admin()) {
 
