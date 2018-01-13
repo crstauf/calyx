@@ -1,561 +1,396 @@
 <?php
 
-// https://gist.github.com/crstauf/030df6bd6c436620e96cb92a44c9772f
-
-if (!defined('ABSPATH') || !function_exists('add_filter')) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit();
+if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
+    header( 'Status: 403 Forbidden' );
+    header( 'HTTP/1.1 403 Forbidden' );
+    exit;
 }
 
 class image_tag {
 
-    const VERSION = '0.0.4';
+    // const VERSION = '0.0.3.3';
+    // const GITHUB = 'https://gist.github.com/crstauf/030df6bd6c436620e96cb92a44c9772f';
+
     const DATAURI = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-    protected $args = array();
+    var $alt = '',
+        $width = 0,
+        $height = 0,
+        $title = '',
+        $source = '',       // URL of the smallest/original image
+        $theme_image = '',  // image filename
+        $orientation = '',  // landscape|portrait
+        $classes = array(), // array of classes
+        $attributes = array(),
 
-    var $attributes = array(
-                'id' => '',
-               'alt' => '',
-               'src' => '',
-             'sizes' => '',
-             'title' => '',
-             'width' =>  0,
-            'height' =>  0,
-            'srcset' => array(),
-             'class' => array(),
-        ),
+        $lazypreload = false,
+        $lazyload = true,
+        $srcset = array(),
+        $sizes = 'auto',
 
         $echo = true,
         $noscript = true,
-        $lazyload = true,
-        $lazypreload = false,
-        $noscript_sizes = array();
 
-    protected $files = array(
+        $noscript_sizes = false,
+        $noscript_image_size = 'full',
+
+        $attachment_id = 0,
+        $image_sizes = array(
+            'thumbnail',
+            'medium',
+            'medium_large',
+            'large',
+            'full'
+        ),
+
+        $lazyload_class = 'lazyload',
+        $lazypreload_class = 'lazypreload';
+
+    private $tag = array();
+    private $post = array();
+    private $noscript_tag = array();
+
+    private $args = array();
+    public $files = array(
         '__smallest' => array(
-            'width'  => 9999999,
-            'height' => 9999999,
-            'url'    => ''
+            'width' => 9999999999,
+            'height' => 999999999,
+            'url' => '',
         ),
         '__largest' => array(
-            'width'  => 0,
+            'width' => 0,
             'height' => 0,
-            'url'    => '',
+            'url' => '',
         ),
     );
 
-    protected $orientation = ''; // portrait|landscape
+    private $debug = true;
+    private $done_output = false;
+    private $generating_noscript = false;
 
     function __construct() {
-        if ( !is_subclass_of( $this, 'image_tag' ) ) {
+        $args = func_get_args();
+        $this->args = $args[0];
 
-            $args = func_get_arg( 0 );
-            if ( array_key_exists( 'attachment_id', $args ) )
-                $source = $args['attachment_id'];
-            else if ( array_key_exists( 'source', $args ) )
-                $source = $args['source'];
-            else if ( array_key_exists( 'theme_image', $args ) )
-                $source = $args['theme_image'];
+        if ($this->is_WP())
+            $this->args = apply_filters('image-tag/args',$this->args);
+
+        if (!count($this->args))
+            return false;
+
+        foreach ($this->args as $key => $value)
+            if (isset($this->$key)) {
+                $this->$key = $value;
+                unset($this->args[$key]);
+            }
+
+        if ($this->is_AMP() || $this->is_FBIA())
+            $this->noscript = false;
+
+        if (!$this->get_image()) {
+            if (
+                $this->debug
+                || ($this->is_WP() && defined('WP_DEBUG') && WP_DEBUG)
+            )
+                throw new Exception('No image source provided.');
+            return false;
+        }
+
+        $this->collect_files();
+        $this->tag = $this->generate();
+        if ($this->noscript && !$this->is_AMP() && !$this->is_FBIA()) {
+            $this->generating_noscript = true;
+            $this->noscript_tag = $this->generate();
+            $this->generating_noscript = false;
+        }
+    }
+
+    function __destruct() {
+		if (true === $this->done_output) return;
+		if (true === $this->echo) $this->display();
+	}
+
+    function display() {
+        $this->done_output = true;
+        echo $this->output();
+    }
+
+    function output( $classes = array() ) {
+        $output = '';
+        do {
+            $tag = $this->generating_noscript ? $this->noscript_tag : $this->tag;
+
+			if (count($classes))
+				$tag['class'] = array_merge($tag['class'],$classes);
+
+            if ($this->generating_noscript)
+                $output .= '<noscript>';
+
+            $esc = $this->is_WP() ? 'esc_attr' : 'htmlentities';
+
+            if ($this->is_AMP())
+                $output .= '<amp-img';
+            else if ($this->is_FBIA())
+                $output .= '<figure><img';
             else
-                return false;
+                $output .= '<img';
 
-            $args['attributes']['class']['old-generated'] = 'old-generated-image-tag';
+            foreach ($tag as $attr => $value)
+                if (false !== $value)
+                    $output .= ' ' . $esc($attr) . '="' . (is_array($value) ? $esc($this->output_array($attr,$value)) : $esc($value)) . '"';
 
-            unset(
-                $args['attachment_id'],
-                $args['source'],
-                $args['filename']
-            );
+            $output .= ' />';
+            if ($this->is_FBIA())
+                $output .= '<figcaption>' . $this->tag['title'] . '</figcaption></figure>';
+
+            if ($this->generating_noscript)
+                $output .= '</noscript>';
+
+            if ($this->noscript && !$this->generating_noscript)
+                $this->generating_noscript = true;
+            else
+                break;
+        } while (1);
+
+        return $output;
+    }
+
+        function output_array($attr,$array) {
+            $glue = in_array($attr,array('data-srcset','srcset')) ? ', ' : ' ';
+            return implode($glue,$array);
+        }
+
+    function get_image() {
+		if (!empty($this->theme_image))
+			$this->source = THEME_IMG_DIR_URI . $this->theme_image;
+
+        if ($this->is_attachment()) {
 
             if (
-                array_key_exists( 'echo', $args )
-                && false === $args['echo']
+                !$this->is_WP()
+                || 'attachment' !== get_post_type($this->attachment_id)
+                || false === stripos(get_post_mime_type($this->attachment_id),'image')
             )
-                return image_tag( $source, $args );
-            else
-                echo image_tag( $source, $args );
+                return false;
 
-            exit();
+            $this->post = get_post($this->attachment_id);
+            list($this->source,$this->width,$this->height) = wp_get_attachment_image_src($this->attachment_id,'full');
+
+        } else if (!empty($this->source)) {
+            list($this->width,$this->height) = @getimagesize(!empty($this->theme_image) ? THEME_IMG_DIR_PATH . $this->theme_image : $this->source);
         }
 
-        add_filter( 'image-tag/noscript/attributes/glue', array( &$this, 'filter_image_tag_noscript_attributes_glue' ) );
+		if ($this->width > $this->height)
+			$this->orientation = 'landscape';
+		else if ($this->height > $this->width)
+			$this->orientation = 'portrait';
+		else if ($this->height === $this->width)
+			$this->orientation = 'square';
+		else
+			$this->orientation = 'unknown';
 
-        if ( is_array( $this->args ) && count( $this->args ) ) {
-
-			if ( array_key_exists( 'attributes', $this->args ) ) {
-				foreach ( $this->args['attributes'] as $key => $value )
-					$this->attributes[$key] = $value;
-				unset( $this->args['attributes'] );
-			}
-
-			foreach ( $this->args as $key => $value )
-                if ( isset( $this->$key ) )
-                    $this->$key = $value;
+		if ( is_array( $this->image_sizes ) ) {
+			if (
+				array_key_exists( 'landscape', $this->image_sizes )
+				&& in_array( $this->orientation, array( 'landscape', 'square', 'unknown' ) )
+			)
+				$this->image_sizes = $this->image_sizes['landscape'];
+			else if (
+				array_key_exists( 'portrait', $this->image_sizes )
+				&& 'portrait' === $this->orientation
+			)
+				$this->image_sizes = $this->image_sizes['portrait'];
 		}
 
-        $this->attributes['class']['generated'] = 'generated-image-tag';
-
-        $this->gather_files();
-        $this->determine_orientation();
-        $this->being_lazy();
-
-    }
-
-    function __toString() {
-        if ( !$this->echo )
-            return '';
-
-        ksort( $this->attributes );
-
-        $image_output = $this->image_output();
-
-        if ( !$this->noscript )
-            return implode( "\n", $image_output );
-
-        $this->noscript_prep();
-
-        return implode( "\n", array_filter( $image_output ) ) . implode( "\n", array_filter( $this->noscript_image_output() ) );
-    }
-
-        function image_output() {
-            $output = array( 'open' => "\n<img " );
-
-            foreach ( $this->attributes as $attr_name => $attr_value ) {
-
-                $attr_value = apply_filters( 'image-tag/attributes/value', $attr_value, $attr_name, $this );
-                $attr_value = apply_filters( 'image-tag/attributes/' . $attr_name . '/value', $attr_value, $this );
-
-                $output[$attr_name] = $this->construct_attribute( $attr_name, $attr_value );
-
-                if ( '' === trim( $output[$attr_name] ) )
-                    unset( $output[$attr_name] );
-
-            }
-
-            $output['close'] = "/>\n";
-
-            return array_filter( $output );
-        }
-
-        function noscript_prep() {
-
-            $this->attributes['class']['noscript'] = 'noscript';
-
-            if ( !empty( $this->attributes['id'] ) )
-                $this->attributes['id'] .= '-noscript';
-
-            if ( array_key_exists( 'data-sizes', $this->attributes ) )
-                $this->attributes['sizes'] = $this->attributes['data-sizes'];
-
-            if ( array_key_exists( 'data-src', $this->attributes ) && self::DATAURI !== $this->attributes['data-src'] )
-                $this->attributes['src'] = $this->attributes['data-src'];
-
-            if ( 'auto' === $this->attributes['sizes'] ) {
-
-                if ( !empty( $this->noscript_sizes ) && is_array( $this->noscript_sizes ) && count( $this->noscript_sizes ) ) {
-
-                    $this->attributes['sizes'] = $this->noscript_sizes;
-
-                    if ( array_key_exists( 'data-srcset', $this->attributes ) )
-                        $this->attributes['srcset'] = $this->attributes['data-srcset'];
-
-                } else {
-                    $this->attributes['src'] = $this->files['__largest']['url'];
-                    unset( $this->attributes['sizes'] );
-                }
-
-            }
-
-            unset(
-                $this->attributes['class']['lazyload'],
-                $this->attributes['class']['lazypreload'],
-                $this->attribtues['data-src'],
-                $this->attributes['data-sizes'],
-                $this->attributes['data-srcset']
-            );
-        }
-
-        function noscript_image_output() {
-            $output = array(
-                'open_noscript' => '<noscript>',
-                'open_img' => "\t<img",
-            );
-
-            foreach ( $this->attributes as $attr_name => $attr_value ) {
-
-                $attr_value = apply_filters( 'image-tag/noscript/attributes/value', $attr_value, $attr_name, $this );
-                $attr_value = apply_filters( 'image-tag/noscript/attributes/' . $attr_name . '/value', $attr_value, $this );
-
-                $output[$attr_name] = "\t" . $this->construct_attribute( $attr_name, $attr_value, true );
-
-                if ( '' === trim( $output[$attr_name] ) )
-                    unset( $output[$attr_name] );
-
-            }
-
-            $output['close_img'] = "\n\t/>";
-            $output['close_noscript'] = "</noscript>\n";
-
-            return array_filter( $output );
-        }
-
-            function construct_attribute( $attr_name, $attr_value, $noscript = false ) {
-                if ( !is_array( $attr_value ) ) {
-                    if ( !empty( $attr_value ) && ( '' !== trim( $attr_value ) || 'alt' === $attr_name ) )
-                        return "\t" . $attr_name . '="' . esc_attr( $attr_value ) . '" ';
-                    return false;
-                }
-
-                if ( false !== strpos( $attr_name, 'srcset' ) && count( $attr_value ) )
-                    foreach ( $attr_value as $w => $url )
-                        $attr_value[$w] = $url . ' ' . $w;
-
-                switch ( $attr_name ) {
-                    case 'sizes':
-                    case 'srcset':
-                    case 'data-srcset':
-                        $glue = ",\n\t\t";
-                        break;
-                    case 'class':
-                    default:
-                        $glue = ' ';
-                        break;
-                }
-
-                $glue = apply_filters( 'image-tag/' . ( $noscript ? 'noscript/' : '' ) . 'attributes/glue', $glue, $attr_name, $this );
-                $glue = apply_filters( 'image-tag/' . ( $noscript ? 'noscript/' : '' ) . 'attributes/' . $attr_name . '/glue', $glue, $this );
-
-                foreach ( $attr_value as $i => $maybe_array )
-                    if ( is_array( $maybe_array ) )
-                        $attr_value[$i] = implode( $glue, $maybe_array );
-
-                return "\t" . $attr_name . '="' . implode( $glue, $attr_value ) . '" ';
-            }
-
-                function filter_image_tag_noscript_attributes_glue( $glue ) {
-                    if ( ' ' === $glue )
-                        return ' ';
-                    return $glue . "\t";
-                }
-
-    function determine_orientation() {
-        $largest = &$this->files['__largest'];
-
-        if ( $largest['width'] > $largest['height'] )
-            $this->orientation = 'landscape';
-        else if ( $largest['width'] < $largest['height'] )
-            $this->orientation = 'portrait';
-        else if ( $largest['width'] === $largest['height'] )
-            $this->orientation = 'square';
-        else
-            $this->orientation = false;
-
-        $this->attributes['class']['orientation'] = 'orientation-' .
-            ( false === $this->orientation
-                ? 'unknown'
-                : $this->orientation
-            );
-    }
-
-    function gather_files() {}
-
-    function being_lazy() {
-        if ( !$this->lazyload && !$this->lazypreload )
-            return false;
-
-        if ( $this->lazypreload )
-            $this->attributes['class']['lazypreload'] = 'lazypreload';
-
-        if ( !$this->lazyload )
-            return false;
-
-        $this->attributes['data-sizes'] = $this->attributes['sizes'];
-
-        $this->attributes['class']['lazyload'] = 'lazyload';
-
-		if ( 3 < count( $this->files ) )
-			$this->attributes['data-srcset'] = $this->attributes['srcset'];
-		else
-			$this->attributes['data-src'] = $this->attributes['src'];
-
-		$this->attributes['src'] = self::DATAURI;
-
-        unset( $this->attributes['srcset'] );
+		$this->classes[] = 'orientation-' . $this->orientation;
 
         return true;
     }
 
-}
+    function collect_files() {
+        if (!$this->is_attachment()) {
 
+            $this->files['original']['url'] = $this->source;
+            $this->files['original']['width'] = $this->width;
+            $this->files['original']['height'] = $this->height;
 
-/*
-##      ##  #######  ########  ########  ########  ########  ########  ######   ######
-##  ##  ## ##     ## ##     ## ##     ## ##     ## ##     ## ##       ##    ## ##    ##
-##  ##  ## ##     ## ##     ## ##     ## ##     ## ##     ## ##       ##       ##
-##  ##  ## ##     ## ########  ##     ## ########  ########  ######    ######   ######
-##  ##  ## ##     ## ##   ##   ##     ## ##        ##   ##   ##             ##       ##
-##  ##  ## ##     ## ##    ##  ##     ## ##        ##    ##  ##       ##    ## ##    ##
- ###  ###   #######  ##     ## ########  ##        ##     ## ########  ######   ######
-*/
+            $this->check_dimensions($this->files['original']);
 
-class image_tag_wp_attachment extends image_tag {
-
-    var $id = 0,
-        $post = null,
-        $image_sizes = array( 'thumbnail', 'medium', 'medium_large', 'large', 'full' );
-
-    function __construct() {
-        $this->args = func_get_arg( 0 );
-
-        parent::__construct();
-
-        $this->get_post();
-
-        if (
-            false === $this->post
-            || is_wp_error( $this->post )
-        )
-            return;
-
-        $this->attributes['class']['post'] = 'post-' . $this->id;
-		$this->attributes['class']['generated-attachment'] = 'generated-image-attachment-tag';
-
-    }
-
-    function noscript_prep() {
-        parent::noscript_prep();
-
-		$this->attributes['class']['post-noscript'] = $this->attributes['class']['post'] . '-noscript';
-
-        if ( !empty( $this->attributes['sizes'] ) || !empty( $this->noscript_sizes ) )
-            return;
-
-        $largest = $this->files['__largest'];
-
-        foreach ( $this->files as $size => $file ) {
-            if ( in_array( $size, array( '__largest', '__smallest' ) ) )
-                continue;
-            if ( $file['url'] === $largest['url'] ) {
-                $this->attributes['class']['WP-size'] = 'size-' . $size;
-                break;
+            if (false !== $this->srcset) {
+                $i = 0;
+                foreach ($this->srcset as $url) {
+                    $this->files[$i]['url'] = $url;
+                    list(
+                        $this->files[$i]['width'],
+                        $this->files[$i]['height']) = @getimagesize($url);
+                    $this->check_dimensions($this->files[$i]);
+                    $i++;
+                }
             }
+
+        } else {
+
+            foreach ($this->image_sizes as $size) {
+                list(
+                    $this->files[$size]['url'],
+                    $this->files[$size]['width'],
+                    $this->files[$size]['height']) = wp_get_attachment_image_src($this->attachment_id,$size);
+
+                $this->check_dimensions($this->files[$size]);
+            }
+
         }
     }
 
-    function get_post() {
-        $this->post = get_post( $this->id );
-
-        if ( '' === $this->attributes['alt'] )
-            $this->attributes['alt'] = esc_attr( get_the_title( $this->post ) );
-
-        if ( '' === $this->attributes['title'] )
-            $this->attributes['title'] = esc_attr( get_the_title( $this->post ) );
-    }
-
-    function gather_files() {
-
-        foreach ( $this->image_sizes as $i => $image_size ) {
-
-            $this->attributes['class']['WP-size'][$image_size] = 'size-' . $image_size;
-
-            $img = wp_get_attachment_image_src( $this->id, $image_size );
-
-            if ( 0 === $i ) {
-                $this->attributes['src']    = $img[0];
-                $this->attributes['width']  = $img[1];
-                $this->attributes['height'] = $img[2];
-            }
-
-            $this->files[$image_size] = array(
-                'width'  => $img[1],
-                'height' => $img[2],
-                'url'    => $img[0],
-            );
-
-            $this->attributes['srcset'][$img[1] . 'w'] = $img[0];
-
-            if ( $this->files['__largest']['width'] < $img[1] )
-                $this->files['__largest'] = &$this->files[$image_size];
-
-            if ( $this->files['__smallest']['width'] > $img[1] )
-                $this->files['__smallest'] = &$this->files[$image_size];
-        }
-
-        $this->files['__largest']['ratio'] = ( $this->files['__largest']['height'] / $this->files['__largest']['width'] ) * 100;
-
-    }
-
-}
-
-
-/*
-##      ## ########     ######## ##     ## ######## ##     ## ########
-##  ##  ## ##     ##       ##    ##     ## ##       ###   ### ##
-##  ##  ## ##     ##       ##    ##     ## ##       #### #### ##
-##  ##  ## ########        ##    ######### ######   ## ### ## ######
-##  ##  ## ##              ##    ##     ## ##       ##     ## ##
-##  ##  ## ##              ##    ##     ## ##       ##     ## ##
- ###  ###  ##              ##    ##     ## ######## ##     ## ########
-*/
-
-class image_tag_theme extends image_tag_url {
-
-	protected $filename = '';
-
-	protected $files = array(
-        '__smallest' => array(
-            'width'  => 9999999,
-            'height' => 9999999,
-            'path'   => '',
-            'url'    => ''
-        ),
-        '__largest' => array(
-            'width'  => 0,
-            'height' => 0,
-            'path'   => '',
-            'url'    => '',
-        ),
-    );
-
-	function __construct() {
-		$this->args = func_get_arg( 0 );
-		$this->filename = $this->args['filename'];
-
-		$this->files['full']['path'] = THEME_IMAGES_PATH . $this->filename;
-
-		if ( !file_exists( $this->files['full']['path'] ) )
-			return false;
-
-		$this->attributes['src'] = THEME_IMAGES_URL . $this->filename;
-		$this->attributes['class']['generated-theme'] = 'generated-image-theme-tag';
-
-		parent::__construct();
-	}
-
-	function gather_files() {
-
-		$get = @getimagesize( $this->files['full']['path'] );
-
-		$this->files['__largest']
-			= $this->files['__smallest']
-			= $this->files['full']
-			= array(
-				'width' => $get[0],
-				'height' => $get[1],
-				'url' => THEME_IMAGES_URL . $this->filename,
-				'path' => THEME_IMAGES_PATH . $this->filename,
-			);
-
-		if ( !count( $this->attributes['srcset'] ) )
-			return;
-
-		foreach ( $this->attributes['srcset'] as $size => $filename ) {
-			$path = THEME_IMAGES_PATH . $filename;
-
-			if ( !file_exists( $path ) ) {
-				unset( $this->attributes['srcset'][$size] );
-				continue;
-			}
-
-			$url = THEME_IMAGES_URL . $filename;
-			$get = @getimagesize( $path );
-
-			$this->attributes['srcset'][$size] = $url;
-
-			$file = $this->files[$size] = array(
-				'width' => $get[0],
-				'height' => $get[1],
-				'url' => $url,
-				'path' => $path,
-			);
-
-            if ( $this->files['__largest']['width'] < $get[0] )
+        function check_dimensions($file) {
+            if (
+                $file['width'] > $this->files['__largest']['width']
+                && $file['height'] > $this->files['__largest']['height']
+            )
                 $this->files['__largest'] = $file;
 
-            if ( $this->files['__smallest']['width'] > $img[1] )
+            if (
+                $file['width'] < $this->files['__smallest']['width']
+                && $file['height'] < $this->files['__smallest']['height']
+            )
                 $this->files['__smallest'] = $file;
-		}
+        }
 
-	}
+        function remove_smallest_largest_files() {
+            $array = $this->files;
+            unset($array['__smallest'],$array['__largest']);
+            return $array;
+        }
 
-}
+    function generate() {
+        $tag['src'] = $this->generate_src();
+        $tag['width'] = $this->width;
+        $tag['height'] = $this->height;
+        $tag[$this->lazyload && !$this->generating_noscript && !$this->is_AMP() ? 'data-srcset' : 'srcset'] = $this->generate_srcset();
+        $tag[$this->lazyload && !$this->generating_noscript ? 'data-sizes' : 'sizes'] = $this->generating_noscript ? $this->noscript_sizes : $this->sizes;
+        $tag['alt'] = !empty($this->tag['alt']) ? $this->tag['alt'] : $this->generate_title();
+        $tag['title'] = !empty($this->tag['title']) ? $this->tag['title'] : $this->generate_title();
+        $tag['class'] = $this->generate_class();
 
+        if ($this->is_WP())
+            $this->attributes = apply_filters('image-tag/attributes',$this->attributes,get_class_vars(__CLASS__));
 
-/*
-##     ## ########  ##
-##     ## ##     ## ##
-##     ## ##     ## ##
-##     ## ########  ##
-##     ## ##   ##   ##
-##     ## ##    ##  ##
- #######  ##     ## ########
-*/
+        if (count($this->attributes))
+            foreach ($this->attributes as $attr => $value)
+                $tag[$attr] = $value;
 
-class image_tag_url extends image_tag {
+        if ($this->is_AMP())
+            $tag['layout'] = 'responsive';
 
-    function __construct() {
-		if ( !count( $this->args ) )
-			$this->args = func_get_arg( 0 );
+        if ($this->is_WP())
+            foreach ($tag as $attr => $value)
+                $tag[$attr] = apply_filters('image-tag/tag/' . str_replace('data-','',$attr),$value,get_class_vars(__CLASS__));
 
-        parent::__construct();
-
-		$this->files['full']['url'] = $this->attributes['src'] = $this->args['source'];
-		$this->attributes['class']['generated-url'] = 'generated-image-url-tag';
+        return $tag;
     }
 
-    function gather_files() {}
+        function generate_src() {
+            if ($this->generating_noscript) {
+                if ($this->is_attachment()) {
+					$noscript_image_size = apply_filters(
+						'image-tag/tag/noscript_image_size',
+						$this->noscript_image_size,
+						get_class_vars(__CLASS__)
+					);
+					if ( array_key_exists( $noscript_image_size, $this->files ) )
+	                    return apply_filters(
+	                        'image-tag/tag/noscript_src',
+	                        $this->files[$noscript_image_size]['url'],
+	                        get_class_vars(__CLASS__)
+	                    );
+					else
+						return apply_filters(
+							'image-tag/tag/noscript_src',
+							$this->files['__largest']['url'],
+							get_class_vars(__CLASS__)
+						);
+                } else
+                    return $this->files['__largest']['url'];
+            } else if ($this->lazyload && !$this->generating_noscript && !$this->is_AMP())
+                return self::DATAURI;
+            else if (1 < count($this->remove_smallest_largest_files()))
+                return $this->files['__smallest']['url'];
+            else if (!empty($this->source))
+                return $this->source;
+        }
 
-	function being_lazy() {
-        if ( !$this->lazyload && !$this->lazypreload )
+        function generate_srcset() {
+            if ($this->generating_noscript)
+                return $this->noscript_sizes;
+            else if (count($this->srcset))
+                return $this->srcset;
+            else if (count($this->remove_smallest_largest_files())) {
+                foreach ($this->files as $key => $file)
+                    if (!in_array($key,array('__smallest','__largest')) && is_array($file) && !empty($file['width']))
+                        $this->srcset[] = $file['url'] . ' ' . $file['width'] . 'w';
+            } else
+                return false;
+            return $this->srcset;
+        }
+
+        function generate_title() {
+            if ($this->is_attachment()) return $this->post->post_title;
+			else if (!empty($this->title)) return $this->title;
+			else if (!empty($this->alt)) return $this->alt;
+            else return basename($this->source);
+        }
+
+        function generate_class() {
+            $classes = array('generated-image-tag');
+            if ($this->noscript)
+                $classes[] = $this->generating_noscript ? 'hide-if-js' : 'hide-if-no-js';
+            if ($this->lazyload && !$this->generating_noscript) {
+                $classes[] = $this->is_WP() ? apply_filters('image-tag/classes/lazyload',$this->lazyload_class) : $this->lazyload_class;
+                if ($this->lazypreload)
+                    $classes[] = $this->is_WP() ? apply_filters('image-tag/classes/lazypreload',$this->lazypreload_class) : $this->lazypreload_class;
+            }
+            if ($this->is_attachment()) {
+                $classes[] = 'post-' . $this->post->ID;
+                if ($this->generating_noscript)
+                    $classes[] = 'size-' . apply_filters('image-tag/tag/noscript_image_size',$this->noscript_image_size,get_class_vars(__CLASS__));
+                else
+                    $classes = array_merge($classes,array_map(function($size) { return 'size-' . $size; },array_keys($this->remove_smallest_largest_files())));
+            }
+            return array_unique(array_merge($classes,$this->classes));
+        }
+
+    function is_attachment() { return 0 !== $this->attachment_id && intval($this->attachment_id) == $this->attachment_id; }
+    function is_WP() { return defined('ABSPATH') && function_exists('is_attachment') && function_exists('apply_filters'); }
+
+    function is_AMP() { // Google Accelerated Mobile Pages
+        $is_AMP = defined('IS_AMP') && IS_AMP;
+        if ($this->is_WP())
+            $is_AMP = apply_filters('image-tag/test/amp',$is_AMP);
+        return $is_AMP;
+    }
+
+    function is_FBIA() { // Facebook Instant Articles
+        $is_FBIA = defined('IS_FBIA') && IS_FBIA;
+        if ($this->is_WP())
+            $is_FBIA = apply_filters('image-tag/test/fbia',$is_FBIA);
+        return $is_FBIA;
+    }
+
+    function debug($var) {
+        if ((
+                !$this->is_WP()
+                && false === $this->debug
+            ) || (
+                !defined('WP_DEBUG')
+                || !WP_DEBUG
+            )
+        )
             return false;
-
-        if ( $this->lazypreload )
-            $this->attributes['class']['lazypreload'] = 'lazypreload';
-
-        if ( !$this->lazyload )
-            return false;
-
-		if ( !empty( $this->attributes['sizes'] ) )
-        	$this->attributes['data-sizes'] = $this->attributes['sizes'];
-
-        $this->attributes['class']['lazyload'] = 'lazyload';
-		$this->attributes['data-src'] = $this->attributes['src'];
-		$this->attributes['src'] = self::DATAURI;
-
-        return true;
+        else if (is_string($var)) echo $var . '<br />' . "\n";
+        else if (is_array($var)) echo print_r($var,true) . '<br />' . "\n";
+        else if (is_object($var)) echo print_r(get_object_var($var),true) . '<br />' . "\n";
     }
 
 }
 
-if ( !function_exists( 'image_tag' ) ) {
-
-	function image_tag( $source, $args = false ) {
-	    if ( false === $args )
-	        $args = array();
-
-	    if ( is_int( $source ) ) {
-
-	        $args['id'] = $source;
-	        return new image_tag_wp_attachment( $args );
-
-	    } else if (
-	        false !== stripos( $source, 'http://' )
-	        || false !== stripos( $source, 'https://' )
-	    ) {
-
-	        $args['source'] = $source;
-			return new image_tag_url( $args );
-
-	    } else if ( apply_filters( 'image-tag/enable-theme-images', defined( 'THEME_IMAGES_URL' ) ) ) {
-
-	        $args['filename'] = $source;
-			return new image_tag_theme( $args );
-
-	    }
-
-	    return false;
-	}
-
-}
+?>
