@@ -1,0 +1,365 @@
+/**
+ * Define the text styles.
+ */
+
+* {
+	margin: 0;
+	padding: 0;
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+html,
+body {
+	text-decoration-skip-ink: auto;
+	font-size: 20px; /* 1rem */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+	font-weight: 700;
+}
+
+	* + h2,
+	* + h3,
+	* + h4,
+	* + h5,
+	* + h6,
+	* + .h2,
+	* + .h3,
+	* + .h4,
+	* + .h5,
+	* + .h6 {
+		margin-top: 1.5em;
+	}
+
+p,
+ol,
+ul,
+li,
+td,
+pre,
+blockquote {
+	line-height: normal;
+}
+
+	* + p,
+	* + ol,
+	* + ul,
+	* + pre,
+	* + form,
+	* + table,
+	* + blockquote,
+	* + img.aligncenter,
+	img.aligncenter + * {
+		margin-top: 1rem;
+	}
+
+	h1 + *,
+	h2 + *,
+	h3 + *,
+	h4 + *,
+	h5 + *,
+	h6 + *,
+	.h1 + *,
+	.h2 + *,
+	.h3 + *,
+	.h4 + *,
+	.h5 + *,
+	.h6 + * {
+		margin-top: 0.5rem;
+	}
+
+a,
+.a {
+	text-decoration: underline;
+}
+
+b,
+strong,
+.strong {
+	font-weight: 700;
+}
+
+ul,
+ol {
+	margin-left: 1rem;
+}
+
+blockquote {
+	width: 80%;
+	font-style: italic;
+}
+
+hr,
+.hr {
+
+}
+
+abbr,
+acronym {
+
+}
+
+hr,
+.hr,
+.container,
+#container,
+blockquote,
+.aligncenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+	.aligncenter { text-align: center; }
+
+	.container,
+	#container,
+	.container--fullwidth {
+		width: 100%;
+		max-width: 990px;
+	}
+
+		.container,
+		#container { width: 90%; }
+
+.alignleft,
+.alignright {
+	float: left;
+	display: inline;
+	text-align: left;
+}
+
+.alignright {
+	float: right;
+	text-align: right;
+}
+
+.screen-reader-text {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	clip-path: polygon( 0 0, 0 0, 0 0, 0 0 );
+	clip: rect( 1px, 1px, 1px, 1px );
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+
+/*
+#### ##     ##    ###     ######   ########  ######
+ ##  ###   ###   ## ##   ##    ##  ##       ##    ##
+ ##  #### ####  ##   ##  ##        ##       ##
+ ##  ## ### ## ##     ## ##   #### ######    ######
+ ##  ##     ## ######### ##    ##  ##             ##
+ ##  ##     ## ##     ## ##    ##  ##       ##    ##
+#### ##     ## ##     ##  ######   ########  ######
+*/
+
+img {
+	max-width: 100%;
+}
+
+img.alignleft  { margin: 1.11rem 1.11rem 1.11rem 0; }
+img.alignright { margin: 1.11rem 0 1.11rem 1.11rem; }
+
+img.lazyload,
+img.lazyloading,
+img.lazyloaded {
+	opacity: 0;
+}
+
+	img.lazyloading,
+	img.lazyloaded {
+		will-change: opacity;
+		transition: opacity 0.5s;
+	}
+
+	img.lazyloaded {
+		opacity: 1;
+	}
+
+
+/*
+########  ##     ## ######## ########  #######  ##    ##  ######
+##     ## ##     ##    ##       ##    ##     ## ###   ## ##    ##
+##     ## ##     ##    ##       ##    ##     ## ####  ## ##
+########  ##     ##    ##       ##    ##     ## ## ## ##  ######
+##     ## ##     ##    ##       ##    ##     ## ##  ####       ##
+##     ## ##     ##    ##       ##    ##     ## ##   ### ##    ##
+########   #######     ##       ##     #######  ##    ##  ######
+*/
+
+.btn,
+.btn--large,
+.btn--primary {
+
+}
+
+
+/*
+ ######   #######  ##        #######  ########   ######
+##    ## ##     ## ##       ##     ## ##     ## ##    ##
+##       ##     ## ##       ##     ## ##     ## ##
+##       ##     ## ##       ##     ## ########   ######
+##       ##     ## ##       ##     ## ##   ##         ##
+##    ## ##     ## ##       ##     ## ##    ##  ##    ##
+ ######   #######  ########  #######  ##     ##  ######
+*/
+
+.color--blue,
+.color--primary {
+	color: #369;
+}
+
+.color--black {
+	color: #000;
+}
+
+.color--white {
+	color: #FFF;
+}
+
+
+/*
+########     ###     ######  ##    ##  ######   ########   #######  ##     ## ##    ## ########   ######
+##     ##   ## ##   ##    ## ##   ##  ##    ##  ##     ## ##     ## ##     ## ###   ## ##     ## ##    ##
+##     ##  ##   ##  ##       ##  ##   ##        ##     ## ##     ## ##     ## ####  ## ##     ## ##
+########  ##     ## ##       #####    ##   #### ########  ##     ## ##     ## ## ## ## ##     ##  ######
+##     ## ######### ##       ##  ##   ##    ##  ##   ##   ##     ## ##     ## ##  #### ##     ##       ##
+##     ## ##     ## ##    ## ##   ##  ##    ##  ##    ##  ##     ## ##     ## ##   ### ##     ## ##    ##
+########  ##     ##  ######  ##    ##  ######   ##     ##  #######   #######  ##    ## ########   ######
+*/
+
+.bg--blue,
+.bg--primary {
+	background-color: #369;
+}
+
+.bg--black {
+	background-color: #000;
+}
+
+.bg--white {
+	background-color: #FFF;
+}
+
+
+/*
+########   #######  ########  ########  ######## ########   ######
+##     ## ##     ## ##     ## ##     ## ##       ##     ## ##    ##
+##     ## ##     ## ##     ## ##     ## ##       ##     ## ##
+########  ##     ## ########  ##     ## ######   ########   ######
+##     ## ##     ## ##   ##   ##     ## ##       ##   ##         ##
+##     ## ##     ## ##    ##  ##     ## ##       ##    ##  ##    ##
+########   #######  ##     ## ########  ######## ##     ##  ######
+*/
+
+.border--blue,
+.border--primary {
+	border-color: #369;
+}
+
+.border--black {
+	border-color: #000;
+}
+
+.border--white {
+	border-color: #FFF;
+}
+
+
+/*
+######## ##       ######## ##     ##
+##       ##       ##        ##   ##
+##       ##       ##         ## ##
+######   ##       ######      ###
+##       ##       ##         ## ##
+##       ##       ##        ##   ##
+##       ######## ######## ##     ##
+*/
+
+.flex {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: stretch;
+	align-items: center;
+}
+
+.flex--column { flex-direction: column; }
+.flex--nowrap { flex-wrap: nowrap;      }
+
+.flex--justify-start   { justify-content: flex-start;    }
+.flex--justify-end     { justify-content: flex-end;      }
+.flex--justify-center  { justify-content: center;        }
+.flex--justify-between { justify-content: space-between; }
+.flex--justify-around  { justify-content: space-around;  }
+
+.flex--items-start     { align-items: flex-start;        }
+.flex--items-end       { align-items: flex-end;          }
+.flex--items-center    { align-items: center;            }
+.flex--items-baseline  { align-items: baseline;          }
+.flex--items-stretch   { align-items: stretch;           }
+
+.flex--align-start     { align-content: flex-start;      }
+.flex--align-end       { align-content: flex-end;        }
+.flex--align-center    { align-content: center;          }
+.flex--align-between   { align-content: space-between;   }
+.flex--align-around    { align-content: space-around;    }
+.flex--align-stretch   { align-content: stretch;         }
+
+.flex--self-start      { align-self: flex-start;         }
+.flex--self-end        { align-self: flex-end;           }
+.flex--self-center     { align-self: center;             }
+.flex--self-baseline   { align-self: baseline;           }
+.flex--self-stretch    { align-self: stretch;            }
+
+
+/*
+##     ## ####  ######   ######
+###   ###  ##  ##    ## ##    ##
+#### ####  ##  ##       ##
+## ### ##  ##   ######  ##
+##     ##  ##        ## ##
+##     ##  ##  ##    ## ##    ##
+##     ## ####  ######   ######
+*/
+
+html.js .noscript,
+html.js .hide-if-js,
+html.no-js img.lazyload,
+html.no-js video.lazyload,
+html.no-js .hide-if-no-js,
+html.no-js iframe.lazyload {
+	display: none !important;
+}
+
+
+/*
+########  ########  ######  ##    ## ########  #######  ########      #######  ##    ## ##       ##    ##
+##     ## ##       ##    ## ##   ##     ##    ##     ## ##     ##    ##     ## ###   ## ##        ##  ##
+##     ## ##       ##       ##  ##      ##    ##     ## ##     ##    ##     ## ####  ## ##         ####
+##     ## ######    ######  #####       ##    ##     ## ########     ##     ## ## ## ## ##          ##
+##     ## ##             ## ##  ##      ##    ##     ## ##           ##     ## ##  #### ##          ##
+##     ## ##       ##    ## ##   ##     ##    ##     ## ##           ##     ## ##   ### ##          ##
+########  ########  ######  ##    ##    ##     #######  ##            #######  ##    ## ########    ##
+*/
+
+@media ( min-width: 768px ) {
+
+	.only-mobile { display: none !important; }
+
+}

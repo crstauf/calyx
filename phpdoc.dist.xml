@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+	<title>Calyx</title>
+	<parser>
+		<default-package-name>calyx</default-package-name>
+		<target>includes/_dev/docs/cache</target>
+	</parser>
+	<transformer>
+		<target>includes/_dev/docs</target>
+	</transformer>
+	<files>
+		<directory>.</directory>
+		<ignore>includes/_dev/docs/*</ignore>
+	</files>
+</phpdoc>

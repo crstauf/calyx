@@ -1,0 +1,488 @@
+<?php
+/**
+ * Theme setup.
+ */
+
+if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	exit;
+}
+
+/**
+ * Theme helper class.
+ */
+final class Calyx {
+	use Calyx_ManageFeatures, Calyx_ManageAPIs;
+
+	/** @var Calyx_Data Helper for data. */
+	private $_data = null;
+
+	/** @var Calyx_Admin Helper for admin. */
+	private $_admin = null;
+
+	/** @var Calyx_Front Helper for frontend. */
+	private $_front = null;
+
+	/** @var Calyx_Actions Helper for actions. */
+	private $_actions = null;
+
+	/** @var Calyx_Filters Helper for filters. */
+	private $_filters = null;
+
+	/** @var Calyx_WooCommerce Helper for WooCommerce. */
+	private $_woocommerce = null;
+
+	/** @var array Array of CPT helpers. */
+	private $_cpts = array();
+
+
+	/*
+	 ######   #######  ##    ##  ######  ######## ########  ##     ##  ######  ########
+	##    ## ##     ## ###   ## ##    ##    ##    ##     ## ##     ## ##    ##    ##
+	##       ##     ## ####  ## ##          ##    ##     ## ##     ## ##          ##
+	##       ##     ## ## ## ##  ######     ##    ########  ##     ## ##          ##
+	##       ##     ## ##  ####       ##    ##    ##   ##   ##     ## ##          ##
+	##    ## ##     ## ##   ### ##    ##    ##    ##    ##  ##     ## ##    ##    ##
+	 ######   #######  ##    ##  ######     ##    ##     ##  #######   ######     ##
+	*/
+
+	/**
+	 * Construct.
+	 */
+	protected function __construct() {
+		$this->register_hooks();
+		$this->include_files();
+		$this->initialize();
+	}
+
+	/**
+	 * Get singleton instance.
+	 */
+	public static function get_instance() {
+		static $_instance = null;
+
+		if ( is_null( $_instance ) )
+			$_instance = new self();
+
+		return $_instance;
+	}
+
+	/**
+	 * Register core action and filter hooks.
+	 *
+	 * Step 1 in construct.
+	 * Next: include_files().
+	 */
+	protected function register_hooks() {
+
+		add_action( THEME_PREFIX . '/apis/add',     array( &$this, 'add_api'     ), 10, 2 );
+		add_action( THEME_PREFIX . '/cpts/add',     array( &$this, 'add_cpt'     ) );
+		add_action( THEME_PREFIX . '/features/add', array( &$this, 'add_feature' ), 10, 2 );
+
+	}
+
+	/**
+	 * Include required core files used in admin and on the frontend.
+	 *
+	 * Step 2 in construct.
+	 * Next: initialize().
+	 */
+	protected function include_files() {
+		do_action( 'qm/start', THEME_PREFIX . '/' . __FUNCTION__ . '()' );
+
+		/**
+		 * Core files.
+		 */
+		require_once CALYX_ABSPATH . 'includes/constants.php';
+		require_once CALYX_ABSPATH . 'temporary/global.php';
+		require_once CALYX_ABSPATH . 'includes/utilities.php';
+
+		( is_admin() && require_once CALYX_ABSPATH . 'includes/class-calyx-admin.php' )
+		             || require_once CALYX_ABSPATH . 'includes/class-calyx-front.php';
+
+		  WP_DEVELOP && include_once CALYX_ABSPATH . 'includes/_dev/dev-functions.php';
+
+		/**
+		 * Core abstract files.
+		 */
+		require_once CALYX_ABSPATH . 'includes/abstract-calyx-cpt.php';
+
+		/**
+		 * Core class files.
+		 */
+		require_once CALYX_ABSPATH . 'includes/class-calyx-data.php';
+		require_once CALYX_ABSPATH . 'includes/class-calyx-actions.php';
+		require_once CALYX_ABSPATH . 'includes/class-calyx-filters.php';
+		include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
+
+		/**
+		 * Enhancements class files.
+		 */
+		require_once CALYX_ABSPATH . 'includes/class-image-tag.php';
+
+		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'core' );
+		do_action( THEME_PREFIX . '/include_files/after_core' );
+
+		/**
+		 * Custom post type files.
+		 */
+
+		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'cpts' );
+		do_action( THEME_PREFIX . '/include_files/after_cpts' );
+
+		/**
+		 * Feature files.
+		 */
+
+
+		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'features' );
+
+		do_action( THEME_PREFIX . '/include_files' );
+
+		do_action( 'qm/lap',  THEME_PREFIX . '/' . __FUNCTION__ . '()', 'others' );
+		do_action( 'qm/stop', THEME_PREFIX . '/' . __FUNCTION__ . '()' );
+
+		do_action( THEME_PREFIX . '/files_loaded' );
+	}
+
+	/**
+	 * Initialize Calyx.
+	 *
+	 * Final step in construct.
+	 */
+	protected function initialize() {
+		do_action( THEME_PREFIX . '/before_init' );
+
+		$this->_data    = Calyx_Data::create_instance();
+		$this->_actions = Calyx_Actions::create_instance();
+		$this->_filters = Calyx_Filters::create_instance();
+
+		class_exists( 'Calyx_Admin' ) && $this->_admin = Calyx_Admin::create_instance();
+		class_exists( 'Calyx_Front' ) && $this->_front = Calyx_Front::create_instance();
+
+		class_exists( 'Calyx_WooCommerce' ) && $this->_woocommerce = Calyx_WooCommerce::create_instance();
+
+		do_action( THEME_PREFIX . '/init' );
+		do_action( THEME_PREFIX . '/after_init' );
+	}
+
+
+	/*
+	##      ## ########     ###    ########  ########  ######## ########   ######
+	##  ##  ## ##     ##   ## ##   ##     ## ##     ## ##       ##     ## ##    ##
+	##  ##  ## ##     ##  ##   ##  ##     ## ##     ## ##       ##     ## ##
+	##  ##  ## ########  ##     ## ########  ########  ######   ########   ######
+	##  ##  ## ##   ##   ######### ##        ##        ##       ##   ##         ##
+	##  ##  ## ##    ##  ##     ## ##        ##        ##       ##    ##  ##    ##
+	 ###  ###  ##     ## ##     ## ##        ##        ######## ##     ##  ######
+	*/
+
+	/** Alias for $_admin property. */
+	function admin( $hook = null ) { return is_null( $hook ) ? $this->_admin : $this->_admin->$hook(); }
+
+	/** Alias for $_front property. */
+	function front( $hook = null ) { return is_null( $hook ) ? $this->_front : $this->_front->$hook(); }
+
+	/** Alias for $_actions property. */
+	function actions() { return $this->_actions; }
+
+	/** Alias for $_filters property. */
+	function filters() { return $this->_filters; }
+
+	/** Alias for $_woocommerce property. */
+	function wc() { return $this->_woocommerce; }
+
+	/**
+	 * Manage theme data.
+	 *
+	 * @uses Calyx_Data::__data()
+	 *
+	 * @return mixed
+	 */
+	function data( string $key = null, $value = null, bool $force = false ) {
+		return $this->_data->__data( $key, $value, $force );
+	}
+
+
+	/*
+	 ######  ########  ########  ######
+	##    ## ##     ##    ##    ##    ##
+	##       ##     ##    ##    ##
+	##       ########     ##     ######
+	##       ##           ##          ##
+	##    ## ##           ##    ##    ##
+	 ######  ##           ##     ######
+	*/
+
+	/**
+	 * Check if theme CPT exists.
+	 *
+	 * @param string $type Post type.
+	 *
+	 * @return bool
+	 */
+	function has_cpt( string $type ) {
+		return array_key_exists( $type, $this->_cpts );
+	}
+
+	/**
+	 * Add theme CPT.
+	 *
+	 * @param _Calyx_CPT $object Post type object.
+	 *
+	 * @return bool Theme CPT exists or was registered.
+	 */
+	function add_cpt( _Calyx_CPT $object ) {
+		      !$this->has_cpt( $object->get_type() ) && $this->_cpts[$object->get_type()] = $object;
+		return $this->has_cpt( $object->get_type() );
+	}
+
+	/**
+	 * Check if theme CPT exists.
+	 *
+	 * @param string $type Post type.
+	 *
+	 * @uses $this::has_cpt()
+	 *
+	 * @return null|_Calyx_Cpt
+	 */
+	function get_cpt( string $type ) {
+		return $this->has_cpt( $type )
+			? $this->_cpts[$type]
+			: null;
+	}
+
+
+	/*
+	 ######  ######## ########  ##     ## ######## ########
+	##    ## ##       ##     ## ##     ## ##       ##     ##
+	##       ##       ##     ## ##     ## ##       ##     ##
+	 ######  ######   ########  ##     ## ######   ########
+	      ## ##       ##   ##    ##   ##  ##       ##   ##
+	##    ## ##       ##    ##    ## ##   ##       ##    ##
+	 ######  ######## ##     ##    ###    ######## ##     ##
+	*/
+
+	/**
+	 * Get server info.
+	 *
+	 * 1 => Apache|nginx
+	 * 2 => version
+	 *
+	 * @return array
+	 */
+	function get_server_info() {
+		preg_match( '/^(nginx|Apache)\/([0-9\.]*).*$/', $_SERVER['SERVER_SOFTWARE'], $matches );
+		return $matches;
+	}
+
+	/**
+	 * Retrieve indication of server under high load.
+	 *
+	 * @uses $this::is_extreme_load()
+	 */
+	function is_server_high_load() {
+		return (
+			(
+				       defined( THEME_PREFIX . '_HIGH_LOAD' )
+				   && constant( THEME_PREFIX . '_HIGH_LOAD' )
+			)
+			|| !!get_transient( THEME_PREFIX . '_HIGH_LOAD' )
+			|| $this->is_server_extreme_load()
+		);
+	}
+
+	/**
+	 * Retrieve indication of server under extreme load.
+	 */
+	function is_server_extreme_load() {
+		 return (
+			(
+				       defined( THEME_PREFIX . '_EXTREME_LOAD' )
+				   && constant( THEME_PREFIX . '_EXTREME_LOAD' )
+			)
+			|| !!get_transient( THEME_PREFIX . '_EXTREME_LOAD' )
+		);
+	}
+
+	/**
+	 * Set benchmark.
+	 */
+	function benchmark( $label = '' ) {
+	}
+
+	/**
+	 * Get template part.
+	 *
+	 * @param array $template_names Array of template paths to check.
+	 * @param array $args           Array of variables for template part to use.
+	 *
+	 * @see locate_template()
+	 */
+	function get_template_part( $template_paths, $args = array() ) {
+		$template_part = locate_template( $template_paths );
+
+		if ( !empty( $template_part ) ) {
+			extract( $args );
+
+			$template_part_slug = trim( str_replace( '.php', '', str_replace( array(
+				get_stylesheet_directory(),
+				get_template_directory(),
+			), '', $template_part ) ) );
+
+			$action_handle = 'get_template_part_' . ltrim( $template_part_slug, '/' );
+
+			do_action( $action_handle, $template_part_slug, '' );
+
+			require $template_part;
+		}
+	}
+
+
+	/*
+	######## ##     ## ######## ##    ## ########  ######
+	##       ##     ## ##       ###   ##    ##    ##    ##
+	##       ##     ## ##       ####  ##    ##    ##
+	######   ##     ## ######   ## ## ##    ##     ######
+	##        ##   ##  ##       ##  ####    ##          ##
+	##         ## ##   ##       ##   ###    ##    ##    ##
+	########    ###    ######## ##    ##    ##     ######
+	*/
+
+	/**
+	 * Check if doing AJAX.
+	 */
+	function doing_ajax() {
+		return !!(
+			wp_doing_ajax()
+			|| (
+				defined( 'WC_DOING_AJAX' )
+				       && WC_DOING_AJAX
+			)
+			|| (
+				isset( $_GET )
+				&& array_key_exists( 'wc-ajax', $_GET )
+			)
+		);
+	}
+
+	/**
+	 * Check if doing cron.
+	 */
+	function doing_cron() {
+		return !!( defined( 'DOING_CRON' ) && DOING_CRON );
+	}
+
+	/**
+	 * Check if doing autosave.
+	 */
+	function doing_autosave() {
+		return !!( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE );
+	}
+
+	/**
+	 * Check if Query Monitor disabled.
+	 */
+	function QM_disabled() {
+		return !!( defined( 'QM_DISABLED' ) && QM_DISABLED );
+	}
+
+	/**
+	 * Check if is REST request.
+	 */
+	 function doing_rest() {
+		return !!(
+			(
+				defined( 'REST_REQUEST' )
+				       && REST_REQUEST
+			)
+			|| (
+				defined( 'WC_API_REQUEST' )
+				       && WC_API_REQUEST
+			)
+		);
+	}
+
+
+	/*
+	 ######   #######  ##    ## ########  #### ######## ####  #######  ##    ##    ###    ##        ######
+	##    ## ##     ## ###   ## ##     ##  ##     ##     ##  ##     ## ###   ##   ## ##   ##       ##    ##
+	##       ##     ## ####  ## ##     ##  ##     ##     ##  ##     ## ####  ##  ##   ##  ##       ##
+	##       ##     ## ## ## ## ##     ##  ##     ##     ##  ##     ## ## ## ## ##     ## ##        ######
+	##       ##     ## ##  #### ##     ##  ##     ##     ##  ##     ## ##  #### ######### ##             ##
+	##    ## ##     ## ##   ### ##     ##  ##     ##     ##  ##     ## ##   ### ##     ## ##       ##    ##
+	 ######   #######  ##    ## ########  ####    ##    ####  #######  ##    ## ##     ## ########  ######
+	*/
+
+
+
+
+	/*
+	##     ## ####  ######   ######
+	###   ###  ##  ##    ## ##    ##
+	#### ####  ##  ##       ##
+	## ### ##  ##   ######  ##
+	##     ##  ##        ## ##
+	##     ##  ##  ##    ## ##    ##
+	##     ## ####  ######   ######
+	*/
+
+	function _register_vendor_assets() {
+
+		/**
+		 * Register webfontloader.
+		 * @link https://github.com/typekit/webfontloader GitHub repository for webfontloader.
+		 * @version 1.6.28
+		 */
+		wp_register_script( 'webfontloader', get_theme_file_uri( 'assets/js/webfontloader.min.js' ), array(), '1.6.28' );
+
+		$this->_register_vendor_assets__lazysizes();
+	}
+
+	/**
+	 * Register lazysizes scripts.
+	 * @link https://github.com/aFarkas/lazysizes GitHub repository for lazysizes.
+	 * @version 4.0.2
+	 */
+	protected function _register_vendor_assets__lazysizes() {
+		$version = '4.0.2';
+		$lazysizes_handles = array(
+			'lazysizes/core',
+			'lazysizes/object-fit',
+			'lazysizes/progressive',
+			'lazysizes/respimg'
+		);
+
+		wp_register_script( 'lazysizes/core',        get_theme_file_uri( 'assets/js/lazysizes--core.min.js'        ), array(),                   $version );
+		wp_register_script( 'lazysizes/object-fit',  get_theme_file_uri( 'assets/js/lazysizes--object-fit.min.js'  ), array( 'lazysizes/core' ), $version );
+		wp_register_script( 'lazysizes/progressive', get_theme_file_uri( 'assets/js/lazysizes--progressive.min.js' ), array( 'lazysizes/core' ), $version );
+		wp_register_script( 'lazysizes/respimg',     get_theme_file_uri( 'assets/js/lazysizes--respimg.min.js'     ), array( 'lazysizes/core' ), $version );
+
+		list( $src, $deps ) = (
+			(
+				SCRIPT_DEBUG
+				|| !CONCATENATE_SCRIPTS
+			)
+			? array(
+				null,
+				$lazysizes_handles
+			)
+			: array(
+				get_theme_file_uri( 'assets/js/lazysizes.min.js' ),
+				array()
+			)
+		);
+
+		wp_register_script( 'lazysizes', $src, $deps, $version );
+
+		if ( class_exists( 'CSSLLC_EnhanceEnqueues' ) )
+			foreach ( array_merge( $lazysizes_handles, array( 'lazysizes' ) ) as $handle )
+				CSSLLC_EnhanceEnqueues::enhance_script__critical( $handle );
+
+	}
+
+}
+
+?>
+

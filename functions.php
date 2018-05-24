@@ -1,4 +1,7 @@
 <?php
+/**
+ * Load the theme.
+ */
 
 if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -6,66 +9,26 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	exit;
 }
 
-require_once 'includes/constants.php';
+add_theme_support( 'html5' );
+add_theme_support( 'title-tag' );
+add_theme_support( 'post-thumbnails' );
 
-do_action( 'qm/start', THEME_PREFIX . ':load' );
+define( 'THEME_PREFIX', 'calyx' );
+define( 'CALYX_ABSPATH', __DIR__ . '/' );
 
-// core files
-require_once 'includes/class.calyx.php';
-require_once 'includes/trait.calyx.singleton.php';
-require_once 'includes/abstract.calyx._core.php';
-require_once 'includes/class.calyx.utilities.php';
+!trait_exists( 'Calyx_Features' ) && require_once CALYX_ABSPATH . 'includes/traits.php';
+!class_exists( 'Calyx'          ) && require_once CALYX_ABSPATH . 'includes/class-calyx.php';
 
-do_action( 'qm/lap', THEME_PREFIX . ':load', 'core' );
-
-if (
-	WP_DEVELOP
-	&& file_exists( get_theme_file_path( 'includes/_dev/dev.php' ) )
-) {
-	require_once get_theme_file_path( 'includes/_dev/dev.php' );
-	do_action( 'qm/lap', THEME_PREFIX . ':load', 'development' );
+/**
+ * Function to access theme helper singleton.
+ */
+function Calyx() {
+	return Calyx::get_instance();
 }
 
-// additional core files
-require_once get_theme_file_path( 'includes/class.calyx.data.php'     );
-require_once get_theme_file_path( 'includes/class.calyx.actions.php'  );
-require_once get_theme_file_path( 'includes/class.calyx.filters.php'  );
-
-// core abstracts
-require_once get_theme_file_path( 'includes/abstract.cpt.php' );
-
-do_action( 'qm/lap', THEME_PREFIX . ':load', 'additional core' );
-
-if ( is_admin() ) {
-
-	// admin-only files
-	require_once get_theme_file_path( 'includes/class.calyx.admin.php' );
-
-	do_action( 'qm/lap', THEME_PREFIX . ':load', 'back-end' );
-
-} else {
-
-	// front-only files
-	require_once get_theme_file_path( 'includes/class.calyx.front.php' );
-	require_once get_theme_file_path( 'includes/class.image-tag.php' );
-
-	do_action( 'qm/lap', THEME_PREFIX . ':load', 'front-end' );
-
-}
-
-include_once get_theme_file_path( 'includes/_temporary.php' );
-
-do_action( 'qm/stop', THEME_PREFIX . ':load' );
-
-// let's initialize!
+// Initialize!
 Calyx();
 
-do_action( 'qm/start', THEME_PREFIX . ':setup' );
-do_action( 'setup_theme_' . THEME_PREFIX );
-do_action( 'qm/stop', THEME_PREFIX . ':setup' );
-
-do_action( 'qm/start', THEME_PREFIX . ':after_setup' );
-do_action( 'after_setup_theme_' . THEME_PREFIX );
-do_action( 'qm/stop', THEME_PREFIX . ':after_setup' );
+do_action( THEME_PREFIX . '/initialized' );
 
 ?>
