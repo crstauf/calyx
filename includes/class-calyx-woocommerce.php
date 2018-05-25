@@ -26,6 +26,9 @@ class Calyx_WooCommerce {
 	 ######   #######  ##    ##  ######     ##    ##     ##  #######   ######     ##
 	*/
 
+	/**
+	 * Construct.
+	 */
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 

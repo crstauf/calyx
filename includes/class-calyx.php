@@ -178,23 +178,39 @@ final class Calyx {
 	 ###  ###  ##     ## ##     ## ##        ##        ######## ##     ##  ######
 	*/
 
-	/** Alias for $_admin property. */
+	/**
+	 * Public access to $_admin property.
+	 *
+	 * @param null|string $hook Quick access to actions or filters.
+	 *
+	 * @return Calyx_Admin|Calyx_Admin_Actions|Calyx_Admin_Filters
+	 */
 	function admin( $hook = null ) { return is_null( $hook ) ? $this->_admin : $this->_admin->$hook(); }
 
-	/** Alias for $_front property. */
+	/**
+	 * Public access to $_front property.
+	 *
+	 * @param null|string $hook Quick access to actions or filters.
+	 *
+	 * @return Calyx_Front|Calyx_Front_Actions|Calyx_Front_Filters
+	 */
 	function front( $hook = null ) { return is_null( $hook ) ? $this->_front : $this->_front->$hook(); }
 
-	/** Alias for $_actions property. */
+	/** Public access to $_actions property. */
 	function actions() { return $this->_actions; }
 
-	/** Alias for $_filters property. */
+	/** Public access to $_filters property. */
 	function filters() { return $this->_filters; }
 
-	/** Alias for $_woocommerce property. */
+	/** Public access to $_woocommerce property. */
 	function wc() { return $this->_woocommerce; }
 
 	/**
 	 * Manage theme data.
+	 *
+	 * @param string $key   ID of the data.
+	 * @param mixed  $value Data.
+	 * @param bool   $force Force update.
 	 *
 	 * @uses Calyx_Data::__data()
 	 *
@@ -307,15 +323,9 @@ final class Calyx {
 	}
 
 	/**
-	 * Set benchmark.
-	 */
-	function benchmark( $label = '' ) {
-	}
-
-	/**
 	 * Get template part.
 	 *
-	 * @param array $template_names Array of template paths to check.
+	 * @param array $template_paths Array of template paths to check.
 	 * @param array $args           Array of variables for template part to use.
 	 *
 	 * @see locate_template()
@@ -428,10 +438,16 @@ final class Calyx {
 	##     ## ####  ######   ######
 	*/
 
+	/**
+	 * Register vendor (third-party) assets.
+	 *
+	 * @uses $this::_register_vendor_assets__lazysizes()
+	 */
 	function _register_vendor_assets() {
 
 		/**
 		 * Register webfontloader.
+		 *
 		 * @link https://github.com/typekit/webfontloader GitHub repository for webfontloader.
 		 * @version 1.6.28
 		 */
@@ -442,6 +458,7 @@ final class Calyx {
 
 	/**
 	 * Register lazysizes scripts.
+	 *
 	 * @link https://github.com/aFarkas/lazysizes GitHub repository for lazysizes.
 	 * @version 4.0.2
 	 */

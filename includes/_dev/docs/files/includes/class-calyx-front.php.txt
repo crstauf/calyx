@@ -23,6 +23,9 @@ class Calyx_Front {
 	/** @var null|Calyx_Front_Filters **/
 	protected $_filters = null;
 
+	/**
+	 * Construct.
+	 */
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 

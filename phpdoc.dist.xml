@@ -11,5 +11,6 @@
 	<files>
 		<directory>.</directory>
 		<ignore>includes/_dev/docs/*</ignore>
+		<ignore>*/index.php</ignore>
 	</files>
 </phpdoc>

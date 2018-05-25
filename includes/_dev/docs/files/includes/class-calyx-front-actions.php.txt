@@ -15,6 +15,9 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 class Calyx_Front_Actions {
 	use Calyx_Singleton;
 
+	/**
+	 * Construct.
+	 */
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
@@ -26,12 +29,22 @@ class Calyx_Front_Actions {
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
 
+	/**
+	 * Action: init
+	 *
+	 * @uses Calyx_Front::_register_vendor_assets() to register vendor assets.
+	 */
 	function init() {
 
 		Calyx()->front()->_register_vendor_assets();
 
 	}
 
+	/**
+	 * Action: wp_head
+	 *
+	 * - add head meta and link tags.
+	 */
 	function wp_head() {
 		?>
 
@@ -43,6 +56,11 @@ class Calyx_Front_Actions {
 		<?php
 	}
 
+	/**
+	 * Action: wp_enqueue_scripts, priority 0
+	 *
+	 * - enqueue modernizr and lazysizes early
+	 */
 	function wp_enqueue_scripts__0() {
 
 		wp_enqueue_script( 'modernizr' );
@@ -50,6 +68,11 @@ class Calyx_Front_Actions {
 
 	}
 
+	/**
+	 * Action: wp_footer
+	 *
+	 * - enqueue webfontloader
+	 */
 	function wp_footer() {
 
 		wp_enqueue_script( 'webfontloader' );

@@ -31,6 +31,15 @@ class Calyx_Actions {
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
 
+	/**
+	 * Action: init
+	 *
+	 * - register theme script object
+	 * - register theme copy stylesheet
+	 * - register vendor assets
+	 *
+	 * @uses Calyx::_register_vendor_assets()
+	 */
 	function init() {
 
 		wp_register_script( THEME_PREFIX . '/script_object', get_theme_file_url( 'assets/js/calyx.min.js' ), null, 'init' );
@@ -54,6 +63,12 @@ class Calyx_Actions {
 
 	}
 
+	/**
+	 * Action: wp_enqueue_scripts
+	 *
+	 * - enqueue theme script object
+	 * - remove built-in emoji styles
+	 */
 	function wp_enqueue_scripts() {
 
 		wp_enqueue_script( THEME_PREFIX . '/script_object' );
@@ -81,10 +96,10 @@ class Calyx_Actions {
 	/**
 	 * Check hash of components for compatibility.
 	 *
-	 * @param string $dependency_name           Name of dependency, for example: WordPress, WooCommerce, etc.
-	 * @param string $dependency_version        Version of dependency, for example: 2.0.1.
-	 * @param string $dependent_name            Name of customization.
-	 * @param string $tested_dependency_version Last tested version of dependency.
+	 * @param string $dependency_name        Name of dependency, for example: WordPress, WooCommerce, etc.
+	 * @param string $dependency_hash        Latest commit hash of dependency.
+	 * @param string $dependent_name         Name of customization.
+	 * @param string $tested_dependency_hash Last tested commit hash of dependency.
 	 */
 	function _compatibility_monitor__hash( $dependency_name, $dependency_hash, $dependent_name, $tested_dependency_hash ) {
 		if ( $dependency_hash !== $tested_dependency_hash )

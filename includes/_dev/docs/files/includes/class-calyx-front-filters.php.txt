@@ -15,6 +15,9 @@
 class Calyx_Front_Filters {
 	use Calyx_Singleton;
 
+	/**
+	 * Construct.
+	 */
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 

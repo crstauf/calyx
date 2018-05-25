@@ -1,4 +1,7 @@
 <?php
+/**
+ * Helper for managing data.
+ */
 
 if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -17,6 +20,9 @@ class Calyx_Data {
 	 */
 	private $_storeroom = array();
 
+	/**
+	 * Construct.
+	 */
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
@@ -60,6 +66,16 @@ class Calyx_Data {
 			: null;
 	}
 
+	/**
+	 * Add data.
+	 *
+	 * Only sets the data if the ID doesn't yet exist.
+	 *
+	 * @param string $key   Data ID.
+	 * @param mixed  $value Data.
+	 *
+	 * @return bool
+	 */
 	function add( string $key, $value ) {
 		!$this->exists( $key ) && $this->_storeroom[$key] = $value;
 		return $this->exists( $key );

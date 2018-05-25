@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">179</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">142</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1950406923"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1640658395"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1950406923" class="accordion-body collapse in">
+            <div id="namespace-1640658395" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -226,7 +226,6 @@
                                                                     <a href="../classes/Calyx.html#method_get_server_info" class="">get_server_info()</a><br />
                                                                     <a href="../classes/Calyx.html#method_is_server_high_load" class="">is_server_high_load()</a><br />
                                                                     <a href="../classes/Calyx.html#method_is_server_extreme_load" class="">is_server_extreme_load()</a><br />
-                                                                    <a href="../classes/Calyx.html#method_benchmark" class="">benchmark()</a><br />
                                                                     <a href="../classes/Calyx.html#method_get_template_part" class="">get_template_part()</a><br />
                                                                     <a href="../classes/Calyx.html#method_doing_ajax" class="">doing_ajax()</a><br />
                                                                     <a href="../classes/Calyx.html#method_doing_cron" class="">doing_cron()</a><br />
@@ -821,21 +820,23 @@
             <article class="method">
                 <h3 class="public ">admin()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">admin(  <span class="argument">$hook = null</span>) </pre>
-                <p><em>Alias for $_admin property.</em></p>
+                <pre class="signature" style="margin-right: 54px;">admin(null|string  <span class="argument">$hook = null</span>) : \Calyx_Admin|\Calyx_Admin_Actions|\Calyx_Admin_Filters</pre>
+                <p><em>Public access to $_admin property.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>null|string</td>
                                 <td>$hook </td>
-                                <td></td>
+                                <td><p>Quick access to actions or filters.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    <a href="../classes/Calyx_Admin.html">\Calyx_Admin</a>|<a href="../classes/Calyx_Admin_Actions.html">\Calyx_Admin_Actions</a>|<a href="../classes/Calyx_Admin_Filters.html">\Calyx_Admin_Filters</a>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -855,21 +856,23 @@
             <article class="method">
                 <h3 class="public ">front()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">front(  <span class="argument">$hook = null</span>) </pre>
-                <p><em>Alias for $_front property.</em></p>
+                <pre class="signature" style="margin-right: 54px;">front(null|string  <span class="argument">$hook = null</span>) : \Calyx_Front|\Calyx_Front_Actions|\Calyx_Front_Filters</pre>
+                <p><em>Public access to $_front property.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>null|string</td>
                                 <td>$hook </td>
-                                <td></td>
+                                <td><p>Quick access to actions or filters.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    <a href="../classes/Calyx_Front.html">\Calyx_Front</a>|<a href="../classes/Calyx_Front_Actions.html">\Calyx_Front_Actions</a>|<a href="../classes/Calyx_Front_Filters.html">\Calyx_Front_Filters</a>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -890,7 +893,7 @@
                 <h3 class="public ">actions()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">actions() </pre>
-                <p><em>Alias for $_actions property.</em></p>
+                <p><em>Public access to $_actions property.</em></p>
                 
 
                 
@@ -916,7 +919,7 @@
                 <h3 class="public ">filters()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">filters() </pre>
-                <p><em>Alias for $_filters property.</em></p>
+                <p><em>Public access to $_filters property.</em></p>
                 
 
                 
@@ -942,7 +945,7 @@
                 <h3 class="public ">wc()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">wc() </pre>
-                <p><em>Alias for $_woocommerce property.</em></p>
+                <p><em>Public access to $_woocommerce property.</em></p>
                 
 
                 
@@ -967,26 +970,26 @@
             <article class="method">
                 <h3 class="public ">data()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">data(\string  <span class="argument">$key = null</span>,   <span class="argument">$value = null</span>, \bool  <span class="argument">$force = false</span>) : mixed</pre>
+                <pre class="signature" style="margin-right: 54px;">data(string  <span class="argument">$key = null</span>, mixed  <span class="argument">$value = null</span>, boolean  <span class="argument">$force = false</span>) : mixed</pre>
                 <p><em>Manage theme data.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td>\string</td>
+                                <td>string</td>
                                 <td>$key </td>
-                                <td></td>
+                                <td><p>ID of the data.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>mixed</td>
                                 <td>$value </td>
-                                <td></td>
+                                <td><p>Data.</p></td>
                             </tr>
                                                     <tr>
-                                <td>\bool</td>
+                                <td>boolean</td>
                                 <td>$force </td>
-                                <td></td>
+                                <td><p>Force update.</p></td>
                             </tr>
                                             </table>
                 
@@ -1205,54 +1208,20 @@
 
                                     <div class="row-fluid">
         <div class="span8 content class">
-            <a id="method_benchmark" name="method_benchmark" class="anchor"></a>
-            <article class="method">
-                <h3 class="public ">benchmark()</h3>
-                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">benchmark(  <span class="argument">$label = &#039;&#039;</span>) </pre>
-                <p><em>Set benchmark.</em></p>
-                
-
-                                    <h4>Parameters</h4>
-                    <table class="table table-condensed table-hover">
-                                                    <tr>
-                                <td></td>
-                                <td>$label </td>
-                                <td></td>
-                            </tr>
-                                            </table>
-                
-                
-                				
-                            </article>
-        </div>
-        <aside class="span4 detailsbar">
-            <h1><i class="icon-arrow-down"></i></h1>
-                                                            <dl>
-                                                                            </dl>
-            <h2>Tags</h2>
-            <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
-                            </table>
-        </aside>
-    </div>
-
-                                    <div class="row-fluid">
-        <div class="span8 content class">
             <a id="method_get_template_part" name="method_get_template_part" class="anchor"></a>
             <article class="method">
                 <h3 class="public ">get_template_part()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">get_template_part(  <span class="argument">$template_paths</span>, array  <span class="argument">$args = array()</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">get_template_part(array  <span class="argument">$template_paths</span>, array  <span class="argument">$args = array()</span>) </pre>
                 <p><em>Get template part.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$template_paths </td>
-                                <td></td>
+                                <td><p>Array of template paths to check.</p></td>
                             </tr>
                                                     <tr>
                                 <td>array</td>
@@ -1415,7 +1384,7 @@
                 <h3 class="public ">_register_vendor_assets()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">_register_vendor_assets() </pre>
-                <p><em></em></p>
+                <p><em>Register vendor (third-party) assets.</em></p>
                 
 
                 
@@ -1426,7 +1395,9 @@
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>$this::_register_vendor_assets__lazysizes()</dd>
+                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -1624,7 +1595,7 @@ Next: initialize().</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 24th, 2018 at 07:00.
+                    on May 25th, 2018 at 05:25.
                 </section>
             </section>
         </section>
