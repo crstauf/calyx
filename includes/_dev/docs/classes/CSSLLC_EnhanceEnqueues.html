@@ -106,7 +106,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">142</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">59</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-101069626"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-775048003"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-101069626" class="accordion-body collapse in">
+            <div id="namespace-775048003" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -326,7 +326,7 @@
                 <h3 class="public ">__construct()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">__construct() </pre>
-                <p><em></em></p>
+                <p><em>Construct.</em></p>
                 
 
                 
@@ -351,32 +351,37 @@
             <article class="method">
                 <h3 class="public ">maybe_enhance_stylesheet__noscript()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">maybe_enhance_stylesheet__noscript(  <span class="argument">$tag</span>,   <span class="argument">$handle</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">maybe_enhance_stylesheet__noscript(string  <span class="argument">$tag</span>, string  <span class="argument">$handle</span>) : string</pre>
+                <p><em>Maybe add noscript tags to stylesheet tag.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$tag </td>
-                                <td></td>
+                                <td><p>Link stylesheet tag.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered asset handle.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Link stylesheet tag.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href=""><span class="namespace-wrapper">filter hook.</span></a></dd>
+                                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -390,42 +395,47 @@
             <article class="method">
                 <h3 class="public ">maybe_enhance_stylesheet__critical()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">maybe_enhance_stylesheet__critical(  <span class="argument">$tag</span>,   <span class="argument">$handle</span>,   <span class="argument">$href</span>,   <span class="argument">$media</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">maybe_enhance_stylesheet__critical(string  <span class="argument">$tag</span>, string  <span class="argument">$handle</span>, string  <span class="argument">$href</span>, string  <span class="argument">$media</span>) : string</pre>
+                <p><em>Maybe print critical stylesheet tag.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$tag </td>
-                                <td></td>
+                                <td><p>Link stylesheet tag.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered asset handle.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$href </td>
-                                <td></td>
+                                <td><p>Asset URI.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$media </td>
-                                <td></td>
+                                <td><p>Media queries.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Link stylesheet tag.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href=""><span class="namespace-wrapper">filter hook.</span></a></dd>
+                                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -439,37 +449,42 @@
             <article class="method">
                 <h3 class="public ">maybe_enhance_script__critical()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">maybe_enhance_script__critical(  <span class="argument">$tag</span>,   <span class="argument">$handle</span>,   <span class="argument">$src</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">maybe_enhance_script__critical(string  <span class="argument">$tag</span>, string  <span class="argument">$handle</span>, string  <span class="argument">$src</span>) : string</pre>
+                <p><em>Maybe print critical script tag.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$tag </td>
-                                <td></td>
+                                <td><p>Script HTML tag.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered asset handle.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$src </td>
-                                <td></td>
+                                <td><p>Script source URI.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Script tag.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href=""><span class="namespace-wrapper">filter hook.</span></a></dd>
+                                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -483,31 +498,34 @@
             <article class="method">
                 <h3 class="public ">maybe_enhance__preload()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">maybe_enhance__preload(  <span class="argument">$tag</span>,   <span class="argument">$handle</span>,   <span class="argument">$src</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">maybe_enhance__preload(string  <span class="argument">$tag</span>, string  <span class="argument">$handle</span>, string  <span class="argument">$src</span>) : string</pre>
+                <p><em>Maybe get link preload tag for asset.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$tag </td>
-                                <td></td>
+                                <td><p>HTML tag for asset.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered asset handle.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$src </td>
-                                <td></td>
+                                <td><p>Asset URI.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Original tag, or link with preload.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -528,7 +546,7 @@
                 <h3 class="public ">_maybe_enqueue_cssrelpreload()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">_maybe_enqueue_cssrelpreload() </pre>
-                <p><em></em></p>
+                <p><em>Enqueue preload polyfill if registered.</em></p>
                 
 
                 
@@ -539,7 +557,9 @@
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href="https://github.com/filamentgroup/loadCSS"><span class="namespace-wrapper">https://github.com/filamentgroup/loadCSS</span></a></dd>
+                                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -581,16 +601,16 @@
             <article class="method">
                 <h3 class="public ">enhance_script__critical()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">enhance_script__critical(  <span class="argument">$handle</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">enhance_script__critical(string  <span class="argument">$handle</span>) </pre>
+                <p><em>Set script as critical.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered script handle.</p></td>
                             </tr>
                                             </table>
                 
@@ -616,16 +636,16 @@
             <article class="method">
                 <h3 class="public ">enhance_stylesheet__critical()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">enhance_stylesheet__critical(  <span class="argument">$handle</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">enhance_stylesheet__critical(string  <span class="argument">$handle</span>) </pre>
+                <p><em>Set stylesheet as critical.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered stylesheet handle.</p></td>
                             </tr>
                                             </table>
                 
@@ -651,16 +671,16 @@
             <article class="method">
                 <h3 class="public ">enhance_stylesheet__noscript()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">enhance_stylesheet__noscript(  <span class="argument">$handle</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">enhance_stylesheet__noscript(string  <span class="argument">$handle</span>) </pre>
+                <p><em>Set stylesheet to load if noscript.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered stylesheet handle.</p></td>
                             </tr>
                                             </table>
                 
@@ -686,16 +706,16 @@
             <article class="method">
                 <h3 class="public ">enhance_stylesheet__preload()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">enhance_stylesheet__preload(  <span class="argument">$handle</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">enhance_stylesheet__preload(string  <span class="argument">$handle</span>) </pre>
+                <p><em>Set stylesheet to preload.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered stylesheet handle.</p></td>
                             </tr>
                                             </table>
                 
@@ -721,16 +741,16 @@
             <article class="method">
                 <h3 class="public ">enhance_script__preload()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">enhance_script__preload(  <span class="argument">$handle</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">enhance_script__preload(string  <span class="argument">$handle</span>) </pre>
+                <p><em>Set script to preload.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered script handle.</p></td>
                             </tr>
                                             </table>
                 
@@ -757,7 +777,7 @@
                 <h3 class="public ">_debug_action__wp_enqueue_scripts()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">_debug_action__wp_enqueue_scripts() </pre>
-                <p><em></em></p>
+                <p><em>Tests for debugging purposes.</em></p>
                 
 
                 
@@ -782,42 +802,47 @@
             <article class="method">
                 <h3 class="protected ">_maybe_print_stylesheet_inline()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">_maybe_print_stylesheet_inline(  <span class="argument">$tag</span>,   <span class="argument">$handle</span>,   <span class="argument">$href</span>,   <span class="argument">$media</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">_maybe_print_stylesheet_inline(string  <span class="argument">$tag</span>, string  <span class="argument">$handle</span>, string  <span class="argument">$href</span>, string  <span class="argument">$media</span>) : string</pre>
                 <p><em>Print stylesheet contents inline, if found.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$tag </td>
-                                <td></td>
+                                <td><p>Link stylesheet tag.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered asset handle.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$href </td>
-                                <td></td>
+                                <td><p>Stylesheet URI.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$media </td>
-                                <td></td>
+                                <td><p>Media query.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>$this::_get_asset_contents()</dd>
+                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -831,37 +856,42 @@
             <article class="method">
                 <h3 class="protected ">_maybe_print_script_inline()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">_maybe_print_script_inline(  <span class="argument">$tag</span>,   <span class="argument">$handle</span>,   <span class="argument">$src</span>) </pre>
-                <p><em>Print stylesheet contents inline, if found.</em></p>
+                <pre class="signature" style="margin-right: 54px;">_maybe_print_script_inline(string  <span class="argument">$tag</span>, string  <span class="argument">$handle</span>, string  <span class="argument">$src</span>) : string</pre>
+                <p><em>Print script contents inline, if found.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$tag </td>
-                                <td></td>
+                                <td><p>Script tag.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$handle </td>
-                                <td></td>
+                                <td><p>Registered asset handle.</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$src </td>
-                                <td></td>
+                                <td><p>Script URI.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML.</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>$this::_get_asset_contents()</dd>
+                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -954,7 +984,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 25th, 2018 at 05:25.
+                    on May 29th, 2018 at 04:16.
                 </section>
             </section>
         </section>

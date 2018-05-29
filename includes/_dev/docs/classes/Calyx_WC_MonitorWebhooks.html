@@ -106,7 +106,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">142</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">59</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1380826932"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1038212630"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1380826932" class="accordion-body collapse in">
+            <div id="namespace-1038212630" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -188,7 +188,7 @@
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
                     <h1><small>\</small>Calyx_WC_MonitorWebhooks</h1>
-                    <p><em>Class to monitor webhooks, specifically, their automatic
+                    <p><em>Class to monitor WooCommerce webhooks, specifically, the automatic
 disabling due to successive connection failures.</em></p>
                     
                     
@@ -323,7 +323,7 @@ disabling due to successive connection failures.</em></p>
                 <h3 class="public ">__construct()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">__construct() </pre>
-                <p><em></em></p>
+                <p><em>Construct.</em></p>
                 
 
                 
@@ -348,34 +348,34 @@ disabling due to successive connection failures.</em></p>
             <article class="method">
                 <h3 class="public ">action__woocommerce_webhook_delivery()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">action__woocommerce_webhook_delivery(  <span class="argument">$http_args</span>,   <span class="argument">$response</span>,   <span class="argument">$duration</span>,   <span class="argument">$arg</span>,   <span class="argument">$webhook_id</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">action__woocommerce_webhook_delivery(array  <span class="argument">$http_args</span>, array  <span class="argument">$response</span>, integer  <span class="argument">$duration</span>, string  <span class="argument">$arg</span>, integer  <span class="argument">$webhook_id</span>) </pre>
+                <p><em>Action: woocommerce_webhook_delivery</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$http_args </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$response </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$duration </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$arg </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
@@ -402,7 +402,7 @@ disabling due to successive connection failures.</em></p>
             <article class="method">
                 <h3 class="public ">step_1()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">step_1(  <span class="argument">$webhook_id</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">step_1(integer  <span class="argument">$webhook_id</span>) </pre>
                 <p><em>Step 1: on deactivation of webhook due to failures, create a log entry, and set transient
 to mark the time of deactivation.</em></p>
                 <p>Fires on <code>woocommerce_webhook_disabled_due_delivery_failures</code> action.</p>
@@ -410,7 +410,7 @@ to mark the time of deactivation.</em></p>
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
@@ -437,7 +437,7 @@ to mark the time of deactivation.</em></p>
             <article class="method">
                 <h3 class="public ">step_2()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">step_2(  <span class="argument">$http</span>,   <span class="argument">$response</span>,   <span class="argument">$duration</span>,   <span class="argument">$arg</span>,   <span class="argument">$webhook_id</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">step_2(array  <span class="argument">$http</span>, array  <span class="argument">$response</span>, integer  <span class="argument">$duration</span>, string  <span class="argument">$arg</span>, integer  <span class="argument">$webhook_id</span>) </pre>
                 <p><em>Step 2: if webhook was deactivated due to failures, &#039;woocommerce_webhook_delivery&#039; action
 still fires, so let&#039;s use it to log the object the webhook failed to process.</em></p>
                 <p>Fires on <code>woocommerce_webhook_delivery</code> action.</p>
@@ -445,27 +445,27 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$http </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$response </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$duration </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$arg </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
@@ -492,24 +492,24 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
             <article class="method">
                 <h3 class="public ">step_3()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">step_3(  <span class="argument">$webhook_id</span>,   <span class="argument">$time</span>,   <span class="argument">$arg</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">step_3(integer  <span class="argument">$webhook_id</span>, integer  <span class="argument">$time</span>, string  <span class="argument">$arg</span>) </pre>
                 <p><em>Step 3: log first hook argument if webhook disabled due to delivery failure.</em></p>
                 <p>Fires on <code>THEME_PREFIX . '/woocommerce/disabled_webhook_triggered'</code> action.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$time </td>
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$arg </td>
                                 <td></td>
                             </tr>
@@ -536,14 +536,14 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
             <article class="method">
                 <h3 class="public ">step_4()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">step_4(  <span class="argument">$bool</span>, \WC_Webhook  <span class="argument">$webhook</span>,   <span class="argument">$arg</span>) : boolean</pre>
+                <pre class="signature" style="margin-right: 54px;">step_4(boolean  <span class="argument">$bool</span>, \WC_Webhook  <span class="argument">$webhook</span>, string  <span class="argument">$arg</span>) : boolean</pre>
                 <p><em>Step 4: if webhook is disabled, and transient is set, log first hook argument.</em></p>
                 <p>Fires on <code>woocommerce_webhook_should_deliver</code> filter.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>boolean</td>
                                 <td>$bool </td>
                                 <td></td>
                             </tr>
@@ -553,7 +553,7 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$arg </td>
                                 <td></td>
                             </tr>
@@ -582,14 +582,14 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
             <article class="method">
                 <h3 class="public ">step_5()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">step_5(  <span class="argument">$webhook_id</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">step_5(integer  <span class="argument">$webhook_id</span>) </pre>
                 <p><em>Step 5: if transient is set, and webhook is updated to be active, delete the transient.</em></p>
                 <p>Fires on <code>woocommerce_webhook_updated</code> action.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
@@ -616,14 +616,14 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
             <article class="method">
                 <h3 class="protected ">get_webhook_disabled_transient()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">get_webhook_disabled_transient(  <span class="argument">$webhook_id</span>) : boolean</pre>
+                <pre class="signature" style="margin-right: 54px;">get_webhook_disabled_transient(integer  <span class="argument">$webhook_id</span>) : boolean</pre>
                 <p><em>Get webhook deactivated status from transient.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
@@ -652,14 +652,14 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
             <article class="method">
                 <h3 class="protected ">set_webhook_disabled_transient()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">set_webhook_disabled_transient(  <span class="argument">$webhook_id</span>) : boolean</pre>
+                <pre class="signature" style="margin-right: 54px;">set_webhook_disabled_transient(integer  <span class="argument">$webhook_id</span>) : boolean</pre>
                 <p><em>Set webhook deactivated transient to current time.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
@@ -688,14 +688,14 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
             <article class="method">
                 <h3 class="protected ">delete_webhook_disabled_transient()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">delete_webhook_disabled_transient(  <span class="argument">$webhook_id</span>) : boolean</pre>
+                <pre class="signature" style="margin-right: 54px;">delete_webhook_disabled_transient(integer  <span class="argument">$webhook_id</span>) : boolean</pre>
                 <p><em>Delete webhook deactivated transient.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$webhook_id </td>
                                 <td></td>
                             </tr>
@@ -767,7 +767,7 @@ still fires, so let&#039;s use it to log the object the webhook failed to proces
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 25th, 2018 at 05:25.
+                    on May 29th, 2018 at 04:16.
                 </section>
             </section>
         </section>

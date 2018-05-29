@@ -23,6 +23,7 @@ class Calyx_Actions {
 
 		add_action( 'init',               array( &$this, 'init'               ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
+		add_action( 'admin_bar_menu',     array( &$this, 'admin_bar_menu'     ), 50 );
 
 		add_action( THEME_PREFIX . '/compatibility_monitor/version',     array( &$this, '_compatibility_monitor__version'   ), 10, 4 );
 		add_action( THEME_PREFIX . '/compatibility_monitor/internal',    array( &$this, '_compatibility_monitor__hash'      ), 10, 4 );
@@ -78,6 +79,28 @@ class Calyx_Actions {
 		remove_action( 'wp_print_styles',     'print_emoji_styles' );
 		remove_action( 'admin_print_styles',  'print_emoji_styles' );
 
+	}
+
+	/**
+	 * Action: admin_bar_menu
+	 *
+	 * - if WP_DEVELOP, add link to documentation
+	 *
+	 * @param WP_Admin_Bar $bar
+	 */
+	function admin_bar_menu( $bar ) {
+
+		if ( WP_DEVELOP ) {
+			$bar->add_node( array(
+				'id' => THEME_PREFIX . '-docs',
+				'title' => 'View Docs',
+				'parent' => 'site-name',
+				'href' => get_template_directory_uri() . '/includes/_dev/docs',
+				'meta' => array(
+					'target' => '_blank',
+				),
+			) );
+		}
 	}
 
 	/**

@@ -25,6 +25,9 @@ class CSSLLC_EnhanceEnqueues {
 		),
 	);
 
+	/**
+	 * Construct.
+	 */
 	function __construct() {
 
 		if ( !defined( 'SCRIPT_DEBUG' ) || !SCRIPT_DEBUG ) {
@@ -54,6 +57,16 @@ class CSSLLC_EnhanceEnqueues {
 	##       #### ########    ##    ######## ##     ##  ######
 	*/
 
+	/**
+	 * Maybe add noscript tags to stylesheet tag.
+	 *
+	 * @param string $tag    Link stylesheet tag.
+	 * @param string $handle Registered asset handle.
+	 *
+	 * @see 'style_loader_tag' filter hook.
+	 *
+	 * @return string Link stylesheet tag.
+	 */
 	function maybe_enhance_stylesheet__noscript( $tag, $handle ) {
 		if ( empty( wp_styles()->get_data( $handle, 'noscript' ) ) )
 			return $tag;
@@ -61,6 +74,18 @@ class CSSLLC_EnhanceEnqueues {
 		return '<noscript>' . $tag . '</noscript>';
 	}
 
+	/**
+	 * Maybe print critical stylesheet tag.
+	 *
+	 * @param string $tag    Link stylesheet tag.
+	 * @param string $handle Registered asset handle.
+	 * @param string $href   Asset URI.
+	 * @param string $media  Media queries.
+	 *
+	 * @see 'style_loader_tag' filter hook.
+	 *
+	 * @return string Link stylesheet tag.
+	 */
 	function maybe_enhance_stylesheet__critical( $tag, $handle, $href, $media ) {
 		if ( empty( wp_styles()->get_data( $handle, 'critical' ) ) )
 			return $tag;
@@ -69,6 +94,17 @@ class CSSLLC_EnhanceEnqueues {
 			return $this->_maybe_print_stylesheet_inline( $tag, $handle, $href, $media );
 	}
 
+	/**
+	 * Maybe print critical script tag.
+	 *
+	 * @param string $tag    Script HTML tag.
+	 * @param string $handle Registered asset handle.
+	 * @param string $src    Script source URI.
+	 *
+	 * @see 'script_loader_tag' filter hook.
+	 *
+	 * @return string Script tag.
+	 */
 	function maybe_enhance_script__critical( $tag, $handle, $src ) {
 		if ( empty( wp_styles()->get_data( $handle, 'critical' ) ) )
 			return $tag;
@@ -77,6 +113,15 @@ class CSSLLC_EnhanceEnqueues {
 			return $this->_maybe_print_script_inline( $tag, $handle, $src );
 	}
 
+	/**
+	 * Maybe get link preload tag for asset.
+	 *
+	 * @param string $tag    HTML tag for asset.
+	 * @param string $handle Registered asset handle.
+	 * @param string $src    Asset URI.
+	 *
+	 * @return string Original tag, or link with preload.
+	 */
 	function maybe_enhance__preload( $tag, $handle, $src ) {
 		static $once = false;
 
@@ -118,6 +163,15 @@ class CSSLLC_EnhanceEnqueues {
 
 	/**
 	 * Print stylesheet contents inline, if found.
+	 *
+	 * @param string $tag    Link stylesheet tag.
+	 * @param string $handle Registered asset handle.
+	 * @param string $href   Stylesheet URI.
+	 * @param string $media  Media query.
+	 *
+	 * @uses $this::_get_asset_contents()
+	 *
+	 * @return string HTML.
 	 */
 	protected function _maybe_print_stylesheet_inline( $tag, $handle, $href, $media ) {
 		$contents = $this->_get_asset_contents( $href );
@@ -134,7 +188,15 @@ class CSSLLC_EnhanceEnqueues {
 	}
 
 	/**
-	 * Print stylesheet contents inline, if found.
+	 * Print script contents inline, if found.
+	 *
+	 * @param string $tag    Script tag.
+	 * @param string $handle Registered asset handle.
+	 * @param string $src    Script URI.
+	 *
+	 * @uses $this::_get_asset_contents()
+	 *
+	 * @return string HTML.
 	 */
 	protected function _maybe_print_script_inline( $tag, $handle, $src ) {
 		$contents = $this->_get_asset_contents( $src );
@@ -184,6 +246,11 @@ class CSSLLC_EnhanceEnqueues {
 		return apply_filters( 'enhance-enqueues/asset/content', file_get_contents( $path ), $path, $href );
 	}
 
+	/**
+	 * Enqueue preload polyfill if registered.
+	 *
+	 * @link https://github.com/filamentgroup/loadCSS
+	 */
 	function _maybe_enqueue_cssrelpreload() {
 		if ( wp_script_is( 'cssrelpreload' ) )
 			return;
@@ -212,6 +279,11 @@ class CSSLLC_EnhanceEnqueues {
 		return false;
 	}
 
+	/**
+	 * Set script as critical.
+	 *
+	 * @param string $handle Registered script handle.
+	 */
 	static function enhance_script__critical( $handle ) {
 		if ( !array_key_exists( $handle, wp_scripts()->registered ) )
 			return;
@@ -219,6 +291,11 @@ class CSSLLC_EnhanceEnqueues {
 		wp_scripts()->add_data( $handle, 'critical', true );
 	}
 
+	/**
+	 * Set stylesheet as critical.
+	 *
+	 * @param string $handle Registered stylesheet handle.
+	 */
 	static function enhance_stylesheet__critical( $handle ) {
 		if ( !array_key_exists( $handle, wp_styles()->registered ) )
 			return;
@@ -226,6 +303,11 @@ class CSSLLC_EnhanceEnqueues {
 		wp_styles()->add_data( $handle, 'critical', true );
 	}
 
+	/**
+	 * Set stylesheet to load if noscript.
+	 *
+	 * @param string $handle Registered stylesheet handle.
+	 */
 	static function enhance_stylesheet__noscript( $handle ) {
 		if ( !array_key_exists( $handle, wp_styles()->registered ) )
 			return;
@@ -233,6 +315,11 @@ class CSSLLC_EnhanceEnqueues {
 		wp_styles()->add_data( $handle, 'noscript', true );
 	}
 
+	/**
+	 * Set stylesheet to preload.
+	 *
+	 * @param string $handle Registered stylesheet handle.
+	 */
 	static function enhance_stylesheet__preload( $handle ) {
 		if ( !array_key_exists( $handle, wp_styles()->registered ) )
 			return;
@@ -240,6 +327,11 @@ class CSSLLC_EnhanceEnqueues {
 		wp_styles()->add_data( $handle, 'preload', true );
 	}
 
+	/**
+	 * Set script to preload.
+	 *
+	 * @param string $handle Registered script handle.
+	 */
 	static function enhance_script__preload( $handle ) {
 		if ( !array_key_exists( $handle, wp_scripts()->registered ) )
 			return;
@@ -247,6 +339,9 @@ class CSSLLC_EnhanceEnqueues {
 		wp_scripts()->add_data( $handle, 'preload', true );
 	}
 
+	/**
+	 * Tests for debugging purposes.
+	 */
 	function _debug_action__wp_enqueue_scripts() {
 		$handle = 'enhance-enqueues-test';
 

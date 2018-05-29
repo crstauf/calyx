@@ -1,4 +1,7 @@
 <?php
+/**
+ * Monitor WooCommerce webhooks.
+ */
 
 if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -7,12 +10,15 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 }
 
 /**
- * Class to monitor webhooks, specifically, their automatic
+ * Class to monitor WooCommerce webhooks, specifically, the automatic
  * disabling due to successive connection failures.
  */
 class Calyx_WC_MonitorWebhooks {
 	use Calyx_Singleton;
 
+	/**
+	 * Construct.
+	 */
 	function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
@@ -32,6 +38,15 @@ class Calyx_WC_MonitorWebhooks {
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
 
+	/**
+	 * Action: woocommerce_webhook_delivery
+	 *
+	 * @param array  $http_args
+	 * @param array  $response
+	 * @param int    $duration
+	 * @param string $arg
+	 * @param int    $webhook_id
+	 */
 	function action__woocommerce_webhook_delivery( $http_args, $response, $duration, $arg, $webhook_id ) {
 		$webhook = wc_get_webhook( $webhook_id );
 
@@ -69,6 +84,8 @@ class Calyx_WC_MonitorWebhooks {
 	 * to mark the time of deactivation.
 	 *
 	 * Fires on `woocommerce_webhook_disabled_due_delivery_failures` action.
+	 *
+	 * @param int $webhook_id
 	 */
 	function step_1( $webhook_id ) {
 		wc_get_logger()->info( 'Disabled: ' . $webhook_id, array( 'source' => 'wc-webhook-disabled-due-delivery-failure' ) );
@@ -80,6 +97,12 @@ class Calyx_WC_MonitorWebhooks {
 	 * still fires, so let's use it to log the object the webhook failed to process.
 	 *
 	 * Fires on `woocommerce_webhook_delivery` action.
+	 *
+	 * @param array  $http
+	 * @param array  $response
+	 * @param int    $duration
+	 * @param string $arg
+	 * @param int    $webhook_id
 	 */
 	function step_2( $http, $response, $duration, $arg, $webhook_id ) {
 		if (
@@ -97,6 +120,10 @@ class Calyx_WC_MonitorWebhooks {
 	 * Step 3: log first hook argument if webhook disabled due to delivery failure.
 	 *
 	 * Fires on `THEME_PREFIX . '/woocommerce/disabled_webhook_triggered'` action.
+	 *
+	 * @param int    $webhook_id
+	 * @param int    $time
+	 * @param string $arg
 	 */
 	function step_3( $webhook_id, $time, $arg ) {
 		wc_get_logger()->info( $arg, array( 'source' => 'wc-disabled-webhook-' . $webhook_id . '-triggered-' . $this->get_webhook_disabled_transient( $webhook_id ) ) );
@@ -106,6 +133,10 @@ class Calyx_WC_MonitorWebhooks {
 	 * Step 4: if webhook is disabled, and transient is set, log first hook argument.
 	 *
 	 * Fires on `woocommerce_webhook_should_deliver` filter.
+	 *
+	 * @param bool       $bool
+	 * @param WC_Webhook $webhook
+	 * @param string     $arg
 	 *
 	 * @return bool
 	 */
@@ -130,6 +161,8 @@ class Calyx_WC_MonitorWebhooks {
 	 * Step 5: if transient is set, and webhook is updated to be active, delete the transient.
 	 *
 	 * Fires on `woocommerce_webhook_updated` action.
+	 *
+	 * @param int $webhook_id
 	 */
 	function step_5( $webhook_id ) {
 		if ( empty( $this->get_webhook_disabled_transient( $webhook_id ) ) )
@@ -159,6 +192,7 @@ class Calyx_WC_MonitorWebhooks {
 
 	/**
 	 * Get webhook deactivated status from transient.
+	 * @param int $webhook_id
 	 * @return bool
 	 */
 	protected function get_webhook_disabled_transient( $webhook_id ) {
@@ -167,6 +201,7 @@ class Calyx_WC_MonitorWebhooks {
 
 	/**
 	 * Set webhook deactivated transient to current time.
+	 * @param int $webhook_id
 	 * @return bool
 	 */
 	protected function set_webhook_disabled_transient( $webhook_id ) {
@@ -175,6 +210,7 @@ class Calyx_WC_MonitorWebhooks {
 
 	/**
 	 * Delete webhook deactivated transient.
+	 * @param int $webhook_id
 	 * @return bool
 	 */
 	protected function delete_webhook_disabled_transient( $webhook_id ) {

@@ -26,25 +26,33 @@ class Calyx_Filters {
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
 
-	function http_request_args( $r, $url ) {
+	/**
+	 * Filter: http_request_args
+	 *
+	 * @param array  $args
+	 * @param string $url
+	 *
+	 * @return array
+	 */
+	function http_request_args( $args, $url ) {
 		if ( false !== strpos( $url, 'http://api.wordpress.org/themes/update-check' ) )
-			return $r; // Not a theme update request. Bail immediately.
+			return $args; // Not a theme update request. Bail immediately.
 
 		if (
-			is_array( $r )
-			&& count( $r )
-			&& array_key_exists( 'themes', $r )
-			&& is_array( $r['themes'] )
-			&& count( $r['themes'] )
-			&& array_key_exists( 'themes', $r['body'] )
+			is_array( $args )
+			&& count( $args )
+			&& array_key_exists( 'themes', $args )
+			&& is_array( $args['themes'] )
+			&& count( $args['themes'] )
+			&& array_key_exists( 'themes', $args['body'] )
 		) {
-			$r['body']['themes'] = json_decode( $r['body']['themes'] );
+			$args['body']['themes'] = json_decode( $args['body']['themes'] );
 			list( $template, $stylesheet ) = array( get_option( 'template' ), get_option( 'stylesheet' ) );
-			unset( $r['body']['themes']->themes->$template, $r['body']['themes']->themes->$stylesheet );
-			$r['body']['themes'] = json_encode( $r['body']['themes'] );
+			unset( $args['body']['themes']->themes->$template, $args['body']['themes']->themes->$stylesheet );
+			$args['body']['themes'] = json_encode( $args['body']['themes'] );
 		}
 
-		return $r;
+		return $args;
 	}
 
 }

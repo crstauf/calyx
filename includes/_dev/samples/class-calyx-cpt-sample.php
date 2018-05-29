@@ -1,4 +1,7 @@
 <?php
+/**
+ * Sample registration of a custom post type.
+ */
 
 if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -6,15 +9,26 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	exit;
 }
 
+/**
+ * Register 'sample' CPT.
+ */
 class Calyx_CPT_Sample extends _Calyx_CPT {
 
-	protected $_type = 'sample';
-	protected $_plural = 'Sample Posts';
-	protected $_singular = 'Sample Post';
-	protected $_dashicon_code = '\f468';
-	protected $_args = array(
-		'menu_icon' => 'dashicons-sos',
-	);
+	/**
+	 * Construct.
+	 */
+	protected function __construct() {
+
+		$this->_type = 'sample';
+		$this->_plural = 'Samples';
+		$this->_singular = 'Sample';
+		$this->_dashicon_code = '\f468';
+		$this->_args = array(
+			'menu_icon' => 'dashicons-sos',
+		);
+
+		parent::__construct();
+	}
 
 }
 

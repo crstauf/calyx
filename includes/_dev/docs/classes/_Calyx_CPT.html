@@ -106,7 +106,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">142</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">59</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1828833093"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1395716926"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1828833093" class="accordion-body collapse in">
+            <div id="namespace-1395716926" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -483,7 +483,7 @@
                 <h3 class="public ">action__init()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">action__init() </pre>
-                <p><em>Action hook: init</em></p>
+                <p><em>Action: init</em></p>
                 
 
                 
@@ -512,7 +512,7 @@
                 <h3 class="public ">action__admin_init()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">action__admin_init() </pre>
-                <p><em></em></p>
+                <p><em>Action: admin_init</em></p>
                 
 
                 
@@ -537,14 +537,14 @@
             <article class="method">
                 <h3 class="public ">action__save_post()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">action__save_post(\int  <span class="argument">$post_id</span>, \WP_Post  <span class="argument">$post</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">action__save_post(integer  <span class="argument">$post_id</span>, \WP_Post  <span class="argument">$post</span>) </pre>
+                <p><em>Action: save_post</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td>\int</td>
+                                <td>integer</td>
                                 <td>$post_id </td>
                                 <td></td>
                             </tr>
@@ -576,8 +576,8 @@
             <article class="method">
                 <h3 class="public ">filter__dashboard_glance_items()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">filter__dashboard_glance_items(array  <span class="argument">$items</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">filter__dashboard_glance_items(array  <span class="argument">$items</span>) : array</pre>
+                <p><em>Add count of CPT to &#039;At a Glance&#039; dashboard widget.</em></p>
                 
 
                                     <h4>Parameters</h4>
@@ -590,7 +590,9 @@
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    array
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -610,8 +612,8 @@
             <article class="method">
                 <h3 class="public ">filter__post_updated_messages()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">filter__post_updated_messages(array  <span class="argument">$notices</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">filter__post_updated_messages(array  <span class="argument">$notices</span>) : array</pre>
+                <p><em>Add messages for updating the custom post type.</em></p>
                 
 
                                     <h4>Parameters</h4>
@@ -624,7 +626,9 @@
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    array
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -645,7 +649,7 @@
                 <h3 class="public ">get_type()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">get_type() </pre>
-                <p><em></em></p>
+                <p><em>Get CPT name.</em></p>
                 
 
                 
@@ -671,7 +675,7 @@
                 <h3 class="public ">get_nonce()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">get_nonce() </pre>
-                <p><em></em></p>
+                <p><em>Get nonce for CPT .</em></p>
                 
 
                 
@@ -697,7 +701,7 @@
                 <h3 class="public ">get_nonce__action()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">get_nonce__action() </pre>
-                <p><em></em></p>
+                <p><em>Get nonce action for CPT.</em></p>
                 
 
                 
@@ -723,7 +727,7 @@
                 <h3 class="public ">get_nonce__name()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">get_nonce__name() </pre>
-                <p><em></em></p>
+                <p><em>Get nonce name for CPT.</em></p>
                 
 
                 
@@ -749,7 +753,7 @@
                 <h3 class="public ">get_dashicon_code()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">get_dashicon_code() </pre>
-                <p><em></em></p>
+                <p><em>Get WordPress dashicon code for CPT.</em></p>
                 
 
                 
@@ -851,7 +855,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 25th, 2018 at 05:25.
+                    on May 29th, 2018 at 04:16.
                 </section>
             </section>
         </section>

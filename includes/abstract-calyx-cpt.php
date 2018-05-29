@@ -80,7 +80,7 @@ abstract class _Calyx_CPT {
 	*/
 
 	/**
-	 * Action hook: init
+	 * Action: init
 	 *
 	 * @see register_post_type()
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type#Arguments
@@ -164,12 +164,21 @@ abstract class _Calyx_CPT {
 
 	}
 
+	/**
+	 * Action: admin_init
+	 */
 	function action__admin_init() {
 		if ( !empty( $this->_dashicon_code ) )
 			wp_add_inline_style( 'dashicons', '.icon-cpt-' . $this->get_type() . ':before { content: "' . $this->get_dashicon_code() . '" !important; }' );
 	}
 
-	function action__save_post( int $post_id, WP_Post $post ) {
+	/**
+	 * Action: save_post
+	 *
+	 * @param int     $post_id
+	 * @param WP_Post $post
+	 */
+	function action__save_post( $post_id, WP_Post $post ) {
 		if (
 			empty( $this->_postmeta )
 			|| !isset( $_POST )
@@ -200,7 +209,14 @@ abstract class _Calyx_CPT {
 	##       #### ########    ##    ######## ##     ##  ######
 	*/
 
-	function filter__dashboard_glance_items( array $items ) {
+	/**
+	 * Add count of CPT to 'At a Glance' dashboard widget.
+	 *
+	 * @param array $items
+	 *
+	 * @return array
+	 */
+	function filter__dashboard_glance_items( $items ) {
 		$count = wp_count_posts( $this->get_type() );
 
 		$items['count_' . $this->get_type()] =
@@ -211,8 +227,18 @@ abstract class _Calyx_CPT {
 		return $items;
 	}
 
-	function filter__post_updated_messages( array $notices ) {
+	/**
+	 * Add messages for updating the custom post type.
+	 *
+	 * @param array $notices
+	 *
+	 * @return array
+	 */
+	function filter__post_updated_messages( $notices ) {
 		global $post_ID, $post;
+
+		if ( get_post_type( $post ) !== $this->get_type() )
+			return $notices;
 
 		$object = get_post_type_object( get_post_type( $post ) );
 
@@ -244,10 +270,19 @@ abstract class _Calyx_CPT {
 	##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
 	*/
 
+	/** Get CPT name. */
 	function get_type()  { return $this->_type; }
+
+	/** Get nonce for CPT .*/
 	function get_nonce() { return wp_create_nonce( $this->get_nonce__action() ); }
+
+	/** Get nonce action for CPT. */
 	function get_nonce__action() { return $this->_nonce['action']; }
-	function get_nonce__name()   { return $this->_nonce['name'];   }
+
+	/** Get nonce name for CPT. */
+	function get_nonce__name()   { return $this->_nonce['name']; }
+
+	/** Get WordPress dashicon code for CPT. */
 	function get_dashicon_code() { return $this->_dashicon_code;   }
 
 }
