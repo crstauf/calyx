@@ -24,6 +24,7 @@ class Calyx_Front_Actions {
 		add_action( 'init',               array( &$this, 'init'                  ) );
 		add_action( 'wp_head',            array( &$this, 'wp_head'               ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts__0' ), 0 );
+		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts__5' ), 5 );
 		add_action( 'wp_footer',          array( &$this, 'wp_footer'             ) );
 
 		do_action( 'qm/stop', __METHOD__ . '()' );
@@ -35,6 +36,8 @@ class Calyx_Front_Actions {
 	 * @uses Calyx_Front::_register_vendor_assets() to register vendor assets.
 	 */
 	function init() {
+
+		wp_register_style( THEME_PREFIX . '/styles', get_theme_file_uri( 'style.css' ), array( THEME_PREFIX . '/copy' ), 'init' );
 
 		Calyx()->front()->_register_vendor_assets();
 
@@ -59,7 +62,8 @@ class Calyx_Front_Actions {
 	/**
 	 * Action: wp_enqueue_scripts, priority 0
 	 *
-	 * - enqueue modernizr and lazysizes early
+	 * - enqueue modernizr script
+	 * - enqueue lazysizes script
 	 */
 	function wp_enqueue_scripts__0() {
 
@@ -69,9 +73,21 @@ class Calyx_Front_Actions {
 	}
 
 	/**
+	 * Action: wp_enqueue_scripts, priority 5
+	 *
+	 * - enqueue copy stylesheet
+	 */
+	function wp_enqueue_scripts__5() {
+
+		 wp_enqueue_style( THEME_PREFIX . '/copy' );
+		wp_style_add_data( THEME_PREFIX . '/copy', 'critical', true );
+
+	}
+
+	/**
 	 * Action: wp_footer
 	 *
-	 * - enqueue webfontloader
+	 * - enqueue webfontloader script
 	 */
 	function wp_footer() {
 

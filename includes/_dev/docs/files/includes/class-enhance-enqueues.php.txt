@@ -6,7 +6,7 @@
 /**
  * Class to enhance WordPress enqueues.
  *
- * Possible properties: critical, noscript, preload.
+ * Possible properties: critical, noscript, preload, inline.
  */
 class CSSLLC_EnhanceEnqueues {
 
@@ -17,11 +17,13 @@ class CSSLLC_EnhanceEnqueues {
 		'script' => array(
 			'preload',
 			'critical',
+			'inline',
 		),
 		'style' => array(
 			'preload',
 			'critical',
 			'noscript',
+			'inline',
 		),
 	);
 
@@ -34,6 +36,9 @@ class CSSLLC_EnhanceEnqueues {
 
 			add_filter(  'style_loader_tag', array( &$this, 'maybe_enhance_stylesheet__critical' ), 999, 4 );
 			add_filter( 'script_loader_tag', array( &$this, 'maybe_enhance_script__critical'     ), 999, 3 );
+
+			add_filter(  'style_loader_tag', array( &$this, 'maybe_enhance_stylesheet__inline' ), 999, 4 );
+			add_filter( 'script_laoder_tag', array( &$this, 'maybe_enhance_script__inline'     ), 999, 3 );
 
 			add_filter(  'style_loader_tag', array( &$this, 'maybe_enhance__preload' ), 999, 3 );
 			add_filter( 'script_loader_tag', array( &$this, 'maybe_enhance__preload' ), 999, 3 );
@@ -148,6 +153,43 @@ class CSSLLC_EnhanceEnqueues {
 		|| $preload_tag .= "\n";
 
 		return str_replace( $search, $preload_tag, $tag );
+	}
+
+	/**
+	 * Maybe print script inline.
+	 *
+	 * @param string $tag    HTML tag for script.
+	 * @param string $handle Registered script handle.
+	 * @param string $src    Script source URI.
+	 *
+	 * @see 'script_loader_tag' filter hook.
+	 *
+	 * @return string Script tag.
+	 */
+	function maybe_enhance_script__inline( $tag, $handle, $src ) {
+		if ( empty( wp_scripts()->get_data( $handle, 'inline' ) ) )
+			return $tag;
+
+		return $this->_maybe_print_script_inline( $tag, $handle, $src );
+	}
+
+	/**
+	 * Maybe print stylesheet inline.
+	 *
+	 * @param string $tag    Link stylesheet tag.
+	 * @param string $handle Registered asset handle.
+	 * @param string $href   Asset URI.
+	 * @param string $media  Media queries.
+	 *
+	 * @see 'style_loader_tag' filter hook.
+	 *
+	 * @return string Link stylesheet tag.
+	 */
+	function maybe_enhance_stylesheet__inline( $tag, $handle, $href, $media ) {
+		if ( empty( wp_styles()->get_data( $handle, 'inline' ) ) )
+			return $tag;
+
+		return $this->_maybe_print_stylesheet__inline( $tag, $handle, $href, $media );
 	}
 
 
@@ -273,6 +315,7 @@ class CSSLLC_EnhanceEnqueues {
 
 	/**
 	 * Check if server version supports http2 push.
+	 * @todo Add server support detection.
 	 * @return bool
 	 */
 	function server_supports_http2_push() {
@@ -288,6 +331,7 @@ class CSSLLC_EnhanceEnqueues {
 		if ( !array_key_exists( $handle, wp_scripts()->registered ) )
 			return;
 
+
 		wp_scripts()->add_data( $handle, 'critical', true );
 	}
 
@@ -300,7 +344,7 @@ class CSSLLC_EnhanceEnqueues {
 		if ( !array_key_exists( $handle, wp_styles()->registered ) )
 			return;
 
-		wp_styles()->add_data( $handle, 'critical', true );
+		wp_style_add_data( $handle, 'critical', true );
 	}
 
 	/**
@@ -312,7 +356,7 @@ class CSSLLC_EnhanceEnqueues {
 		if ( !array_key_exists( $handle, wp_styles()->registered ) )
 			return;
 
-		wp_styles()->add_data( $handle, 'noscript', true );
+		wp_style_add_data( $handle, 'noscript', true );
 	}
 
 	/**
@@ -324,7 +368,7 @@ class CSSLLC_EnhanceEnqueues {
 		if ( !array_key_exists( $handle, wp_styles()->registered ) )
 			return;
 
-		wp_styles()->add_data( $handle, 'preload', true );
+		wp_style_add_data( $handle, 'preload', true );
 	}
 
 	/**
@@ -336,7 +380,31 @@ class CSSLLC_EnhanceEnqueues {
 		if ( !array_key_exists( $handle, wp_scripts()->registered ) )
 			return;
 
-		wp_scripts()->add_data( $handle, 'preload', true );
+		wp_script_add_data( $handle, 'preload', true );
+	}
+
+	/**
+	 * Set script to print inline.
+	 *
+	 * @param string $handle Registered script handle.
+	 */
+	static function enhance_script__inline( $handle ) {
+		if ( !array_key_exists( $handle, wp_scripts()->registered ) )
+			return;
+
+		wp_script_add_data( $handle, 'inline', true );
+	}
+
+	/**
+	 * Set stylesheet to print inline.
+	 *
+	 * @param string $handle Registered stylesheet handle.
+	 */
+	static function enhance_stylesheet__inline( $handle ) {
+		if ( !array_key_exists( $handle, wp_styles()->registered ) )
+			return;
+
+		wp_style_add_data( $handle, 'inline', true );
 	}
 
 	/**

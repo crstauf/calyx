@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">59</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">1</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1816973748"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1178234447"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1816973748" class="accordion-body collapse in">
+            <div id="namespace-1178234447" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -284,13 +284,13 @@
             <a id="property_src" name="property_src" class="anchor"></a>
             <article class="property">
                 <h3 class="protected ">$src</h3>
-                <pre class="signature">$src : </pre>
+                <pre class="signature">$src : string</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                
-                                            </article>
+                string
+                &mdash; Image size URI.                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -308,13 +308,13 @@
             <a id="property_width" name="property_width" class="anchor"></a>
             <article class="property">
                 <h3 class="protected ">$width</h3>
-                <pre class="signature">$width : </pre>
+                <pre class="signature">$width : string</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                
-                                            </article>
+                string
+                &mdash; Image size URI.                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -332,13 +332,13 @@
             <a id="property_height" name="property_height" class="anchor"></a>
             <article class="property">
                 <h3 class="protected ">$height</h3>
-                <pre class="signature">$height : </pre>
+                <pre class="signature">$height : string</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                
-                                            </article>
+                string
+                &mdash; Image size URI.                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -356,13 +356,13 @@
             <a id="property_orientation" name="property_orientation" class="anchor"></a>
             <article class="property">
                 <h3 class="protected ">$orientation</h3>
-                <pre class="signature">$orientation : </pre>
+                <pre class="signature">$orientation : string</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                
-                                            </article>
+                string
+                &mdash; Image size URI.                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -427,21 +427,23 @@
             <article class="method">
                 <h3 class="public ">get()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">get(\string  <span class="argument">$prop</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">get(string  <span class="argument">$prop</span>) : string|integer</pre>
+                <p><em>Get image size property.</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td>\string</td>
+                                <td>string</td>
                                 <td>$prop </td>
-                                <td></td>
+                                <td><p>Property name.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string|integer
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -462,7 +464,7 @@
                 <h3 class="public ">exists()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">exists() </pre>
-                <p><em></em></p>
+                <p><em>Check if size has image URI.</em></p>
                 
 
                 
@@ -530,7 +532,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on May 29th, 2018 at 04:16.
+                    on June 11th, 2018 at 02:16.
                 </section>
             </section>
         </section>

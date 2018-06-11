@@ -24,6 +24,7 @@ defined( 'CONCATENATE_SCRIPTS' ) || define( 'CONCATENATE_SCRIPTS', !WP_DEVELOP |
 defined( 'COMPRESS_SCRIPTS'    ) || define( 'COMPRESS_SCRIPTS',    !WP_DEVELOP || !SCRIPT_DEBUG );
 defined( 'COMPRESS_CSS'        ) || define( 'COMPRESS_CSS',        !WP_DEVELOP || !SCRIPT_DEBUG );
 defined( 'QM_DISABLED'         ) || define( 'QM_DISABLED',         !WP_DEBUG );
+defined( 'QMX_DISABLED'        ) || define( 'QMX_DISABLED',         QM_DISABLED );
 defined( 'ACF_LITE'            ) || define( 'ACF_LITE',            !WP_DEVELOP );
 
 ?>

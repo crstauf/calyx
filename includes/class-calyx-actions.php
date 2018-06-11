@@ -84,13 +84,13 @@ class Calyx_Actions {
 	/**
 	 * Action: admin_bar_menu
 	 *
-	 * - if WP_DEVELOP, add link to documentation
+	 * - if WP_LOCAL_DEV or WP_DEVELOP constants are true, add link to documentation.
 	 *
 	 * @param WP_Admin_Bar $bar
 	 */
 	function admin_bar_menu( $bar ) {
 
-		if ( WP_DEVELOP ) {
+		if ( WP_LOCAL_DEV || WP_DEVELOP ) {
 			$bar->add_node( array(
 				'id' => THEME_PREFIX . '-docs',
 				'title' => 'View Docs',
@@ -101,6 +101,7 @@ class Calyx_Actions {
 				),
 			) );
 		}
+
 	}
 
 	/**

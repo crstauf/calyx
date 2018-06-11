@@ -22,7 +22,7 @@ class Calyx_WC_MonitorWebhooks {
 	function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
-		do_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', __CLASS__, '3.3.5' );
+		do_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', __CLASS__, '3.4.0' );
 
 		add_action( 'woocommerce_webhook_delivery', array( &$this, 'action__woocommerce_webhook_delivery' ), 10, 5 );
 

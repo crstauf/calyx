@@ -29,6 +29,8 @@ class Calyx_Filters {
 	/**
 	 * Filter: http_request_args
 	 *
+	 * Prevent update checks for theme.
+	 *
 	 * @param array  $args
 	 * @param string $url
 	 *

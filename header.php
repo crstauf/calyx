@@ -11,8 +11,10 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 ?>
 
 <!DOCTYPE html>
-<html <?php language_attributes() ?>>
+<html <?php language_attributes() ?> class="no-js">
 <head>
+
+	<script type="text/javascript">document.documentElement.className = document.documentElement.className.replace( 'no-js', 'js' );</script>
 
 	<?php wp_head() ?>
 

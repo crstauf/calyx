@@ -38,4 +38,6 @@ function _temporary_action__wp_footer() {
 }
 // add_action( 'wp_footer', '_temporary_action__wp_footer' );
 
+add_action( 'wp_footer', 'image_tag__debug' );
+
 ?>
