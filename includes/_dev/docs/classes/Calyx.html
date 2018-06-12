@@ -111,7 +111,7 @@
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">1</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">2</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-400725271"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-494513533"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-400725271" class="accordion-body collapse in">
+            <div id="namespace-494513533" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -221,6 +221,15 @@
                                                                     <a href="../classes/Calyx.html#method_filters" class="">filters()</a><br />
                                                                     <a href="../classes/Calyx.html#method_wc" class="">wc()</a><br />
                                                                     <a href="../classes/Calyx.html#method_data" class="">data()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_add_acf" class="">add_acf()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_add_acfs" class="">add_acfs()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_set_acf" class="">set_acf()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_has_acfs" class="">has_acfs()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_has_acf" class="">has_acf()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_get_acfs" class="">get_acfs()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_get_acf" class="">get_acf()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_load_acf" class="">load_acf()</a><br />
+                                                                    <a href="../classes/Calyx.html#method_load_acfs" class="">load_acfs()</a><br />
                                                                     <a href="../classes/Calyx.html#method_has_cpt" class="">has_cpt()</a><br />
                                                                     <a href="../classes/Calyx.html#method_add_cpt" class="">add_cpt()</a><br />
                                                                     <a href="../classes/Calyx.html#method_get_cpt" class="">get_cpt()</a><br />
@@ -271,6 +280,7 @@
                                                                     <a href="../classes/Calyx.html#property__filters" class="">$_filters</a><br />
                                                                     <a href="../classes/Calyx.html#property__woocommerce" class="">$_woocommerce</a><br />
                                                                     <a href="../classes/Calyx.html#property__cpts" class="">$_cpts</a><br />
+                                                                    <a href="../classes/Calyx.html#property__acfs" class="">$_acfs</a><br />
                                                             </section>
                             <section class="span4">
                                 <em>N/A</em>
@@ -528,6 +538,30 @@
                                 <h4>Type</h4>
                 array
                 &mdash; Array of CPT helpers.                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__acfs" name="property__acfs" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_acfs</h3>
+                <pre class="signature">$_acfs : array</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; Array of ACF PHP files.                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -1005,6 +1039,322 @@
                                                             <dl>
                                                                                                             <dt>Uses</dt>
                                                                 <dd>Calyx_Data::__data()</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_add_acf" name="method_add_acf" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">add_acf()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">add_acf(string  <span class="argument">$handle</span>, string  <span class="argument">$path</span>) : boolean</pre>
+                <p><em>Add ACF file.</em></p>
+                <p>Will not overwrite already registered handles.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$handle </td>
+                                <td><p>ACF file handle.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$path </td>
+                                <td><p>Path to ACF file.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>Calyx::has_acf()</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_add_acfs" name="method_add_acfs" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">add_acfs()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">add_acfs(array  <span class="argument">$acfs</span>) </pre>
+                <p><em>Add multiple ACF files.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$acfs </td>
+                                <td><p>array( handle =&gt; path, handle =&gt; path, ... )</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_set_acf" name="method_set_acf" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">set_acf()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">set_acf(string  <span class="argument">$handle</span>, string  <span class="argument">$path</span>) </pre>
+                <p><em>Set ACF handle and path.</em></p>
+                <p>Will overwrite an existing registration.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$handle </td>
+                                <td><p>ACF file handle.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$path </td>
+                                <td><p>ACF file path.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_has_acfs" name="method_has_acfs" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">has_acfs()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">has_acfs() : boolean</pre>
+                <p><em>Check if any ACF files are registered.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>Calyx::get_acfs()</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_has_acf" name="method_has_acf" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">has_acf()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">has_acf(string  <span class="argument">$handle</span>) : boolean</pre>
+                <p><em>Check if ACF file handle is registered.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$handle </td>
+                                <td><p>ACF file handle.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_acfs" name="method_get_acfs" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_acfs()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_acfs() : array</pre>
+                <p><em>Get all ACF handles and paths.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>array( handle =&gt; file path )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_acf" name="method_get_acf" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_acf()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_acf(string  <span class="argument">$handle</span>) : null|string</pre>
+                <p><em>Get ACF path.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$handle </td>
+                                <td><p>ACF file handle.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    null|string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>Calyx::has_acf()</dd>
+                                            <dd>Calyx::get_acfs();</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_load_acf" name="method_load_acf" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">load_acf()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">load_acf(string  <span class="argument">$handle</span>) </pre>
+                <p><em>Load specified ACF.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$handle </td>
+                                <td><p>ACF file handle.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>Calyx::has_acf()</dd>
+                                            <dd>Calyx::get_acf()</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_load_acfs" name="method_load_acfs" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">load_acfs()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">load_acfs() </pre>
+                <p><em>Load all registered ACF files.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>Calyx::get_acfs()</dd>
+                                            <dd>Calyx::load_acf()</dd>
                                                 </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
@@ -1596,7 +1946,7 @@ Next: initialize().</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on June 11th, 2018 at 06:54.
+                    on June 12th, 2018 at 06:02.
                 </section>
             </section>
         </section>

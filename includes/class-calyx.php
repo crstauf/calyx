@@ -36,6 +36,9 @@ final class Calyx {
 	/** @var array Array of CPT helpers. */
 	private $_cpts = array();
 
+	/** @var array Array of ACF PHP files. */
+	private $_acfs = array();
+
 
 	/*
 	 ######   #######  ##    ##  ######  ######## ########  ##     ##  ######  ########
@@ -185,7 +188,11 @@ final class Calyx {
 	 *
 	 * @return Calyx_Admin|Calyx_Admin_Actions|Calyx_Admin_Filters
 	 */
-	function admin( $hook = null ) { return is_null( $hook ) ? $this->_admin : $this->_admin->$hook(); }
+	function admin( $hook = null ) {
+		return is_null( $hook )
+			? $this->_admin
+			: $this->_admin->$hook();
+	}
 
 	/**
 	 * Public access to $_front property.
@@ -194,15 +201,25 @@ final class Calyx {
 	 *
 	 * @return Calyx_Front|Calyx_Front_Actions|Calyx_Front_Filters
 	 */
-	function front( $hook = null ) { return is_null( $hook ) ? $this->_front : $this->_front->$hook(); }
+	function front( $hook = null ) {
+		return is_null( $hook )
+			? $this->_front
+			: $this->_front->$hook();
+	}
 
-	/** Public access to $_actions property. */
+	/**
+	 * Public access to $_actions property.
+	 */
 	function actions() { return $this->_actions; }
 
-	/** Public access to $_filters property. */
+	/**
+	 * Public access to $_filters property.
+	 */
 	function filters() { return $this->_filters; }
 
-	/** Public access to $_woocommerce property. */
+	/**
+	 * Public access to $_woocommerce property.
+	 */
 	function wc() { return $this->_woocommerce; }
 
 	/**
@@ -218,6 +235,146 @@ final class Calyx {
 	 */
 	function data( string $key = null, $value = null, bool $force = false ) {
 		return $this->_data->__data( $key, $value, $force );
+	}
+
+
+	/*
+	   ###     ######  ########  ######
+	  ## ##   ##    ## ##       ##    ##
+	 ##   ##  ##       ##       ##
+	##     ## ##       ######    ######
+	######### ##       ##             ##
+	##     ## ##    ## ##       ##    ##
+	##     ##  ######  ##        ######
+	*/
+
+	/**
+	 * Add ACF file.
+	 *
+	 * Will not overwrite already registered handles.
+	 *
+	 * @param string $handle ACF file handle.
+	 * @param string $path   Path to ACF file.
+	 *
+	 * @uses Calyx::has_acf()
+	 *
+	 * @return bool
+	 */
+	function add_acf( $handle, $path ) {
+		if ( $this->has_acf( $handle ) )
+			return false;
+
+		$this->_acfs[$handle] = $path;
+
+		return $this->has_acf( $handle );
+	}
+
+	/**
+	 * Add multiple ACF files.
+	 *
+	 * @param array $acfs array( handle => path, handle => path, ... )
+	 */
+	function add_acfs( $acfs ) {
+		foreach ( $acfs as $handle => $path )
+			$this->add_acf( $handle, $path );
+	}
+
+	/**
+	 * Set ACF handle and path.
+	 *
+	 * Will overwrite an existing registration.
+	 *
+	 * @param string $handle ACF file handle.
+	 * @param string $path   ACF file path.
+	 */
+	function set_acf( $handle, $path ) {
+		$this->_acfs[$handle] = $path;
+	}
+
+	/**
+	 * Check if any ACF files are registered.
+	 *
+	 * @uses Calyx::get_acfs()
+	 *
+	 * @return bool
+	 */
+	function has_acfs() {
+		return !empty( $this->get_acfs() );
+	}
+
+	/**
+	 * Check if ACF file handle is registered.
+	 *
+	 * @param string $handle ACF file handle.
+	 *
+	 * @return bool
+	 */
+	function has_acf( $handle ) {
+		return array_key_exists( $handle, $this->_acfs );
+	}
+
+	/**
+	 * Get all ACF handles and paths.
+	 *
+	 * @return array array( handle => file path )
+	 */
+	function get_acfs() {
+		return $this->_acfs;
+	}
+
+	/**
+	 * Get ACF path.
+	 *
+	 * @param string $handle ACF file handle.
+	 *
+	 * @uses Calyx::has_acf()
+	 * @uses Calyx::get_acfs();
+	 *
+	 * @return null|string
+	 */
+	function get_acf( $handle ) {
+		if ( !$this->has_acf( $handle ) )
+			return null;
+
+		$acfs = $this->get_acfs();
+
+		return $acfs[$handle];
+	}
+
+	/**
+	 * Load specified ACF.
+	 *
+	 * @param string $handle ACF file handle.
+	 *
+	 * @uses Calyx::has_acf()
+	 * @uses Calyx::get_acf()
+	 */
+	function load_acf( $handle ) {
+		if ( !$this->has_acf( $handle ) )
+			return;
+
+		$path = $this->get_acf( $handle );
+
+		locate_template( $path );
+		do_action( THEME_PREFIX . '/acfs/loaded_' . $handle, $path );
+	}
+
+	/**
+	 * Load all registered ACF files.
+	 *
+	 * @uses Calyx::get_acfs()
+	 * @uses Calyx::load_acf()
+	 */
+	function load_acfs() {
+		if ( !is_admin() )
+			_doing_it_wrong( __METHOD__, 'Loading all ACFs should be done only in the admin.', '1.0' );
+
+		do_action( THEME_PREFIX . '/acfs/loading_all' );
+
+		foreach ( array_keys( $this->get_acfs() ) as $handle )
+			$this->load_acf( $handle );
+
+		do_action( THEME_PREFIX . '/acfs/loaded_all' );
 	}
 
 
