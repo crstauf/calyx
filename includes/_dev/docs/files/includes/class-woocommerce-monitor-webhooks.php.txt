@@ -13,7 +13,7 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
  * Class to monitor WooCommerce webhooks, specifically, the automatic
  * disabling due to successive connection failures.
  */
-class Calyx_WC_MonitorWebhooks {
+class Calyx_WooCommerce_MonitorWebhooks {
 	use Calyx_Singleton;
 
 	/**
@@ -220,3 +220,4 @@ class Calyx_WC_MonitorWebhooks {
 }
 
 ?>
+

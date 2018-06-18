@@ -71,4 +71,81 @@ if ( !function_exists( 'is_woocommerce_active' ) ) {
 
 }
 
+if ( !function_exists( 'hex2rgb' ) ) {
+
+	/**
+	 * Convert a hexadecimal value to rgb values.
+	 *
+	 * @param string $hex     #RRGGBB.
+	 * @param float  $opacity Opacity/alpha value.
+	 *
+	 * @link https://css-tricks.com/snippets/php/convert-hex-to-rgb/ Reference.
+	 *
+	 * @return string rgb() or rgba() value
+	 */
+	function hex_to_rgb( $hex, $opacity = false ) {
+		if ( '#' === $hex[0] )
+			$hex = substr( $hex, 1 );
+
+		if ( !in_array( strlen( $hex ), array( 3, 6 ) ) )
+			return false;
+
+		$hexes = (
+			6 === strlen( $hex )
+			? array( $hex[0] . $hex[1], $hex[2] . $hex[3], $hex[4] . $hex[5] )
+			: array( $hex[0] . $hex[0], $hex[1] . $hex[1], $hex[2] . $hex[2] )
+		);
+
+		$decimals = array_map( 'hexdec', $hexes );
+
+		if ( $opacity )
+			$decimals[] = $opacity <= 1
+				? $opacity
+				: $opacity / 100;
+
+		return $opacity
+			? 'rgba( ' . implode( ', ', $decimals ) . ' )'
+			: 'rgb( '  . implode( ', ', $decimals ) . ' )';
+	}
+
+}
+
+if ( !function_exists( 'maybe_minify_js' ) ) {
+
+	/**
+	 * Maybe minify JavaScript.
+	 *
+	 * @param string $js JavaScript code.
+	 *
+	 * @uses Calyx_Minify::js()
+	 *
+	 * @return string
+	 */
+	function maybe_minify_js( $js ) {
+		return !SCRIPT_DEBUG && COMPRESS_JS
+			? calyx_minify()->js( $js )
+			: $js;
+	}
+
+}
+
+if ( !function_exists( 'maybe_minify_css' ) ) {
+
+	/**
+	 * Maybe minify styles.
+	 *
+	 * @param string $css Styles code.
+	 *
+	 * @uses Calyx_Minify::css()
+	 *
+	 * @return string
+	 */
+	function maybe_minify_css( $css ) {
+		return !SCRIPT_DEBUG && COMPRESS_CSS
+			? calyx_minify()->css( $css )
+			: $css;
+	}
+
+}
+
 ?>

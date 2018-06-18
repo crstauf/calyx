@@ -249,24 +249,38 @@ final class Calyx {
 	*/
 
 	/**
+	 * Get absolute path to ACFs directory.
+	 *
+	 * @param null|string $relative_path Path relative to ACF directory.
+	 *
+	 * @return string
+	 */
+	function get_acfs_path( $relative_path = null ) {
+		return CALYX_ABSPATH . 'includes/acf/' . ( !is_null( $relative_path ) ? $relative_path : '' );
+	}
+
+	/**
 	 * Add ACF file.
 	 *
 	 * Will not overwrite already registered handles.
 	 *
-	 * @param string $handle ACF file handle.
-	 * @param string $path   Path to ACF file.
+	 * @param string $handle        ACF file handle.
+	 * @param string $relative_path Path to ACF file, relative to ACFs directory.
 	 *
-	 * @uses Calyx::has_acf()
+	 * @uses Calyx::has_acf_file()
 	 *
 	 * @return bool
 	 */
-	function add_acf( $handle, $path ) {
-		if ( $this->has_acf( $handle ) )
+	function add_acf_file( $handle, $relative_path ) {
+		if ( $this->has_acf_file( $handle ) )
 			return false;
 
-		$this->_acfs[$handle] = $path;
+		$path = $this->get_acfs_path( $relative_path );
 
-		return $this->has_acf( $handle );
+		if ( file_exists( $path ) )
+			$this->_acfs[$handle] = $path;
+
+		return $this->has_acf_file( $handle );
 	}
 
 	/**
@@ -274,9 +288,9 @@ final class Calyx {
 	 *
 	 * @param array $acfs array( handle => path, handle => path, ... )
 	 */
-	function add_acfs( $acfs ) {
+	function add_acf_files( $acfs ) {
 		foreach ( $acfs as $handle => $path )
-			$this->add_acf( $handle, $path );
+			$this->add_acf_file( $handle, $path );
 	}
 
 	/**
@@ -284,22 +298,22 @@ final class Calyx {
 	 *
 	 * Will overwrite an existing registration.
 	 *
-	 * @param string $handle ACF file handle.
-	 * @param string $path   ACF file path.
+	 * @param string $handle        ACF file handle.
+	 * @param string $relative_path ACF file path, relative to ACFs directory.
 	 */
-	function set_acf( $handle, $path ) {
-		$this->_acfs[$handle] = $path;
+	function set_acf_file( $handle, $relative_path ) {
+		$this->_acfs[$handle] = $relative_path;
 	}
 
 	/**
 	 * Check if any ACF files are registered.
 	 *
-	 * @uses Calyx::get_acfs()
+	 * @uses Calyx::get_acf_files()
 	 *
 	 * @return bool
 	 */
-	function has_acfs() {
-		return !empty( $this->get_acfs() );
+	function has_acf_files() {
+		return !empty( $this->get_acf_files() );
 	}
 
 	/**
@@ -309,7 +323,7 @@ final class Calyx {
 	 *
 	 * @return bool
 	 */
-	function has_acf( $handle ) {
+	function has_acf_file( $handle ) {
 		return array_key_exists( $handle, $this->_acfs );
 	}
 
@@ -318,7 +332,7 @@ final class Calyx {
 	 *
 	 * @return array array( handle => file path )
 	 */
-	function get_acfs() {
+	function get_acf_files() {
 		return $this->_acfs;
 	}
 
@@ -327,16 +341,16 @@ final class Calyx {
 	 *
 	 * @param string $handle ACF file handle.
 	 *
-	 * @uses Calyx::has_acf()
-	 * @uses Calyx::get_acfs();
+	 * @uses Calyx::has_acf_file()
+	 * @uses Calyx::get_acf_files();
 	 *
 	 * @return null|string
 	 */
-	function get_acf( $handle ) {
-		if ( !$this->has_acf( $handle ) )
+	function get_acf_file( $handle ) {
+		if ( !$this->has_acf_file( $handle ) )
 			return null;
 
-		$acfs = $this->get_acfs();
+		$acfs = $this->get_acf_files();
 
 		return $acfs[$handle];
 	}
@@ -346,36 +360,20 @@ final class Calyx {
 	 *
 	 * @param string $handle ACF file handle.
 	 *
-	 * @uses Calyx::has_acf()
-	 * @uses Calyx::get_acf()
+	 * @uses Calyx::has_acf_file()
+	 * @uses Calyx::get_acf_file()
 	 */
-	function load_acf( $handle ) {
-		if ( !$this->has_acf( $handle ) )
+	function load_acf_file( $handle ) {
+		if ( !$this->has_acf_file( $handle ) )
 			return;
 
-		$path = $this->get_acf( $handle );
+		$path = $this->get_acf_file( $handle );
 
 		locate_template( $path );
 		do_action( THEME_PREFIX . '/acfs/loaded_' . $handle, $path );
 	}
 
-	/**
-	 * Load all registered ACF files.
-	 *
-	 * @uses Calyx::get_acfs()
-	 * @uses Calyx::load_acf()
-	 */
-	function load_acfs() {
-		if ( !is_admin() )
-			_doing_it_wrong( __METHOD__, 'Loading all ACFs should be done only in the admin.', '1.0' );
 
-		do_action( THEME_PREFIX . '/acfs/loading_all' );
-
-		foreach ( array_keys( $this->get_acfs() ) as $handle )
-			$this->load_acf( $handle );
-
-		do_action( THEME_PREFIX . '/acfs/loaded_all' );
-	}
 
 
 	/*
@@ -458,10 +456,11 @@ final class Calyx {
 	function is_server_high_load() {
 		return (
 			(
-				       defined( THEME_PREFIX . '_HIGH_LOAD' )
-				   && constant( THEME_PREFIX . '_HIGH_LOAD' )
+				       defined( 'CALYX_HIGH_LOAD' )
+				   && constant( 'CALYX_HIGH_LOAD' )
 			)
-			|| !!get_transient( THEME_PREFIX . '_HIGH_LOAD' )
+			|| !!get_transient( 'CALYX_HIGH_LOAD' )
+			|| !!get_option(    'CALYX_HIGH_LOAD' )
 			|| $this->is_server_extreme_load()
 		);
 	}
@@ -472,10 +471,11 @@ final class Calyx {
 	function is_server_extreme_load() {
 		 return (
 			(
-				       defined( THEME_PREFIX . '_EXTREME_LOAD' )
-				   && constant( THEME_PREFIX . '_EXTREME_LOAD' )
+				       defined( 'CALYX_EXTREME_LOAD' )
+				   && constant( 'CALYX_EXTREME_LOAD' )
 			)
-			|| !!get_transient( THEME_PREFIX . '_EXTREME_LOAD' )
+			|| !!get_transient( 'CALYX_EXTREME_LOAD' )
+			|| !!get_option(    'CALYX_EXTREME_LOAD' )
 		);
 	}
 

@@ -16,11 +16,6 @@ class Calyx_Data {
 	use Calyx_Singleton;
 
 	/**
-	 * @var $_storeroom Array of stored data.
-	 */
-	private $_storeroom = array();
-
-	/**
 	 * Construct.
 	 */
 	protected function __construct() {
@@ -30,111 +25,58 @@ class Calyx_Data {
 	}
 
 	/**
-	 * Generate cache key.
-	 *
-	 * @param mixed  $unhashed_key Unhashed key data for cache value.
-	 * @param string $prefix       A string to label the data's use or source.
-	 *
-	 * @return string md5 hash of JSON encoded key data.
-	 */
-	function get_key( $unhashed_key, $prefix = null ) {
-		empty( $prefix ) || $prefix .= '_';
-		return md5( $prefix . json_encode( $unhashed_key ) );
+	* Set long life transient data.
+	*
+	* @param string $transient  Transient name.
+	* @param mixed  $value      Transient value.
+	* @param int    $expiration Transient expiration.
+	*/
+	function set_long_life_transient( $transient, $value, $expiration ) {
+		if ( !wp_using_ext_object_cache() )
+			return set_transient( $transient, $value, $expiration );
+
+		return (
+			   update_option( '_longlife_' . $transient, $value )
+			&& update_option( '_longlife_timeout_' . $transient, time() + $expiration )
+		);
 	}
 
 	/**
-	 * Check if cache key exists.
+	 * Get long life transient data.
 	 *
-	 * @param string $key Hashed data identifier.
+	 * @param string $transient Transient name.
 	 *
-	 * @return bool
+	 * @return bool|mixed
 	 */
-	function exists( string $key ) {
-		return array_key_exists( $key, $this->_storeroom );
+	function get_long_life_transient( $transient ) {
+		if ( !wp_using_ext_object_cache() )
+			return get_transient( $transient );
+
+		$option = get_option( '_longlife_' . $transient );
+		$timeout = get_option( '_longlife_timeout_' . $transient );
+
+		if (
+			false !== $timeout
+			&& time() > $option['expiration']
+		) {
+			$this->delete_long_life_transient( $transient );
+			return false;
+		}
+
+		return $option;
 	}
 
 	/**
-	 * Get stored data.
+	 * Delete long life transient.
 	 *
-	 * @param string|int $key Hashed data identifier.
-	 *
-	 * @return mixed|null Stored data value.
+	 * @param string $transient Transient name.
 	 */
-	function get( string $key ) {
-		return $this->exists( $key )
-			? $this->_storeroom[$key]
-			: null;
-	}
+	function delete_long_life_transient( $transient ) {
+		if ( !wp_using_ext_object_cache() )
+			return delete_transient( $tranient );
 
-	/**
-	 * Add data.
-	 *
-	 * Only sets the data if the ID doesn't yet exist.
-	 *
-	 * @param string $key   Data ID.
-	 * @param mixed  $value Data.
-	 *
-	 * @return bool
-	 */
-	function add( string $key, $value ) {
-		!$this->exists( $key ) && $this->_storeroom[$key] = $value;
-		return $this->exists( $key );
-	}
-
-	/**
-	 * Add or update data.
-	 *
-	 * @param string|int $key   Hashed data identifier.
-	 * @param mixed      $value Data value.
-	 *
-	 * @return mixed Data value.
-	 */
-	function set( string $key, $value ) {
-		return $this->_storeroom[$key] = $value;
-	}
-
-	/**
-	 * Purge stored data.
-	 *
-	 * @param string $key Hashed data identifier.
-	 */
-	function purge( string $key ) {
-		unset( $this->_storeroom[$key] );
-	}
-
-	/**
-	 * Purge all stored data.
-	 */
-	function purge_all() {
-		$this->_storeroom = array();
-		do_action( THEME_PREFIX . '/data/purged' );
-	}
-
-	/**
-	 * Wrapper for getting and setting of data.
-	 *
-	 * @param mixed      $key   Hashed data identifier, or data to generate key.
-	 * @param null|mixed $value Data value.
-	 * @param bool       $force Force set data value, default false.
-	 *
-	 * @uses $this::get()
-	 * @uses $this::set()
-	 *
-	 * @return mixed (Stored) data value.
-	 */
-	function __data( $key, $value = null, bool $force = false ) {
-		if ( !is_string( $key ) )
-			return $this->get_key( $key, $value );
-
-		else if ( is_null( $value ) )
-			return $this->get( $key );
-
-		if ( true === $force )
-			return $this->set( $key, $value );
-
-		return $this->has( $key )
-			 ? $this->get( $key )
-			 : $this->set( $key, $value );
+		delete_option( '_longlife_timeout_' . $transient );
+		delete_option( '_longlife_' . $transient );
 	}
 
 	/**
@@ -149,3 +91,4 @@ class Calyx_Data {
 }
 
 ?>
+

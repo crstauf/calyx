@@ -102,6 +102,13 @@ class Calyx_Actions {
 			) );
 		}
 
+		if ( Calyx()->is_server_high_load() )
+			$bar->add_menu( array(
+				'id'        => THEME_PREFIX . '-server-load',
+				'parent'    => 'top-secondary',
+				'title'     => '<span style="color: red;">SERVER LOAD: ' . ( Calyx()->is_server_extreme_load() ? 'EXTREME' : 'HIGH' ) . '</span>',
+			) );
+
 	}
 
 	/**

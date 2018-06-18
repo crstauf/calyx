@@ -10,6 +10,7 @@
  * Abstract object for image tag data.
  *
  * @link https://github.com/aFarkas/lazysizes Preferred lazy loading script.
+ * @todo Add image primary color detection and use.
  */
 abstract class image_tag {
 

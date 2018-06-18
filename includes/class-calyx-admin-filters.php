@@ -16,6 +16,12 @@ class Calyx_Admin_Filters {
 	use Calyx_Singleton;
 
 	/**
+	 * Construct.
+	 */
+	function __construct() {
+	}
+
+	/**
 	 * Limits the number of items displayed in list tables.
 	 *
 	 * @param int $per_page User setting for number of items per page.

@@ -50,6 +50,30 @@ class Calyx_Admin {
 	/** Alias for $_filter property. */
 	function filters() { return $this->_filters; }
 
+	/**
+	 * Load all registered ACF files.
+	 *
+	 * @uses Calyx::has_acfs()
+	 * @uses Calyx::get_acfs()
+	 * @uses Calyx::load_acf()
+	 */
+	function load_acfs() {
+		if ( !Calyx()->has_acfs() )
+			return;
+
+		do_action( THEME_PREFIX . '/acfs/loading_all' );
+
+		remove_all_filters( 'acf/get_field_groups' );
+
+		// add fields registered by PHP files
+		add_filter( 'acf/get_field_groups', 'api_acf_get_field_groups', 2, 1 );
+
+		foreach ( array_keys( Calyx()->get_acfs() ) as $handle )
+			Calyx()->load_acf( $handle );
+
+		do_action( THEME_PREFIX . '/acfs/loaded_all' );
+	}
+
 }
 
 add_action( THEME_PREFIX . '/include_files/after_core', array( 'Calyx_Admin', 'include_files' ) );

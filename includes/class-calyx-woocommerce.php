@@ -42,11 +42,12 @@ class Calyx_WooCommerce {
 	 * Include files used in admin and on the frontend.
 	 */
 	public static function include_files() {
-		( is_admin() && self::include_files__admin() )
-		             || self::include_files__front();
+		is_admin()
+			? self::include_files__admin()
+			: self::include_files__front();
 
 		if ( apply_filters( THEME_PREFIX . '/woocommerce/monitor-webhooks', !empty( WC_Data_Store::load( 'webhook' )->get_webhooks_ids() ) ) )
-			require_once CALYX_ABSPATH . 'includes/class-calyx-wc-monitor-webhooks.php';
+			require_once CALYX_ABSPATH . 'includes/class-woocommerce-monitor-webhooks.php';
 
 		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'woocommerce' );
 	}
@@ -91,7 +92,8 @@ class Calyx_WooCommerce {
 		do_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', __CLASS__, '3.4.0' );
 		do_action( THEME_PREFIX . '/woocommerce/before_init' );
 
-		class_exists( 'Calyx_WC_MonitorWebhooks' ) && $this->add_feature( 'monitor-webhooks', new Calyx_WC_MonitorWebhooks );
+		class_exists( 'Calyx_WooCommerce_MonitorWebhooks' )
+			&& $this->add_feature( 'monitor-webhooks', new Calyx_WooCommerce_MonitorWebhooks );
 
 		do_action( THEME_PREFIX . '/woocommerce/init' );
 		do_action( THEME_PREFIX . '/woocommerce/after_init' );
