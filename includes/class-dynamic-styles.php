@@ -32,23 +32,26 @@ class Calyx_DynamicStyles {
 	/**
 	 * Add dynamic style.
 	 *
-	 * @param string $handle Handle for the dynamic styles.
-	 * @param string $styles Dynamic styles (including media query if needed).
-	 * @param bool   $extra  Set dynamic styles as optional, default false.
+	 * @param string $handle   Handle for the dynamic styles.
+	 * @param string $styles   Dynamic styles (including media query if needed).
+	 * @param bool   $optional Set dynamic styles as optional, default false.
 	 *
 	 * @uses Calyx::is_server_high_load()
+	 * @uses Calyx::server_load_messages()
 	 */
-	function add( $handle, $styles, $extra = false ) {
+	function add( $handle, $styles, $optional = false ) {
 		if ( did_action( 'wp_print_footer_scripts' ) ) {
 			_doing_it_wrong( __METHOD__, 'Dynamic styles can not be added after <code>wp_print_footer_scripts</code> hook.', '1.0' );
 			return;
 		}
 
 		if (
-			$extra
+			$optional
 			&& Calyx()->is_server_high_load()
-		)
+		) {
+			Calyx()->server_load_messages( 'add', 'Prevented optional dynamic style: ' . $handle );
 			return;
+		}
 
 		$this->_styles[$handle] = $styles;
 	}

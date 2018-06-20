@@ -29,9 +29,18 @@ class Calyx_Admin_Filters {
 	 * @see Calyx_Admin_Actions::maybe_cap_num_list_table_items()
 	 * @see WP_List_Table::get_items_per_page()
 	 *
+	 * @uses Calyx::server_load_messages()
+	 *
 	 * @return int
 	 */
 	function user_option_per_page( $per_page ) {
+		static $_once = false;
+
+		if ( !$_once ) {
+			Calyx()->server_load_messages( 'add', 'Set max number of table items: ' . current_filter() );
+			$_once = true;
+		}
+
 		return $per_page <= 50
 			? $per_page
 			: 50;

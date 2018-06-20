@@ -78,7 +78,9 @@ class Calyx_WooCommerce {
 		add_action( THEME_PREFIX . '/woocommerce/features/add',            array( &$this, 'add_feature'                   ), 10, 2 );
 
 		add_action( 'admin_menu', array( &$this, '_maybe_remove_reports_page' ), 21 );
+		add_action( 'admin_print_footer_scripts-index.php', array( &$this, 'action__admin_print_footer_scripts' ) );
 
+		add_filter( 'dashboard_glance_items',   array( &$this, 'filter__dashboard_glance_items'   ) );
 		add_filter( 'edit_shop_order_per_page', array( &$this, 'filter__edit_shop_order_per_page' ) );
 
 	}
@@ -120,6 +122,32 @@ class Calyx_WooCommerce {
 		do_action( THEME_PREFIX . '/compatibility_monitor/version', 'WooCommerce', WC_VERSION, $dependent_name, $tested_wc_version );
 	}
 
+	/**
+	 * Print styles for dashboard widget 'At a Glance' items.
+	 *
+	 * @see $this::filter__dashboard_glance_items()
+	 */
+	function action__admin_print_footer_scripts() {
+		?>
+
+		<style type="text/css">
+			.icon-wc-product::before {
+				font-family: 'WooCommerce' !important;
+				content: '\e006' !important;
+			}
+			.icon-wc-shop_order::before {
+				font-family: 'WooCommerce' !important;
+				content: '\e03d' !important;
+			}
+			.icon-wc-shop_coupon::before {
+				font-family: 'WooCommerce' !important;
+				content: '\e600' !important;
+			}
+		</style>
+
+		<?php
+	}
+
 
 	/*
 	######## #### ##       ######## ######## ########   ######
@@ -130,6 +158,27 @@ class Calyx_WooCommerce {
 	##        ##  ##          ##    ##       ##    ##  ##    ##
 	##       #### ########    ##    ######## ##     ##  ######
 	*/
+
+	/**
+	 * Add count of CPTs to 'At a Glance' dashboard widget.
+	 *
+	 * @param array $items
+	 *
+	 * @return array
+	 */
+	function filter__dashboard_glance_items( $items ) {
+		foreach ( array( 'product', 'shop_order', 'shop_coupon' ) as $post_type ) {
+			$object = get_post_type_object( $post_type );
+			$count = wp_count_posts( $post_type );
+
+			$items['count_' . $post_type] =
+				'<a class="icon-wc-' . $post_type . '" href="' . admin_url( add_query_arg( 'post_type', $post_type, 'edit.php' ) ) . '">' .
+					$count->publish . ' ' . _n( $object->labels->singular_name, $object->labels->name, $count->publish ) .
+				'</a>';
+		}
+
+		return $items;
+	}
 
 	/**
 	 * Limit number of orders in list table to 50.
@@ -161,6 +210,9 @@ class Calyx_WooCommerce {
 	 *
 	 * @see 'admin_menu' action
 	 * @see WC_Admin_Menus::reports_menu()
+	 *
+	 * @uses Calyx::is_server_high_load()
+	 * @uses Calyx::server_load_messages()
 	 */
 	function _maybe_remove_reports_page() {
 		if (
@@ -168,6 +220,8 @@ class Calyx_WooCommerce {
 			|| !Calyx()->is_server_high_load()
 		)
 			return;
+
+		Calyx()->server_load_messages( 'add', 'Removed WooCommerce reports screen' );
 
 		current_user_can( 'manage_woocommerce' )
 			? remove_submenu_page( 'woocommerce', 'wc-reports' )

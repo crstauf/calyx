@@ -480,6 +480,32 @@ final class Calyx {
 	}
 
 	/**
+	 * Add or get messages to indicate functionality removed due to server load.
+	 *
+	 * @param string            $action   'get' or 'add'
+	 * @param null|string|array $messages Message(s) to add.
+	 *
+	 * @return array
+	 */
+	function server_load_messages( $action = 'get', $messages = null ) {
+		static $_messages = array();
+
+		if (
+			   'get' === $action
+			|| 'add' !== $action
+			|| is_null( $messages )
+		)
+			return $_messages;
+
+		if ( !is_array( $messages ) )
+			$messages = array( $messages );
+
+		$_messages = array_merge( $_messages, $messages );
+
+		return $_messages;
+	}
+
+	/**
 	 * Get template part.
 	 *
 	 * @param array $template_paths Array of template paths to check.

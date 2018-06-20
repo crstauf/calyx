@@ -73,12 +73,19 @@ class Calyx_Admin_Actions {
 	 * Action hook: wp_dashboard_setup
 	 *
 	 * @uses Calyx::is_server_high_load()
+	 * @uses Calyx::server_load_messages()
 	 */
 	function maybe_disable_dashboard_widgets() {
 		if ( Calyx()->is_server_high_load() ) {
 			remove_meta_box( 'wpseo-dashboard-overview', 'dashboard', 'normal' );
 			remove_meta_box( 'rg_forms_dashboard',       'dashboard', 'normal' );
 			remove_meta_box( 'wpe_dify_news_feed',       'dashboard', 'normal' );
+
+			Calyx()->server_load_messages( 'add', array(
+				'Disabled WordPress SEO widget',
+				'Disabled Gravity Forms widget',
+				'Disabled WP Engine news feed widget',
+			) );
 		}
 	}
 
