@@ -30,6 +30,9 @@ final class Calyx {
 	/** @var Calyx_Filters Helper for filters. */
 	private $_filters = null;
 
+	/** @var Calyx_Server Helper for server. */
+	private $_server = null;
+
 	/** @var Calyx_WooCommerce Helper for WooCommerce. */
 	private $_woocommerce = null;
 
@@ -115,6 +118,7 @@ final class Calyx {
 		 * Core class files.
 		 */
 		require_once CALYX_ABSPATH . 'includes/class-calyx-data.php';
+		require_once CALYX_ABSPATH . 'includes/class-calyx-server.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-actions.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-filters.php';
 		include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
@@ -158,6 +162,7 @@ final class Calyx {
 		do_action( THEME_PREFIX . '/before_init' );
 
 		$this->_data    = Calyx_Data::create_instance();
+		$this->_server  = Calyx_Server::create_instance();
 		$this->_actions = Calyx_Actions::create_instance();
 		$this->_filters = Calyx_Filters::create_instance();
 
@@ -216,6 +221,11 @@ final class Calyx {
 	 * Public access to $_filters property.
 	 */
 	function filters() { return $this->_filters; }
+
+	/**
+	 * Public access to $_server property.
+	 */
+	function server() { return $this->_server; }
 
 	/**
 	 * Public access to $_woocommerce property.
@@ -434,75 +444,6 @@ final class Calyx {
 	##    ## ##       ##    ##    ## ##   ##       ##    ##
 	 ######  ######## ##     ##    ###    ######## ##     ##
 	*/
-
-	/**
-	 * Get server info.
-	 *
-	 * 1 => Apache|nginx
-	 * 2 => version
-	 *
-	 * @return array
-	 */
-	function get_server_info() {
-		preg_match( '/^(nginx|Apache)\/([0-9\.]*).*$/', $_SERVER['SERVER_SOFTWARE'], $matches );
-		return $matches;
-	}
-
-	/**
-	 * Retrieve indication of server under high load.
-	 *
-	 * @uses $this::is_extreme_load()
-	 */
-	function is_server_high_load() {
-		return (
-			(
-				       defined( 'CALYX_HIGH_LOAD' )
-				   && constant( 'CALYX_HIGH_LOAD' )
-			)
-			|| !!get_transient( 'CALYX_HIGH_LOAD' )
-			|| !!get_option(    'CALYX_HIGH_LOAD' )
-			|| $this->is_server_extreme_load()
-		);
-	}
-
-	/**
-	 * Retrieve indication of server under extreme load.
-	 */
-	function is_server_extreme_load() {
-		 return (
-			(
-				       defined( 'CALYX_EXTREME_LOAD' )
-				   && constant( 'CALYX_EXTREME_LOAD' )
-			)
-			|| !!get_transient( 'CALYX_EXTREME_LOAD' )
-			|| !!get_option(    'CALYX_EXTREME_LOAD' )
-		);
-	}
-
-	/**
-	 * Add or get messages to indicate functionality removed due to server load.
-	 *
-	 * @param string            $action   'get' or 'add'
-	 * @param null|string|array $messages Message(s) to add.
-	 *
-	 * @return array
-	 */
-	function server_load_messages( $action = 'get', $messages = null ) {
-		static $_messages = array();
-
-		if (
-			'add' !== $action
-			|| is_null( $messages )
-		)
-			return $_messages;
-
-		if ( !is_array( $messages ) )
-			$messages = array( $messages );
-
-		$_messages = array_merge( $_messages, $messages );
-
-		return $_messages;
-	}
 
 	/**
 	 * Get template part.

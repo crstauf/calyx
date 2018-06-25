@@ -50,8 +50,8 @@ class Calyx_Actions {
 				'_rest' => home_url( 'wp-json' ),
 				'_ajax' => admin_url( 'admin-ajax.php' ),
 
-				   '_server_high_load' => json_encode( Calyx()->is_server_high_load()    ),
-				'_server_extreme_load' => json_encode( Calyx()->is_server_extreme_load() ),
+				   '_server_high_load' => json_encode( Calyx()->server()->is_high_load()    ),
+				'_server_extreme_load' => json_encode( Calyx()->server()->is_extreme_load() ),
 			);
 
 			is_admin() && $localize_args['_admin'] = json_encode( true );
@@ -87,10 +87,6 @@ class Calyx_Actions {
 	 * - if WP_LOCAL_DEV or WP_DEVELOP constants are true, add link to documentation.
 	 *
 	 * @param WP_Admin_Bar $bar
-	 *
-	 * @uses Calyx::is_server_high_load()
-	 * @uses Calyx::is_server_extreme_load()
-	 * @uses Calyx::server_load_messages()
 	 */
 	function admin_bar_menu( $bar ) {
 
@@ -104,28 +100,6 @@ class Calyx_Actions {
 					'target' => '_blank',
 				),
 			) );
-
-		if ( Calyx()->is_server_high_load() ) {
-			$bar->add_menu( array(
-				'id'        => THEME_PREFIX . '-server-load',
-				'parent'    => 'top-secondary',
-				'title'     => '<span style="color: red;">SERVER LOAD: ' . ( Calyx()->is_server_extreme_load() ? 'EXTREME' : 'HIGH' ) . '</span>',
-			) );
-
-			if ( !empty( Calyx()->server_load_messages() ) )
-				foreach ( Calyx()->server_load_messages() as $i => $message )
-					$bar->add_menu( array(
-						'id'        => THEME_PREFIX . '-server-load--' . esc_attr( $i ),
-						'parent'    => THEME_PREFIX . '-server-load',
-						'title'     => wp_kses_post( $message ),
-					) );
-			else
-				$bar->add_menu( array(
-					'id'        => THEME_PREFIX . '-server-load--none',
-					'parent'    => THEME_PREFIX . '-server-load',
-					'title'     => '<em>No functionality disabled on this page</em>',
-				) );
-		}
 
 	}
 

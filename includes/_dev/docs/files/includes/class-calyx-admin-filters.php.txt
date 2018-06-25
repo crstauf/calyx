@@ -29,7 +29,7 @@ class Calyx_Admin_Filters {
 	 * @see Calyx_Admin_Actions::maybe_cap_num_list_table_items()
 	 * @see WP_List_Table::get_items_per_page()
 	 *
-	 * @uses Calyx::server_load_messages()
+	 * @uses Calyx_Server::add_notices()
 	 *
 	 * @return int
 	 */
@@ -37,7 +37,7 @@ class Calyx_Admin_Filters {
 		static $_once = false;
 
 		if ( !$_once ) {
-			Calyx()->server_load_messages( 'add', 'Set max number of table items: ' . current_filter() );
+			Calyx()->server()->add_notices( 'Set max number of table items: ' . current_filter() );
 			$_once = true;
 		}
 

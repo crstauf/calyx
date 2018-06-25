@@ -46,7 +46,7 @@ class Calyx_WooCommerce {
 			? self::include_files__admin()
 			: self::include_files__front();
 
-		if ( apply_filters( THEME_PREFIX . '/woocommerce/monitor-webhooks', !empty( WC_Data_Store::load( 'webhook' )->get_webhooks_ids() ) ) )
+		if ( !empty( WC_Data_Store::load( 'webhook' )->get_webhooks_ids() ) )
 			require_once CALYX_ABSPATH . 'includes/class-woocommerce-monitor-webhooks.php';
 
 		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'woocommerce' );
@@ -77,9 +77,13 @@ class Calyx_WooCommerce {
 		add_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', array( &$this, 'action__compatibility_monitor' ), 10, 2 );
 		add_action( THEME_PREFIX . '/woocommerce/features/add',            array( &$this, 'add_feature'                   ), 10, 2 );
 
-		add_action( 'admin_menu', array( &$this, '_maybe_remove_reports_page' ), 21 );
-		add_action( 'admin_print_footer_scripts-index.php', array( &$this, 'action__admin_print_footer_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_assets' ) );
+		add_action( 'wp_enqueue_scripts',    array( &$this, 'enqueue_assets' ) );
+		add_action( 'admin_menu',            array( &$this, '_maybe_remove_reports_page' ), 21 );
+		add_action( 'wp_dashboard_setup',    array( &$this, 'action__wp_dashboard_setup' ) );
+		add_action( 'admin_bar_menu',        array( &$this, 'action__admin_bar_menu'     ), 65 );
 
+		add_filter( 'request',                  array( &$this, 'filter__request'                  ) );
 		add_filter( 'dashboard_glance_items',   array( &$this, 'filter__dashboard_glance_items'   ) );
 		add_filter( 'edit_shop_order_per_page', array( &$this, 'filter__edit_shop_order_per_page' ) );
 
@@ -94,8 +98,8 @@ class Calyx_WooCommerce {
 		do_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', __CLASS__, '3.4.0' );
 		do_action( THEME_PREFIX . '/woocommerce/before_init' );
 
-		class_exists( 'Calyx_WooCommerce_MonitorWebhooks' )
-			&& $this->add_feature( 'monitor-webhooks', new Calyx_WooCommerce_MonitorWebhooks );
+		if ( class_exists( 'Calyx_WooCommerce_MonitorWebhooks' ) )
+			$this->add_feature( 'monitor-webhooks', new Calyx_WooCommerce_MonitorWebhooks );
 
 		do_action( THEME_PREFIX . '/woocommerce/init' );
 		do_action( THEME_PREFIX . '/woocommerce/after_init' );
@@ -113,6 +117,54 @@ class Calyx_WooCommerce {
 	*/
 
 	/**
+	 * Hook: wp_dashboard_setup
+	 *
+	 * - add inline styles for WooCommerce glance items.
+	 *
+	 * @see $this::filter__dashboard_glance_items()
+	 */
+	function action__wp_dashboard_setup() {
+		wp_add_inline_style( 'dashboard', $this->_inlineStyle_dashboard() );
+	}
+
+	/**
+	 * Add orders count and search field to admin bar.
+	 *
+	 * @param WP_Admin_Bar $bar
+	 */
+	function action__admin_bar_menu( $bar ) {
+		global $wpdb;
+
+		$values = wc_get_order_types( 'order-count' );
+		$placeholders = implode( ', ', array_fill( 0, count( $values ), '%s' ) );
+
+		$start = strtotime( 'midnight', time() + ( HOUR_IN_SECONDS * get_option( 'gmt_offset' ) ) );
+		$values[] = date( 'Y-m-d H:i:s', $start );
+
+		$query = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->posts WHERE `post_type` IN ( $placeholders ) AND `post_date` >= %s", $values );
+		$count = $wpdb->get_var( $query ); error_log( $count );
+
+		$text = sprintf( _n( '%s order today', '%s orders today', $count ), number_format_i18n( $count ) );
+		$icon  = '<span class="ab-icon"></span>';
+		$title = '<span class="ab-label count-' . esc_attr( $count ) . '" aria-hidden="true">' . number_format_i18n( $count ) . '</span>';
+		$title .= '<span class="screen-reader-text">' . $text . '</span>';
+
+		$menu_id = THEME_PREFIX . '-orders';
+
+		$bar->add_menu( array(
+			'id'    => $menu_id,
+			'title' => $icon . $title,
+			'href'  => add_query_arg( 'post_type', 'shop_order', admin_url( 'edit.php' ) ),
+		) );
+
+		$bar->add_menu( array(
+			'parent' => $menu_id,
+			'id' => THEME_PREFIX . '-orders-search',
+			'title' => '<input type="text" id="' . THEME_PREFIX . '-admin-bar-orders-search" placeholder="Order ID/Email" />',
+		) );
+	}
+
+	/**
 	 * Check version of WooCommerce and component for compatibility.
 	 *
 	 * @param string $dependent_name    Name of customization.
@@ -120,32 +172,6 @@ class Calyx_WooCommerce {
 	 */
 	function action__compatibility_monitor( $dependent_name, $tested_wc_version ) {
 		do_action( THEME_PREFIX . '/compatibility_monitor/version', 'WooCommerce', WC_VERSION, $dependent_name, $tested_wc_version );
-	}
-
-	/**
-	 * Print styles for dashboard widget 'At a Glance' items.
-	 *
-	 * @see $this::filter__dashboard_glance_items()
-	 */
-	function action__admin_print_footer_scripts() {
-		?>
-
-		<style type="text/css">
-			.icon-wc-product::before {
-				font-family: 'WooCommerce' !important;
-				content: '\e006' !important;
-			}
-			.icon-wc-shop_order::before {
-				font-family: 'WooCommerce' !important;
-				content: '\e03d' !important;
-			}
-			.icon-wc-shop_coupon::before {
-				font-family: 'WooCommerce' !important;
-				content: '\e600' !important;
-			}
-		</style>
-
-		<?php
 	}
 
 
@@ -158,6 +184,33 @@ class Calyx_WooCommerce {
 	##        ##  ##          ##    ##       ##    ##  ##    ##
 	##       #### ########    ##    ######## ##     ##  ######
 	*/
+
+	/**
+	 * Hook: request
+	 *
+	 * - add support for searching orders by billing email
+	 */
+	function filter__request( $request ) {
+		global $typenow;
+
+		if (
+			!current_user_can( 'view_shop_orders' )
+			|| !in_array( $typenow, wc_get_order_types( 'order-meta-boxes' ) )
+			|| !array_key_exists( '_billing_email', $_GET )
+			|| empty( $_GET['_billing_email'] )
+		)
+			return $request;
+
+		$request['meta_query'] = array(
+			array(
+				'key'   => '_billing_email',
+				'value' => esc_attr( $_GET['_billing_email'] ),
+				'compare' => 'LIKE'
+			),
+		);
+
+		return $request;
+	}
 
 	/**
 	 * Add count of CPTs to 'At a Glance' dashboard widget.
@@ -205,27 +258,169 @@ class Calyx_WooCommerce {
 	##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
 	*/
 
+	function enqueue_assets() {
+		wp_add_inline_style(  'admin-bar', $this->_inlineStyle_adminBar()  );
+		wp_add_inline_script( 'admin-bar', $this->_inlineScript_adminBar() );
+	}
+
+	/**
+	 * Get styles for dashboard widget 'At a Glance' items.
+	 *
+	 * @return string CSS.
+	 */
+	function _inlineStyle_dashboard() {
+		ob_start();
+		?>
+
+		.icon-wc-product::before {
+			font-family: 'WooCommerce' !important;
+			content: '\e006' !important;
+		}
+		.icon-wc-shop_order::before {
+			font-family: 'WooCommerce' !important;
+			content: '\e03d' !important;
+		}
+		.icon-wc-shop_coupon::before {
+			font-family: 'WooCommerce' !important;
+			content: '\e600' !important;
+		}
+
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get styles for admin bar menu item.
+	 *
+	 * @return string CSS.
+	 */
+	function _inlineStyle_adminBar() {
+		ob_start();
+		?>
+
+		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders .ab-item {
+			height: auto;
+		}
+
+		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders .ab-label.count-0 { opacity: 0.5; }
+
+		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders .ab-icon::before {
+			top: 2px;
+			font-family: 'WooCommerce' !important;
+			content: '\e03d' !important;
+		}
+
+		#wp-admin-bar-calyx-orders-default {
+			padding: 0 !important;
+		}
+
+		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders-search .ab-item {
+			height: auto !important;
+		}
+
+		#<?php echo THEME_PREFIX ?>-admin-bar-orders-search {
+			padding: 0 5px;
+			background-color: inherit;
+			box-sizing: border-box;
+			text-align: center;
+			border: none;
+			color: inherit;
+		}
+
+		#<?php echo THEME_PREFIX ?>-admin-bar-orders-search::-webkit-input-placeholder {
+			color: inherit;
+			opacity: 0.5;
+		}
+
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get JavaScript for admin bar menu item.
+	 *
+	 * @return string JavaScript.
+	 */
+	function _inlineScript_adminBar() {
+		ob_start();
+		?>
+
+		jQuery( document ).ready( function() {
+
+			jQuery( '#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders' ).hoverIntent( {
+				over: function() {
+					jQuery( this ).addClass( 'hover' );
+					jQuery( '#calyx-admin-bar-orders-search' ).focus();
+				},
+				out: function() {
+					jQuery( this ).removeClass( 'hover' );
+					jQuery( '#calyx-admin-bar-orders-search' ).val( '' );
+				},
+				timeout: 180,
+				sensitivity: 7,
+				interval: 100
+			} );
+
+			jQuery( '#calyx-admin-bar-orders-search' ).on( 'keydown', function( ev ) {
+				if ( 13 !== ev.keyCode )
+					return true;
+
+				var search_val = jQuery( this ).val();
+
+				if ( parseFloat( search_val ) == search_val ) { /* then object ID */
+					window.location = "<?php echo esc_js( esc_url( add_query_arg( 'action', 'edit', admin_url( 'post.php' ) ) ) ) ?>&post=" + parseFloat( search_val );
+				} else {
+					window.location = "<?php echo esc_js( esc_url( add_query_arg( 'post_type', 'shop_order', admin_url( 'edit.php' ) ) ) ) ?>&_billing_email=" + search_val;
+				}
+			} );
+
+		} );
+
+		<?php
+		return ob_get_clean();
+	}
+
 	/**
 	 * Remove WooCommerce Reports page during high load.
 	 *
 	 * @see 'admin_menu' action
 	 * @see WC_Admin_Menus::reports_menu()
 	 *
-	 * @uses Calyx::is_server_high_load()
-	 * @uses Calyx::server_load_messages()
+	 * @uses Calyx_Server::is_high_load()
+	 * @uses Calyx_Server::add_notices()
 	 */
 	function _maybe_remove_reports_page() {
 		if (
 			!is_current_action( 'admin_menu' )
-			|| !Calyx()->is_server_high_load()
+			|| !Calyx()->server()->is_high_load()
 		)
 			return;
 
-		Calyx()->server_load_messages( 'add', 'Removed WooCommerce reports screen' );
+		Calyx()->server()->add_notices( 'Disabled WooCommerce reports screen' );
 
 		current_user_can( 'manage_woocommerce' )
 			? remove_submenu_page( 'woocommerce', 'wc-reports' )
 			: remove_menu_page( 'wc-reports' );
+	}
+
+	/**
+	 * Check whether to include the mini cart.
+	 *
+	 * @return bool
+	 */
+	function include_mini_cart() {
+		return true;
+	}
+
+	/**
+	 * Alias for include_mini_cart().
+	 *
+	 * @uses $this::include_mini_cart()
+	 *
+	 * @return bool
+	 */
+	function has_mini_cart() {
+		return $this->include_mini_cart();
 	}
 
 }

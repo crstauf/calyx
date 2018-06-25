@@ -6,6 +6,15 @@
  * @link https://gist.github.com/crstauf/030df6bd6c436620e96cb92a44c9772f
  */
 
+if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	exit;
+}
+
+if ( file_exists( __DIR__ . '/class-get-image-most-common-colors.php' ) )
+	require_once __DIR__ . '/class-get-image-most-common-colors.php';
+
 /**
  * Abstract object for image tag data.
  *
@@ -28,6 +37,9 @@ abstract class image_tag {
 
 	/** @var string $_orientation Orientation of the image. **/
 	protected $_orientation = 'unknown';
+
+	/** @var float $_ratio Ratio of the image (height divided by width). **/
+	protected $_ratio = 0;
 
 	/**
 	 * @var string     $id     Image "id" atribute.
@@ -76,9 +88,8 @@ abstract class image_tag {
 	 * @param array $attributes Image attributes.
 	 * @param array $args       Image object arguments.
 	 *
+	 * @uses image_tag::_maybe_create_noscript_object()
 	 * @uses image_tag::get_attributes()
-	 * @uses image_tag::set_orientation()
-	 * @uses image_tag::maybe_set_lazyload_atributes()
 	 */
 	function __construct( $source, $attributes = array(), $args = array() ) {
 		$this->_source = $this->src = $source;
@@ -107,6 +118,10 @@ abstract class image_tag {
 
 	/**
 	 * Print the HTML for the `img` tag.
+	 *
+	 * @uses image_tag::get_html()
+	 *
+	 * @return string
 	 */
 	function __toString() {
 		return $this->get_html();
@@ -116,6 +131,8 @@ abstract class image_tag {
 	 * Get image property.
 	 *
 	 * @param string $property Property name.
+	 *
+	 * @uses image_tag::get_html()
 	 *
 	 * @return string
 	 */
@@ -175,8 +192,9 @@ abstract class image_tag {
 	/**
 	 * Get image tag.
 	 *
-	 * @uses image_tag::get_attribtues()
-	 * @uses image_tag::maybe_get_noscript_html()
+	 * @uses image_tag::set_orientation()
+	 * @uses image_tag::maybe_set_lazyload_attributes()
+	 * @uses image_tag::get_attributes()
 	 *
 	 * @return string <img> tag.
 	 */
@@ -184,6 +202,7 @@ abstract class image_tag {
 		$attributes = array();
 
 		$this->set_orientation();
+		$this->set_ratio();
 		$this->maybe_set_lazyload_attributes();
 
 		foreach ( array_filter( $this->get_attributes() ) as $attribute => $value )
@@ -228,6 +247,13 @@ abstract class image_tag {
 		     if ( $this->width  >  $this->height ) $this->_orientation = 'landscape';
 		else if ( $this->width  <  $this->height ) $this->_orientation = 'portrait';
 		else if ( $this->width === $this->height ) $this->_orientation = 'square';
+	}
+
+	/**
+	 * Determine and store image ratio (height divided by width).
+	 */
+	protected function set_ratio() {
+		$this->_ratio = $this->height / $this->width;
 	}
 
 }
@@ -292,6 +318,7 @@ class image_tag__wp_attachment extends image_tag {
 	function __construct( $source_id, $attributes = array(), $args = array() ) {
 		$this->_source_id = $source_id;
 		$this->_post = get_post( $source_id );
+
 		$this->_sizes = !empty( $args['image_sizes'] )
 			? $args['image_sizes']
 			: array_merge( get_intermediate_image_sizes(), array( 'full' ) );
@@ -331,7 +358,7 @@ class image_tag__wp_attachment extends image_tag {
 		if ( is_null( $_class ) )
 			$_class = apply_filters( 'image_tag/_image_tag__wp_attachment_image_size', '_image_tag__wp_attachment_image_size' );
 
-		$this->_sizes_data[$size] = new $_class( $this->_source_id, $size );
+		$this->_sizes_data[$size] = new $_class( $this, $size );
 
 		if ( $this->_sizes_data[$size]->get( 'width' ) > $this->_sizes_data['__largest']->get( 'width' ) )
 			$this->_sizes_data['__largest'] = $this->_sizes_data[$size];
@@ -429,7 +456,19 @@ class image_tag__wp_attachment extends image_tag {
 	 * Get image attachment object ID.
 	 */
 	function get_attachment_id() {
-		return $this->_source;
+		return $this->_source_id;
+	}
+
+	/**
+	 * Get image attachment metdata.
+	 */
+	function get_metadata() {
+		static $_metadata = null;
+
+		if ( is_null( $_metadata ) )
+			$_metadata = wp_get_attachment_metadata( $this->get_attachment_id() );
+
+		return $_metadata;
 	}
 
 	/**
@@ -443,6 +482,30 @@ class image_tag__wp_attachment extends image_tag {
 		$this->src = $this->get_smallest_size()->get( 'src' );
 
 		return parent::get_html();
+	}
+
+	function get_mode_color() {
+		list( $class_name, $function_name ) = apply_filters( 'image_tag/get_mode_color/function', array( 'GetImageMostCommonColors', 'Get_Colors' ) );
+
+		if (
+			!empty( $class_name )
+			&& class_exists( $class_name )
+		) {
+			$class = new $class_name;
+
+			if ( !is_callable( array( $class, $function_name ) ) )
+				return false;
+
+			$callable = array( $class, $function_name );
+		} else if ( empty( $class_name ) )
+			$callable = $function_name;
+
+		if ( empty( $callable ) )
+			return false;
+
+		$colors = call_user_func( $callable, $this->get_largest_size()->get( 'path' ) );
+
+		return array_shift( array_keys( $colors ) );
 	}
 
 }
@@ -470,6 +533,7 @@ class _image_tag__wp_attachment_image_size {
 	 * @var string $orientation Image size orientation.
 	 */
 	protected $src         = null,
+	          $path        = null,
 	          $width       = null,
 	          $height      = null,
 	          $orientation = null;
@@ -480,8 +544,8 @@ class _image_tag__wp_attachment_image_size {
 	 * @param int    $source_id Source ID.
 	 * @param string $size      Size name.
 	 */
-	function __construct( int $source_id, string $size ) {
-		$attachment = wp_get_attachment_image_src( $source_id, $size );
+	function __construct( image_tag__wp_attachment &$image, $size ) {
+		$attachment = wp_get_attachment_image_src( $image->get_attachment_id(), $size );
 
 		if ( empty( $attachment ) )
 			return;
@@ -492,6 +556,14 @@ class _image_tag__wp_attachment_image_size {
 			$this->height,
 			,
 		) = $attachment;
+
+		$metadata = $image->get_metadata();
+		$upload_dir = wp_upload_dir();
+
+		if ( 'full' === $size )
+			$this->path = $upload_dir['basedir'] . '/' . $metadata['file'];
+		else if ( array_key_exists( $size, $metadata['sizes'] ) )
+			$this->path = $upload_dir['basedir'] . '/' . $metadata['sizes'][$size]['file'];
 
 		if ( $this->width > $this->height )
 			$this->orientation = 'landscape';

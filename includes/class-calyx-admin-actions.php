@@ -41,13 +41,13 @@ class Calyx_Admin_Actions {
 	 * Action hook: admin_init
 	 *
 	 * @uses Calyx::doing_ajax()
-	 * @uses Calyx::is_server_high_load()
+	 * @uses Calyx_Server::is_high_load()
 	 * @uses Calyx_Admin_Filters::user_option_per_page()
 	 */
 	function maybe_cap_num_list_table_items() {
 		if (
 			Calyx()->doing_ajax()
-			|| !Calyx()->is_server_high_load()
+			|| !Calyx()->server()->is_high_load()
 		)
 			return;
 
@@ -72,16 +72,16 @@ class Calyx_Admin_Actions {
 	 *
 	 * Action hook: wp_dashboard_setup
 	 *
-	 * @uses Calyx::is_server_high_load()
-	 * @uses Calyx::server_load_messages()
+	 * @uses Calyx_Server::is_high_load()
+	 * @uses Calyx_Server::add_notices()
 	 */
 	function maybe_disable_dashboard_widgets() {
-		if ( Calyx()->is_server_high_load() ) {
+		if ( Calyx()->server()->is_high_load() ) {
 			remove_meta_box( 'wpseo-dashboard-overview', 'dashboard', 'normal' );
 			remove_meta_box( 'rg_forms_dashboard',       'dashboard', 'normal' );
 			remove_meta_box( 'wpe_dify_news_feed',       'dashboard', 'normal' );
 
-			Calyx()->server_load_messages( 'add', array(
+			Calyx()->server()->add_notices( array(
 				'Disabled WordPress SEO widget',
 				'Disabled Gravity Forms widget',
 				'Disabled WP Engine news feed widget',

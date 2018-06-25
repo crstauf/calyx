@@ -36,8 +36,8 @@ class Calyx_DynamicStyles {
 	 * @param string $styles   Dynamic styles (including media query if needed).
 	 * @param bool   $optional Set dynamic styles as optional, default false.
 	 *
-	 * @uses Calyx::is_server_high_load()
-	 * @uses Calyx::server_load_messages()
+	 * @uses Calyx_Server::is_high_load()
+	 * @uses Calyx_Server::add_notices()
 	 */
 	function add( $handle, $styles, $optional = false ) {
 		if ( did_action( 'wp_print_footer_scripts' ) ) {
@@ -47,9 +47,9 @@ class Calyx_DynamicStyles {
 
 		if (
 			$optional
-			&& Calyx()->is_server_high_load()
+			&& Calyx()->server()->is_high_load()
 		) {
-			Calyx()->server_load_messages( 'add', 'Prevented optional dynamic style: ' . $handle );
+			Calyx()->server()->add_notices( 'Prevented optional dynamic styles' );
 			return;
 		}
 
@@ -69,7 +69,7 @@ class Calyx_DynamicStyles {
 		$styles = '<style type="text/css">' . "\n" . '/* BEGIN dynamic styles */';
 
 			foreach ( $this->_styles as $handle => $styles )
-				$styles .= '// ' . $handle . "\n" . $styles . "\n\n";
+				$styles .= '/* ' . $handle . "*/\n" . $styles . "\n\n";
 
 		$styles .= '/* END dynamic styles */' . "\n" . '</style>';
 
