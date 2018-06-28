@@ -77,8 +77,8 @@ class Calyx_WooCommerce {
 		add_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', array( &$this, 'action__compatibility_monitor' ), 10, 2 );
 		add_action( THEME_PREFIX . '/woocommerce/features/add',            array( &$this, 'add_feature'                   ), 10, 2 );
 
-		add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_assets' ) );
-		add_action( 'wp_enqueue_scripts',    array( &$this, 'enqueue_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, '_enqueue_assets' ) );
+		add_action( 'wp_enqueue_scripts',    array( &$this, '_enqueue_assets' ) );
 		add_action( 'admin_menu',            array( &$this, '_maybe_remove_reports_page' ), 21 );
 		add_action( 'wp_dashboard_setup',    array( &$this, 'action__wp_dashboard_setup' ) );
 		add_action( 'admin_bar_menu',        array( &$this, 'action__admin_bar_menu'     ), 65 );
@@ -131,22 +131,23 @@ class Calyx_WooCommerce {
 	 * Add orders count and search field to admin bar.
 	 *
 	 * @param WP_Admin_Bar $bar
+	 *
+	 * @uses $this::get_orders_count__recent_today()
 	 */
 	function action__admin_bar_menu( $bar ) {
-		global $wpdb;
+		if ( Calyx()->server()->is_extreme_load() ) {
+			$count = 'NA';
+			$text = 'Count for orders today currently not available';
+			$title = '<span class="ab-label count-na" aria-hidden="true">NA</span>';
 
-		$values = wc_get_order_types( 'order-count' );
-		$placeholders = implode( ', ', array_fill( 0, count( $values ), '%s' ) );
+			Calyx()->server()->add_notices( 'Disabled count of today\'s orders' );
+		} else {
+			$count = $this->get_orders_count__recent_today();
+			$text = sprintf( _n( '%s order today', '%s orders today', $count ), number_format_i18n( $count ) );
+			$title = '<span class="ab-label count-' . esc_attr( $count ) . '" aria-hidden="true">' . number_format_i18n( $count ) . '</span>';
+		}
 
-		$start = strtotime( 'midnight', time() + ( HOUR_IN_SECONDS * get_option( 'gmt_offset' ) ) );
-		$values[] = date( 'Y-m-d H:i:s', $start );
-
-		$query = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->posts WHERE `post_type` IN ( $placeholders ) AND `post_date` >= %s", $values );
-		$count = $wpdb->get_var( $query ); error_log( $count );
-
-		$text = sprintf( _n( '%s order today', '%s orders today', $count ), number_format_i18n( $count ) );
 		$icon  = '<span class="ab-icon"></span>';
-		$title = '<span class="ab-label count-' . esc_attr( $count ) . '" aria-hidden="true">' . number_format_i18n( $count ) . '</span>';
 		$title .= '<span class="screen-reader-text">' . $text . '</span>';
 
 		$menu_id = THEME_PREFIX . '-orders';
@@ -189,6 +190,10 @@ class Calyx_WooCommerce {
 	 * Hook: request
 	 *
 	 * - add support for searching orders by billing email
+	 *
+	 * @param array $request Query arguments.
+	 *
+	 * @return array
 	 */
 	function filter__request( $request ) {
 		global $typenow;
@@ -258,7 +263,13 @@ class Calyx_WooCommerce {
 	##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
 	*/
 
-	function enqueue_assets() {
+	/**
+	 * Add inline styles for admin bar menu item.
+	 *
+	 * @uses $this::_inlineStyle_adminBar()
+	 * @uses $this::_inlineScript_adminBar()
+	 */
+	function _enqueue_assets() {
 		wp_add_inline_style(  'admin-bar', $this->_inlineStyle_adminBar()  );
 		wp_add_inline_script( 'admin-bar', $this->_inlineScript_adminBar() );
 	}
@@ -302,7 +313,8 @@ class Calyx_WooCommerce {
 			height: auto;
 		}
 
-		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders .ab-label.count-0 { opacity: 0.5; }
+		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders .ab-label.count-0,
+		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders .ab-label.count-na { opacity: 0.5; }
 
 		#wp-admin-bar-<?php echo THEME_PREFIX ?>-orders .ab-icon::before {
 			top: 2px;
@@ -421,6 +433,45 @@ class Calyx_WooCommerce {
 	 */
 	function has_mini_cart() {
 		return $this->include_mini_cart();
+	}
+
+	/**
+	 * Get recent number of orders for today (transient updates every five minutes).
+	 *
+	 * @uses $this::get_orders_count__today()
+	 *
+	 * @return int
+	 */
+	function get_orders_count__recent_today() {
+		$count = get_transient( THEME_PREFIX . '_orders_count__recent_today' );
+
+		if ( !empty( $count ) )
+			return $count;
+
+		$count = $this->get_orders_count__today();
+
+		set_transient( THEME_PREFIX . '_orders_count__recent_today', $count, MINUTE_IN_SECONDS * 5 );
+
+		return intval( $count );
+	}
+
+	/**
+	 * Get number of orders for today.
+	 *
+	 * @return int
+	 */
+	function get_orders_count__today() {
+		global $wpdb;
+
+		$values = wc_get_order_types( 'order-count' );
+		$placeholders = implode( ', ', array_fill( 0, count( $values ), '%s' ) );
+
+		$start = strtotime( 'midnight', time() + ( HOUR_IN_SECONDS * get_option( 'gmt_offset' ) ) );
+		$values[] = date( 'Y-m-d H:i:s', $start );
+
+		$query = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->posts WHERE `post_type` IN ( $placeholders ) AND `post_date` >= %s", $values );
+
+		return intval( $wpdb->get_var( $query ) );
 	}
 
 }

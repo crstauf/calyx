@@ -9,19 +9,25 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	exit;
 }
 
+/**
+ * Functions and actions to manage the server.
+ */
 class Calyx_Server {
 	use Calyx_Singleton;
 
 	/** @var array $_notices Array of notices for removed functionality. **/
 	protected $_notices = array();
 
+	/**
+	 * Construct.
+	 */
 	function __construct() {
 		if ( !$this->is_high_load() )
 			return;
 
-		add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_styles' ) );
-		add_action( 'admin_bar_menu', array( &$this, 'action__admin_bar_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, '_enqueue_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( &$this, '_enqueue_styles' ) );
+		add_action( 'admin_bar_menu', array( &$this, 'action__admin_bar_menu' ), 999 );
 
 	}
 
@@ -36,6 +42,11 @@ class Calyx_Server {
 	##     ##  ######     ##    ####  #######  ##    ##  ######
 	*/
 
+	/**
+	 * Hook: admin_bar_menu
+	 *
+	 * @param WP_Admin_bar $bar
+	 */
 	function action__admin_bar_menu( $bar ) {
 
 		$bar->add_menu( array(
@@ -71,6 +82,9 @@ class Calyx_Server {
 	##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
 	*/
 
+	/**
+	 * Inline styles for admin bar menu item.
+	 */
 	protected function _inlineStyle_adminBar() {
 		ob_start();
 		?>
@@ -96,7 +110,12 @@ class Calyx_Server {
 		return ob_get_clean();
 	}
 
-	function enqueue_styles() {
+	/**
+	 * Add inline styles for admin bar menu item.
+	 *
+	 * @uses $this::_inlineStyle_adminBar()
+	 */
+	function _enqueue_styles() {
 		wp_add_inline_style( 'admin-bar', $this->_inlineStyle_adminBar() );
 	}
 
@@ -147,13 +166,24 @@ class Calyx_Server {
 	/**
 	 * Add notice to indicate removed functionality (due to server load).
 	 *
-	 * @param array|string $messages Message(s) to add
+	 * @param array|string $messages Message(s) to add.
 	 */
 	function add_notices( $messages ) {
 		if ( !is_array( $messages ) )
 			$messages = array( $messages );
 
 		$this->_notices = array_merge( $this->_notices, $messages );
+	}
+
+	/**
+	 * Alias for add_notices().
+	 *
+	 * @param array|string $message Message to add.
+	 *
+	 * @uses $this::add_notices()
+	 */
+	function add_notice( $message ) {
+		$this->add_notices( $message );
 	}
 
 }

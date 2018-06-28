@@ -15,31 +15,54 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 final class Calyx {
 	use Calyx_ManageFeatures, Calyx_ManageAPIs;
 
-	/** @var Calyx_Data Helper for data. */
+	/**
+	 * @var Calyx_Data Helper for data.
+	 */
 	private $_data = null;
 
-	/** @var Calyx_Admin Helper for admin. */
+	/**
+	 * @var Calyx_Admin Helper for admin.
+	 */
 	private $_admin = null;
 
-	/** @var Calyx_Front Helper for frontend. */
+	/**
+	 * @var Calyx_Front Helper for frontend.
+	 */
 	private $_front = null;
 
-	/** @var Calyx_Actions Helper for actions. */
+	/**
+	 * @var Calyx_Actions Helper for actions.
+	 */
 	private $_actions = null;
 
-	/** @var Calyx_Filters Helper for filters. */
+	/**
+	 * @var Calyx_Filters Helper for filters.
+	 */
 	private $_filters = null;
 
-	/** @var Calyx_Server Helper for server. */
+	/**
+	 * @var Calyx_Server Helper for server.
+	 */
 	private $_server = null;
 
-	/** @var Calyx_WooCommerce Helper for WooCommerce. */
+	/**
+	 * @var Calyx_Customizer Helper for WordPress Customizer.
+	 */
+	private $_customizer = null;
+
+	/**
+	 * @var Calyx_WooCommerce Helper for WooCommerce.
+	 */
 	private $_woocommerce = null;
 
-	/** @var array Array of CPT helpers. */
+	/**
+	 * @var array Array of CPT helpers.
+	 */
 	private $_cpts = array();
 
-	/** @var array Array of ACF PHP files. */
+	/**
+	 * @var array Array of ACF PHP files.
+	 */
 	private $_acfs = array();
 
 
@@ -121,6 +144,7 @@ final class Calyx {
 		require_once CALYX_ABSPATH . 'includes/class-calyx-server.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-actions.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-filters.php';
+		include_once CALYX_ABSPATH . 'includes/class-calyx-customizer.php';
 		include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
 
 		/**
@@ -169,6 +193,7 @@ final class Calyx {
 		class_exists( 'Calyx_Admin' ) && $this->_admin = Calyx_Admin::create_instance();
 		class_exists( 'Calyx_Front' ) && $this->_front = Calyx_Front::create_instance();
 
+		class_exists( 'Calyx_Customizer' ) && $this->_customizer = Calyx_Customizer::create_instance();
 		class_exists( 'Calyx_WooCommerce' ) && $this->_woocommerce = Calyx_WooCommerce::create_instance();
 
 		do_action( THEME_PREFIX . '/init' );
