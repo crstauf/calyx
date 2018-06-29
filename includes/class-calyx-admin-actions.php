@@ -26,9 +26,9 @@ class Calyx_Admin_Actions {
 
 		if ( ACF_LITE ) {
 
-			add_action( 'load-post.php',                                array( Calyx()->admin(), 'load_acfs' ) );
-			add_action( 'load-post-new.php',                            array( Calyx()->admin(), 'load_acfs' ) );
-			add_action( 'wp_ajax_acf/location/match_field_groups_ajax', array( Calyx()->admin(), 'load_acfs' ), 9 );
+			add_action( 'load-post.php',                                array( Calyx()->admin(), 'maybe_load_acf_files' ) );
+			add_action( 'load-post-new.php',                            array( Calyx()->admin(), 'maybe_load_acf_files' ) );
+			add_action( 'wp_ajax_acf/location/match_field_groups_ajax', array( Calyx()->admin(), 'maybe_load_acf_files' ), 9 );
 
 		}
 

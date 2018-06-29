@@ -139,7 +139,7 @@ trait Calyx_ManageFeatures {
 	 *
 	 * @return bool Feature exists or was registered.
 	 */
-	function add_feature( $name, object $feature ) {
+	function add_feature( $name, $feature ) {
 		if ( did_action( THEME_PREFIX . '/before_init' ) ) {
 			      !$this->has_feature( $name ) && $this->_features[$name] = $feature;
 			return $this->has_feature( $name );
@@ -158,7 +158,7 @@ trait Calyx_ManageFeatures {
 	 *
 	 * @return false|object
 	 */
-	function get_feature( string $name ) {
+	function get_feature( $name ) {
 		return $this->has_feature( $name )
 			? $this->_features[$name]
 			: false;

@@ -53,12 +53,12 @@ class Calyx_Admin {
 	/**
 	 * Load all registered ACF files.
 	 *
-	 * @uses Calyx::has_acfs()
-	 * @uses Calyx::get_acfs()
-	 * @uses Calyx::load_acf()
+	 * @uses Calyx::has_acf_files()
+	 * @uses Calyx::get_acf_files()
+	 * @uses Calyx::load_acf_file()
 	 */
-	function load_acfs() {
-		if ( !Calyx()->has_acfs() )
+	function maybe_load_acf_files() {
+		if ( !Calyx()->has_acf_files() )
 			return;
 
 		do_action( THEME_PREFIX . '/acfs/loading_all' );
@@ -68,8 +68,8 @@ class Calyx_Admin {
 		// add fields registered by PHP files
 		add_filter( 'acf/get_field_groups', 'api_acf_get_field_groups', 2, 1 );
 
-		foreach ( array_keys( Calyx()->get_acfs() ) as $handle )
-			Calyx()->load_acf( $handle );
+		foreach ( array_keys( Calyx()->get_acf_files() ) as $handle )
+			Calyx()->load_acf_file( $handle );
 
 		do_action( THEME_PREFIX . '/acfs/loaded_all' );
 	}

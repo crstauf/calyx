@@ -352,7 +352,7 @@ class image_tag__wp_attachment extends image_tag {
 	 *
 	 * @see _image_tag__wp_attachment_image_size
 	 */
-	protected function _add_size_data( string $size ) {
+	protected function _add_size_data( $size ) {
 		static $_class = null;
 
 		if ( is_null( $_class ) )

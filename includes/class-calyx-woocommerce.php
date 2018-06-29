@@ -436,7 +436,7 @@ class Calyx_WooCommerce {
 	}
 
 	/**
-	 * Get recent number of orders for today (transient updates every five minutes).
+	 * Get recent number of orders for today (five minute interval).
 	 *
 	 * @uses $this::get_orders_count__today()
 	 *

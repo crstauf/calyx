@@ -268,7 +268,7 @@ final class Calyx {
 	 *
 	 * @return mixed
 	 */
-	function data( string $key = null, $value = null, bool $force = false ) {
+	function data( $key = null, $value = null, $force = false ) {
 		return $this->_data->__data( $key, $value, $force );
 	}
 
@@ -428,7 +428,7 @@ final class Calyx {
 	 *
 	 * @return bool
 	 */
-	function has_cpt( string $type ) {
+	function has_cpt( $type ) {
 		return array_key_exists( $type, $this->_cpts );
 	}
 
@@ -453,7 +453,7 @@ final class Calyx {
 	 *
 	 * @return null|_Calyx_Cpt
 	 */
-	function get_cpt( string $type ) {
+	function get_cpt( $type ) {
 		return $this->has_cpt( $type )
 			? $this->_cpts[$type]
 			: null;
