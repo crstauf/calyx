@@ -97,6 +97,9 @@ final class Calyx {
 		return $_instance;
 	}
 
+	/** Prevent cloning. */
+	function __clone() {}
+
 	/**
 	 * Register core action and filter hooks.
 	 *

@@ -133,9 +133,22 @@ class Calyx_Server {
 	}
 
 	/**
+	 * Retrieve indication of server under normal load.
+	 *
+	 * @uses $this::is_high_load()
+	 *
+	 * @return bool
+	 */
+	function is_normal_load() {
+		return !$this->is_high_load();
+	}
+
+	/**
 	 * Retrieve indication of server under high load.
 	 *
 	 * @uses $this::is_extreme_load()
+	 *
+	 * @return bool
 	 */
 	function is_high_load() {
 		return (
@@ -151,6 +164,8 @@ class Calyx_Server {
 
 	/**
 	 * Retrieve indication of server under extreme load.
+	 *
+	 * @return bool
 	 */
 	function is_extreme_load() {
 		 return (
@@ -187,3 +202,5 @@ class Calyx_Server {
 	}
 
 }
+
+?>

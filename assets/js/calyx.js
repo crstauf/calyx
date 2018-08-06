@@ -33,6 +33,7 @@
 			};
 		},
 
+		/* convert new lines (\n) to break tags */
 		nl2br: function( str ) {
 			return ( str + "" ).replace( /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, "$1<br />$2" );
 		}

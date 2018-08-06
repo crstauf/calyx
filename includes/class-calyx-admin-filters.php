@@ -19,6 +19,7 @@ class Calyx_Admin_Filters {
 	 * Construct.
 	 */
 	function __construct() {
+
 	}
 
 	/**

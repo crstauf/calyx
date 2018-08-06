@@ -22,6 +22,7 @@ class Calyx_Actions {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
 		add_action( 'init',               array( &$this, 'init'               ) );
+		add_action( 'pre_ping',           array( &$this, 'action__pre_ping'   ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
 		add_action( 'admin_bar_menu',     array( &$this, 'admin_bar_menu'     ), 50 );
 
@@ -62,6 +63,17 @@ class Calyx_Actions {
 
 		Calyx()->_register_vendor_assets();
 
+	}
+
+	/**
+	 * Action: pre_ping
+	 *
+	 * Prevent self-pinging.
+	 */
+	function pre_ping( &$links ) {
+		foreach ( $links as $i => $link )
+			if ( 0 === strpos( $link, home_url() ) )
+				unset( $links[$i] );
 	}
 
 	/**

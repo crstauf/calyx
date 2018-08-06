@@ -12,9 +12,6 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	exit;
 }
 
-if ( file_exists( __DIR__ . '/class-get-image-most-common-colors.php' ) )
-	require_once __DIR__ . '/class-get-image-most-common-colors.php';
-
 /**
  * Abstract object for image tag data.
  *
@@ -485,7 +482,16 @@ class image_tag__wp_attachment extends image_tag {
 	}
 
 	function get_mode_color() {
+		if ( !empty( get_post_meta( $this->get_attachment_id(), '_mode_color', true ) ) )
+			  return get_post_meta( $this->get_attachment_id(), '_mode_color', true );
+
+		$class_filename = apply_filters( 'image_tag/get_mode_color/filepath', __DIR__ . '/class-get-image-most-common-colors.php' );
 		list( $class_name, $function_name ) = apply_filters( 'image_tag/get_mode_color/function', array( 'GetImageMostCommonColors', 'Get_Colors' ) );
+
+		if ( !file_exists( $class_filename ) )
+			return false;
+
+		require_once $class_filename;
 
 		if (
 			!empty( $class_name )
@@ -504,8 +510,12 @@ class image_tag__wp_attachment extends image_tag {
 			return false;
 
 		$colors = call_user_func( $callable, $this->get_largest_size()->get( 'path' ) );
+		$colors = array_keys( $colors );
+		$color = '#' . array_shift( $colors );
 
-		return array_shift( array_keys( $colors ) );
+		add_post_meta( $this->get_attachment_id(), '_mode_color', $color );
+
+		return $color;
 	}
 
 }
@@ -844,7 +854,8 @@ function image_tag__debug() {
 	image_tag( 'https://images.unsplash.com/photo-1528485683898-7633212b3db6?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=dffe08428a166a76b5b6527aeae128ce&auto=format&fit=crop&w=4500&q=80', array( 'width' => 400 ) );
 	image_tag( 'placeholder', array( 'width' => 250, 'height' => 150 ), array( 'text' => 'Hello' ) );
 	image_tag( 'picsum', array( 'width' => 500, 'height' => 500 ), array( 'random' => 1 ) );
-	image_tag( 11, array( 'width' => 300, 'style' => 'width: auto; height: 500px;' ), array( 'image_sizes' => array( 'thumbnail', 'full' ) ) );
+	echo ( $wp = get_image_tag_object( 11, array( 'width' => 300, 'style' => 'width: auto; height: 500px;' ), array( 'image_sizes' => array( 'thumbnail', 'full' ) ) ) );
+	echo $wp->get_mode_color();
 }
 
 ?>

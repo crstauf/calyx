@@ -22,6 +22,7 @@ class Calyx_Filters {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
 		add_filter( 'http_request_args', array( &$this, 'http_request_args' ), 10, 2 );
+		add_filter( 'schedule_event',    array( &$this, 'schedule_event' ) );
 
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
@@ -55,6 +56,27 @@ class Calyx_Filters {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Filter: schedule_event; Load: high
+	 *
+	 * Prevent pings, trackbacks, and enclosures during high load.
+	 *
+	 * @param object $event Properties of event.
+	 *
+	 * @return object|bool
+	 */
+	function schedule_event( $event ) {
+		if (
+			!Calyx()->server()->is_high_load()
+			|| 'do_pings' !== $event->hook
+		)
+			return $event;
+
+		Calyx()->server()->add_notice( 'Prevented scheduling of ping' );
+
+		return false;
 	}
 
 }
