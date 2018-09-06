@@ -510,6 +510,10 @@ class image_tag__wp_attachment extends image_tag {
 			return false;
 
 		$colors = call_user_func( $callable, $this->get_largest_size()->get( 'path' ) );
+
+		if ( empty( $colors ) )
+			return false;
+
 		$colors = array_keys( $colors );
 		$color = '#' . array_shift( $colors );
 
@@ -573,7 +577,7 @@ class _image_tag__wp_attachment_image_size {
 		if ( 'full' === $size )
 			$this->path = $upload_dir['basedir'] . '/' . $metadata['file'];
 		else if ( array_key_exists( $size, $metadata['sizes'] ) )
-			$this->path = $upload_dir['basedir'] . '/' . $metadata['sizes'][$size]['file'];
+			$this->path = $upload_dir['basedir'] . '/' . trailingslashit( dirname( $metadata['file'] ) ) . $metadata['sizes'][$size]['file'];
 
 		if ( $this->width > $this->height )
 			$this->orientation = 'landscape';
