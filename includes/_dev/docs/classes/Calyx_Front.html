@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">21</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">31</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">2</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">2</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1979653927"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-600846949"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1979653927" class="accordion-body collapse in">
+            <div id="namespace-600846949" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -169,6 +169,7 @@
                                                     <li class="class"><a href="../classes/Calyx_Server.html">Calyx_Server</a></li>
                                                     <li class="class"><a href="../classes/Calyx_WooCommerce.html">Calyx_WooCommerce</a></li>
                                                     <li class="class"><a href="../classes/Calyx_WooCommerce_MonitorWebhooks.html">Calyx_WooCommerce_MonitorWebhooks</a></li>
+                                                    <li class="class"><a href="../classes/CSSLLC_ChangeIndicator.html">CSSLLC_ChangeIndicator</a></li>
                                                     <li class="class"><a href="../classes/CSSLLC_EnhanceEnqueues.html">CSSLLC_EnhanceEnqueues</a></li>
                                                     <li class="class"><a href="../classes/GetImageMostCommonColors.html">GetImageMostCommonColors</a></li>
                                                     <li class="class"><a href="../classes/image_tag.html">image_tag</a></li>
@@ -218,6 +219,7 @@
                                                                     <a href="../classes/Calyx_Front.html#method_actions" class="">actions()</a><br />
                                                                     <a href="../classes/Calyx_Front.html#method_filters" class="">filters()</a><br />
                                                                     <a href="../classes/Calyx_Front.html#method__register_vendor_assets" class="">_register_vendor_assets()</a><br />
+                                                                    <a href="../classes/Calyx_Front.html#method__inlineScript_webfontloader" class="">_inlineScript_webfontloader()</a><br />
                                                             </section>
                             <section class="span4">
                                                                     <em>No public properties found</em>
@@ -478,6 +480,46 @@
         </aside>
     </div>
 
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__inlineScript_webfontloader" name="method__inlineScript_webfontloader" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">_inlineScript_webfontloader()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_inlineScript_webfontloader(string  <span class="argument">$context = &#039;all&#039;</span>) : string</pre>
+                <p><em>Load specified fonts using `webfontloader`.</em></p>
+                <p>Returns the JS for issuing instructions to <code>webfontloader</code>.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$context </td>
+                                <td><p>Context/position of the function's call: 'all', 'head', 'footer'.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Non-/minified JS to load fonts.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href=""><span class="namespace-wrapper">for call via `wp_add_inline_script()`</span></a></dd>
+                                            <dd><a href=""><span class="namespace-wrapper">for info on contexts.</span></a></dd>
+                                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
                                                     <div class="row-fluid">
         <div class="span8 content class">
             <a id="method___construct" name="method___construct" class="anchor"></a>
@@ -553,7 +595,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on June 29th, 2018 at 05:10.
+                    on September 10th, 2018 at 07:10.
                 </section>
             </section>
         </section>

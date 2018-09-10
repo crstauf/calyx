@@ -13,6 +13,7 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
  * Helper for dynamic styles.
  */
 class Calyx_DynamicStyles {
+	use Calyx_Singleton;
 
 	/** @var array $_styles Store styles until next hook to print. */
 	protected $_styles = array();
@@ -80,5 +81,5 @@ class Calyx_DynamicStyles {
 
 }
 
-do_action( THEME_PREFIX . '/features/add', 'dynamic-styles', new Calyx_DynamicStyles );
+do_action( THEME_PREFIX . '/features/add', 'dynamic-styles', array( 'Calyx_DynamicStyles', 'create_instance' ) );
 ?>

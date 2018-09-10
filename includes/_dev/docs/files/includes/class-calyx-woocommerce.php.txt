@@ -95,7 +95,7 @@ class Calyx_WooCommerce {
 	 * Final step in construct.
 	 */
 	protected function initialize() {
-		do_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', __CLASS__, '3.4.0' );
+		// do_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', __CLASS__, '3.4.0' );
 		do_action( THEME_PREFIX . '/woocommerce/before_init' );
 
 		if ( class_exists( 'Calyx_WooCommerce_MonitorWebhooks' ) )
@@ -436,7 +436,7 @@ class Calyx_WooCommerce {
 	}
 
 	/**
-	 * Get recent number of orders for today (transient updates every five minutes).
+	 * Get recent number of orders for today (five minute interval).
 	 *
 	 * @uses $this::get_orders_count__today()
 	 *

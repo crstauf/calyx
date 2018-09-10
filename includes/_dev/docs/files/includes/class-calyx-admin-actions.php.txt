@@ -26,9 +26,9 @@ class Calyx_Admin_Actions {
 
 		if ( ACF_LITE ) {
 
-			add_action( 'load-post.php',                                array( Calyx()->admin(), 'maybe_load_acf_files' ) );
-			add_action( 'load-post-new.php',                            array( Calyx()->admin(), 'maybe_load_acf_files' ) );
-			add_action( 'wp_ajax_acf/location/match_field_groups_ajax', array( Calyx()->admin(), 'maybe_load_acf_files' ), 9 );
+			add_action( 'load-post.php',                                array( &$this, 'maybe_load_acf_files' ) );
+			add_action( 'load-post-new.php',                            array( &$this, 'maybe_load_acf_files' ) );
+			add_action( 'wp_ajax_acf/location/match_field_groups_ajax', array( &$this, 'maybe_load_acf_files' ), 9 );
 
 		}
 
@@ -76,17 +76,29 @@ class Calyx_Admin_Actions {
 	 * @uses Calyx_Server::add_notices()
 	 */
 	function maybe_disable_dashboard_widgets() {
-		if ( Calyx()->server()->is_high_load() ) {
-			remove_meta_box( 'wpseo-dashboard-overview', 'dashboard', 'normal' );
-			remove_meta_box( 'rg_forms_dashboard',       'dashboard', 'normal' );
-			remove_meta_box( 'wpe_dify_news_feed',       'dashboard', 'normal' );
+		if ( !Calyx()->server()->is_high_load() )
+			return;
 
-			Calyx()->server()->add_notices( array(
-				'Disabled WordPress SEO widget',
-				'Disabled Gravity Forms widget',
-				'Disabled WP Engine news feed widget',
-			) );
-		}
+		remove_meta_box( 'wpseo-dashboard-overview', 'dashboard', 'normal' );
+		remove_meta_box( 'rg_forms_dashboard',       'dashboard', 'normal' );
+		remove_meta_box( 'wpe_dify_news_feed',       'dashboard', 'normal' );
+
+		Calyx()->server()->add_notices( array(
+			'Disabled WordPress SEO widget',
+			'Disabled Gravity Forms widget',
+			'Disabled WP Engine news feed widget',
+		) );
+	}
+
+	/**
+	 * Maybe load ACF PHP export files.
+	 *
+	 * Action hooks: load-post.php, load-post-new.php, wp_ajax_acf/location/match_filed_groups_ajax
+	 *
+	 * @uses Calyx_Admin::maybe_load_acf_files()
+	 */
+	function maybe_load_acf_files() {
+		calyx()->admin()->maybe_load_acf_files();
 	}
 
 }

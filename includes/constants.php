@@ -10,6 +10,7 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 }
 
 define( 'CALYX_IMAGE_PATH', CALYX_ABSPATH . 'assets/img' );
+define( 'CALYX_PRODUCTION_URL', 'https://wpdev.local' );
 
 defined( 'CALYX_HIGH_LOAD'     ) || define( 'CALYX_HIGH_LOAD',      false );
 defined( 'CALYX_EXTREME_LOAD'  ) || define( 'CALYX_EXTREME_LOAD',   false );

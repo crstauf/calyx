@@ -201,6 +201,53 @@ class Calyx_Server {
 		$this->add_notices( $message );
 	}
 
+	/**
+	 * Check if production environment.
+	 *
+	 * If no indication, default true.
+	 *
+	 * @return bool
+	 */
+	function is_production() {
+		static $_cache = null;
+
+		if ( !is_null( $_cache ) )
+			return $_cache;
+
+		return $_cache = apply_filters( THEME_PREFIX . '/server/is_production', (
+			!defined( 'CALYX_PRODUCTION_URL' )
+			|| site_url() === CALYX_PRODUCTION_URL
+		) );
+	}
+
+	/**
+	 * Check if development environment.
+	 *
+	 * @uses $this::is_production()
+	 *
+	 * @return bool
+	 */
+	function is_development() {
+		static $_cache = null;
+
+		if ( !is_null( $_cache ) )
+			return $_cache;
+
+		return $_cache = apply_filters( THEME_PREFIX . '/server/is_development', (
+			!$this->is_production()
+			&& (
+				(
+					defined( 'WP_LOCAL_DEV' )
+					&& WP_LOCAL_DEV
+				)
+				|| (
+					defined( 'CALYX_DEVELOPMENT_URL' )
+					&& site_url() === CALYX_DEVELOPMENT_URL
+				)
+			)
+		) );
+	}
+
 }
 
 ?>

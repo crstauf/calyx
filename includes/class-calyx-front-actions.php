@@ -21,11 +21,12 @@ class Calyx_Front_Actions {
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
-		add_action( 'init',               array( &$this, 'init'                  ) );
-		add_action( 'wp_head',            array( &$this, 'wp_head'               ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts__0' ), 0 );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts__5' ), 5 );
-		add_action( 'wp_footer',          array( &$this, 'wp_footer'             ) );
+		add_action( 'init',                  array( &$this, 'init'                  ) );
+		add_action( 'wp_head',               array( &$this, 'wp_head'               ) );
+		add_action( 'wp_enqueue_scripts',    array( &$this, 'wp_enqueue_scripts__0' ), 0 );
+		add_action( 'wp_enqueue_scripts',    array( &$this, 'wp_enqueue_scripts__5' ), 5 );
+		add_action( 'login_enqueue_scripts', array( &$this, 'login_enqueue_scripts' ) );
+		add_action( 'wp_footer',             array( &$this, 'wp_footer'             ) );
 
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
@@ -37,7 +38,11 @@ class Calyx_Front_Actions {
 	 */
 	function init() {
 
-		wp_register_style( THEME_PREFIX . '/styles', get_theme_file_uri( 'style.css' ), array( THEME_PREFIX . '/copy' ), 'init' );
+		wp_register_style( THEME_PREFIX . '/styles', get_theme_file_uri( 'style.min.css'  ), array( THEME_PREFIX . '/copy' ), 'init' );
+		wp_register_script( THEME_PREFIX . '/scripts', get_theme_file_uri( 'assets/js/scripts.min.js' ), array(), 'init' );
+
+		wp_register_style( THEME_PREFIX . '/login',  get_theme_file_uri( 'assets/critical/login.min.css'), array( 'login' ), 'init' );
+			wp_style_add_data( THEME_PREFIX . '/login', 'critical', true );
 
 		Calyx()->front()->_register_vendor_assets();
 
@@ -70,6 +75,8 @@ class Calyx_Front_Actions {
 		wp_enqueue_script( 'modernizr' );
 		wp_enqueue_script( 'lazysizes' );
 
+		wp_add_inline_script( 'webfontloader', Calyx()->front()->_inlineScript_webfontloader( 'all' ) );
+
 	}
 
 	/**
@@ -81,6 +88,17 @@ class Calyx_Front_Actions {
 
 		 wp_enqueue_style( THEME_PREFIX . '/copy' );
 		wp_style_add_data( THEME_PREFIX . '/copy', 'critical', true );
+
+	}
+
+	/**
+	 * Action: login_enqueue_scripts
+	 *
+	 * - enqueue login page stylesheet
+	 */
+	function login_enqueue_scripts() {
+
+		wp_enqueue_style( THEME_PREFIX . '/login' );
 
 	}
 

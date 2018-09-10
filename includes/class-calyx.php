@@ -166,7 +166,9 @@ final class Calyx {
 		do_action( THEME_PREFIX . '/include_files/after_cpts' );
 
 		/**
-		 * Feature files.
+		 * Frontend and backend feature files.
+		 *
+		 * Features limited to one side should be included in the appropriate class's method, i.e.: Calyx_Front::include_files().
 		 */
 
 
@@ -604,8 +606,64 @@ final class Calyx {
 		 */
 		wp_register_script( 'webfontloader', get_theme_file_uri( 'assets/js/webfontloader.min.js' ), array(), '1.6.28' );
 
+		/**
+		 * Register fontawesome.
+		 *
+		 * @link https://fontawesome.com/
+		 * @version 5.3.1
+		 */
+		wp_register_style( 'fontawesome', get_theme_file_uri( 'assets/fonts/fontawesome.min.js' ), array(), '5.3.1' );
+
 		$this->_register_vendor_assets__lazysizes();
 	}
+
+	/**
+	 * Get settings for 'webfontloader' script.
+	 *
+	 * @return array
+	 */
+	function get_webfontloader_settings() {
+		return array(
+			'all' => array(
+				'custom' => array(
+					'families' => array( 'Font Awesome' ),
+					'testStrings' => array( 'FontAwesome' => '\uf240\uf00c\uf000' ),
+					'urls' => array(
+						wp_styles()->_css_href(
+							wp_styles()->registered['fontawesome']->src,
+							wp_styles()->registered['fontawesome']->ver,
+							'fontawesome'
+						),
+					),
+				),
+				'google' => array(
+					'families' => array( 'Open Sans:300,400,400i,700' ),
+				),
+			),
+			'header' => array(
+				'google' => array(
+					'families' => array( 'Open Sans:400' ),
+				),
+			),
+			'footer' => array(
+				'custom' => array(
+					'families' => array( 'Font Awesome' ),
+					'testStrings' => array( 'FontAwesome' => '\uf240\uf00c\uf000' ),
+					'urls' => array(
+						wp_styles()->_css_href(
+							wp_styles()->registered['fontawesome']->src,
+							wp_styles()->registered['fontawesome']->ver,
+							'fontawesome'
+						)
+					),
+				),
+				'google' => array(
+					'families' => array( 'Open Sans:300,700' ),
+				),
+			),
+		);
+	}
+
 
 	/**
 	 * Register lazysizes scripts.

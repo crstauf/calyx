@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper for the Wordpress Customizer.
+ * Helper for the WordPress Customizer.
  */
 
 if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {

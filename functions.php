@@ -12,6 +12,7 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 add_theme_support( 'html5' );
 add_theme_support( 'title-tag' );
 add_theme_support( 'post-thumbnails' );
+add_theme_support( 'enhanced-enqueues' );
 
 define( 'THEME_PREFIX', 'calyx' );
 define( 'CALYX_ABSPATH', __DIR__ . '/' );

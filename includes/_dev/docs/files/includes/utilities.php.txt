@@ -122,7 +122,7 @@ if ( !function_exists( 'maybe_minify_js' ) ) {
 	 * @return string
 	 */
 	function maybe_minify_js( $js ) {
-		return !SCRIPT_DEBUG && COMPRESS_JS
+		return !SCRIPT_DEBUG && COMPRESS_SCRIPTS
 			? calyx_minify()->js( $js )
 			: $js;
 	}

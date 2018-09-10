@@ -460,12 +460,7 @@ class image_tag__wp_attachment extends image_tag {
 	 * Get image attachment metdata.
 	 */
 	function get_metadata() {
-		static $_metadata = null;
-
-		if ( is_null( $_metadata ) )
-			$_metadata = wp_get_attachment_metadata( $this->get_attachment_id() );
-
-		return $_metadata;
+		return wp_get_attachment_metadata( $this->get_attachment_id() );
 	}
 
 	/**
@@ -479,6 +474,17 @@ class image_tag__wp_attachment extends image_tag {
 		$this->src = $this->get_smallest_size()->get( 'src' );
 
 		return parent::get_html();
+	}
+
+	/**
+	 * Check if image has mode color.
+	 *
+	 * @uses $this::get_mode_color()
+	 *
+	 * @return bool
+	 */
+	function has_mode_color() {
+		return !empty( $this->get_mode_color() );
 	}
 
 	function get_mode_color() {

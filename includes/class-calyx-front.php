@@ -88,6 +88,41 @@ class Calyx_Front {
 
 	}
 
+	/**
+	 * Load specified fonts using `webfontloader`.
+	 *
+	 * Returns the JS for issuing instructions to `webfontloader`.
+	 *
+	 * @see SAES_Actions::init() for call via `wp_add_inline_script()`
+	 * @see SAES::get_webfontloader_object() for info on contexts.
+	 *
+	 * @param string $context Context/position of the function's call: 'all', 'head', 'footer'.
+	 *
+	 * @return string Non-/minified JS to load fonts.
+	 */
+	function _inlineScript_webfontloader( $context = 'all' ) {
+		ob_start();
+
+		if ( 'footer' === $context ) {
+			?>
+
+			if ( 'undefined' !== typeof WebFont )
+				WebFont.load( JSON.parse( window._calyx_data._webfontloader ).footer );
+
+			<?php
+		} else {
+			?>
+
+			var WebFontConfig = JSON.parse( window._calyx_data._webfontloader ).<?php echo esc_js( $context ) ?>;
+			if ( 'undefined' !== typeof WebFont )
+				WebFont.load( WebFontConfig );
+
+			<?php
+		}
+
+		return maybe_minify_js( ob_get_clean() );
+	}
+
 }
 
 add_action( THEME_PREFIX . '/include_files/after_core', array( 'Calyx_Front', 'include_files' ) );

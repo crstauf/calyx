@@ -140,13 +140,8 @@ trait Calyx_ManageFeatures {
 	 * @return bool Feature exists or was registered.
 	 */
 	function add_feature( $name, $feature ) {
-		if ( did_action( THEME_PREFIX . '/before_init' ) ) {
-			      !$this->has_feature( $name ) && $this->_features[$name] = $feature;
-			return $this->has_feature( $name );
-		} else
-			_doing_it_wrong( __METHOD__ . '()', 'Features should not be added before \'' . THEME_PREFIX . '/before_init\' action.', '1.0' );
-
-		return false;
+		      !$this->has_feature( $name ) && $this->_features[$name] = $feature;
+		return $this->has_feature( $name );
 	}
 
 	/**

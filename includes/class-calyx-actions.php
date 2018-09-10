@@ -22,7 +22,7 @@ class Calyx_Actions {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
 		add_action( 'init',               array( &$this, 'init'               ) );
-		add_action( 'pre_ping',           array( &$this, 'action__pre_ping'   ) );
+		add_action( 'pre_ping',           array( &$this, 'pre_ping'           ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
 		add_action( 'admin_bar_menu',     array( &$this, 'admin_bar_menu'     ), 50 );
 
@@ -44,6 +44,11 @@ class Calyx_Actions {
 	 */
 	function init() {
 
+		wp_register_style( THEME_PREFIX . '/copy', get_theme_file_url( 'assets/critical/copy.min.css' ), null, 'init' );
+		wp_register_style( THEME_PREFIX . '/site', get_theme_file_url( 'assets/critical/site.min.css' ), array( THEME_PREFIX . '/copy' ), 'init' );
+
+		Calyx()->_register_vendor_assets();
+
 		wp_register_script( THEME_PREFIX . '/script_object', get_theme_file_url( 'assets/js/calyx.min.js' ), null, 'init' );
 
 			$localize_args = array(
@@ -51,17 +56,14 @@ class Calyx_Actions {
 				'_rest' => home_url( 'wp-json' ),
 				'_ajax' => admin_url( 'admin-ajax.php' ),
 
-				   '_server_high_load' => json_encode( Calyx()->server()->is_high_load()    ),
-				'_server_extreme_load' => json_encode( Calyx()->server()->is_extreme_load() ),
+				   '_server_high_load' => json_encode( Calyx()->server()->is_high_load()     ),
+				'_server_extreme_load' => json_encode( Calyx()->server()->is_extreme_load()  ),
+				      '_webfontloader' => json_encode( Calyx()->get_webfontloader_settings() ),
 			);
 
 			is_admin() && $localize_args['_admin'] = json_encode( true );
 
 			wp_localize_script( THEME_PREFIX . '/script_object', '_' . THEME_PREFIX . '_data', $localize_args );
-
-		wp_register_style( THEME_PREFIX . '/copy', get_theme_file_url( 'assets/critical/copy.min.css' ), null, 'init' );
-
-		Calyx()->_register_vendor_assets();
 
 	}
 
@@ -69,6 +71,8 @@ class Calyx_Actions {
 	 * Action: pre_ping
 	 *
 	 * Prevent self-pinging.
+	 *
+	 * @param array &$links
 	 */
 	function pre_ping( &$links ) {
 		foreach ( $links as $i => $link )
