@@ -23,6 +23,7 @@ class Calyx_Front_Filters {
 
 		add_filter( 'body_class', array( &$this, 'body_class' ) );
 		add_filter( 'post_class', array( &$this, 'post_class' ), 10, 3 );
+		add_filter( 'the_content', array( &$this, 'the_content' ) );
 
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
@@ -63,6 +64,21 @@ class Calyx_Front_Filters {
 			$classes[] = 'post-thumbnail-' . get_post_thumbnail_id( $post_id );
 
 		return $classes;
+	}
+
+	/**
+	 * Filter: the_content
+	 *
+	 * - add headline anchors
+	 *
+	 * @param string $content
+	 *
+	 * @uses Calyx_Front::add_headline_anchors()
+	 *
+	 * @return string
+	 */
+	function the_content( $content ) {
+		return Calyx()->front()->add_headline_anchors( $content );
 	}
 
 }
