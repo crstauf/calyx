@@ -582,10 +582,10 @@ class _image_tag__wp_attachment_image_size {
 		$metadata = $image->get_metadata();
 		$upload_dir = wp_upload_dir();
 
-		if ( 'full' === $size )
-			$this->path = $upload_dir['basedir'] . '/' . $metadata['file'];
-		else if ( array_key_exists( $size, $metadata['sizes'] ) )
+		if ( array_key_exists( $size, $metadata['sizes'] ) )
 			$this->path = $upload_dir['basedir'] . '/' . trailingslashit( dirname( $metadata['file'] ) ) . $metadata['sizes'][$size]['file'];
+		else if ( file_exists( $upload_dir['basedir'] . '/' . $metadata['file'] ) )
+			$this->path = $upload_dir['basedir'] . '/' . $metadata['file'];
 
 		if ( $this->width > $this->height )
 			$this->orientation = 'landscape';

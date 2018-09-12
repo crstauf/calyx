@@ -132,7 +132,7 @@ class Calyx_WooCommerce {
 	 *
 	 * @param WP_Admin_Bar $bar
 	 *
-	 * @uses $this::get_orders_count__recent_today()
+	 * @uses $this::get_orders_count__today()
 	 */
 	function action__admin_bar_menu( $bar ) {
 		if ( Calyx()->server()->is_extreme_load() ) {
@@ -142,7 +142,7 @@ class Calyx_WooCommerce {
 
 			Calyx()->server()->add_notices( 'Disabled count of today\'s orders' );
 		} else {
-			$count = $this->get_orders_count__recent_today();
+			$count = $this->get_orders_count__today();
 			$text = sprintf( _n( '%s order today', '%s orders today', $count ), number_format_i18n( $count ) );
 			$title = '<span class="ab-label count-' . esc_attr( $count ) . '" aria-hidden="true">' . number_format_i18n( $count ) . '</span>';
 		}
@@ -158,10 +158,20 @@ class Calyx_WooCommerce {
 			'href'  => add_query_arg( 'post_type', 'shop_order', admin_url( 'edit.php' ) ),
 		) );
 
+		if ( function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+
+			if (
+				'post' === $screen->base
+				&& 'shop_order' === $screen->id
+			)
+				$current_id = $_GET['post'];
+		}
+
 		$bar->add_menu( array(
 			'parent' => $menu_id,
 			'id' => THEME_PREFIX . '-orders-search',
-			'title' => '<input type="text" id="' . THEME_PREFIX . '-admin-bar-orders-search" placeholder="Order ID/Email" />',
+			'title' => '<input type="text" id="' . THEME_PREFIX . '-admin-bar-orders-search" placeholder="Order ID/Email"' . ( !empty( $current_id ) ? ' value="' . esc_attr( $current_id ) . '"' : '' ) . ' />',
 		) );
 	}
 
@@ -366,7 +376,7 @@ class Calyx_WooCommerce {
 				},
 				out: function() {
 					jQuery( this ).removeClass( 'hover' );
-					jQuery( '#calyx-admin-bar-orders-search' ).val( '' );
+					jQuery( '#calyx-admin-bar-orders-search' ).val( document.getElementById( '<?php echo THEME_PREFIX ?>-admin-bar-orders-search' ).getAttribute( 'value' ) );
 				},
 				timeout: 180,
 				sensitivity: 7,
@@ -436,19 +446,19 @@ class Calyx_WooCommerce {
 	}
 
 	/**
-	 * Get recent number of orders for today (five minute interval).
+	 * Get number of orders for today (five minute interval).
 	 *
-	 * @uses $this::get_orders_count__today()
+	 * @uses $this::_get_orders_count__today()
 	 *
 	 * @return int
 	 */
-	function get_orders_count__recent_today() {
+	function get_orders_count__today() {
 		$count = get_transient( THEME_PREFIX . '_orders_count__recent_today' );
 
 		if ( !empty( $count ) )
 			return $count;
 
-		$count = $this->get_orders_count__today();
+		$count = $this->_get_orders_count__today();
 
 		set_transient( THEME_PREFIX . '_orders_count__recent_today', $count, MINUTE_IN_SECONDS * 5 );
 
@@ -456,11 +466,11 @@ class Calyx_WooCommerce {
 	}
 
 	/**
-	 * Get number of orders for today.
+	 * Get number of orders for today (real-time).
 	 *
 	 * @return int
 	 */
-	function get_orders_count__today() {
+	function _get_orders_count__today() {
 		global $wpdb;
 
 		$values = wc_get_order_types( 'order-count' );

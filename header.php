@@ -16,7 +16,13 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 
 	<script type="text/javascript">document.documentElement.className = document.documentElement.className.replace( 'no-js', 'js' );</script>
 
-	<?php wp_head() ?>
+	<?php
+	wp_enqueue_style( THEME_PREFIX . '/copy' );
+	wp_enqueue_style( THEME_PREFIX . '/critical/site' );
+	wp_enqueue_style( THEME_PREFIX . '/critical/mobile' );
+
+	wp_head();
+	?>
 
 </head>
 <body <?php body_class() ?>>

@@ -21,8 +21,8 @@ class Calyx_Front_Filters {
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
-		add_filter( 'body_class', array( &$this, 'body_class' ) );
-		add_filter( 'post_class', array( &$this, 'post_class' ), 10, 3 );
+		add_filter( 'body_class',  array( &$this, 'body_class'  ) );
+		add_filter( 'post_class',  array( &$this, 'post_class'  ), 10, 3 );
 		add_filter( 'the_content', array( &$this, 'the_content' ) );
 
 		do_action( 'qm/stop', __METHOD__ . '()' );
@@ -31,19 +31,24 @@ class Calyx_Front_Filters {
 	/**
 	 * Filter: body_class
 	 *
+	 * - add post thumbnail classes (set and ID)
+	 * - add user role class
+	 *
 	 * @param array $classes
 	 *
 	 * @return array
 	 */
 	function body_class( $classes ) {
 		if (
-			!is_singular()
-			|| !has_post_thumbnail( get_queried_object_id() )
-		)
-			return $classes;
+			is_singular()
+			&& has_post_thumbnail( get_queried_object_id() )
+		) {
+			$classes[] = 'has-post-thumbnail';
+			$classes[] = 'post-thumbnail-' . get_post_thumbnail_id( get_queried_object_id() );
+		}
 
-		$classes[] = 'has-post-thumbnail';
-		$classes[] = 'post-thumbnail-' . get_post_thumbnail_id( get_queried_object_id() );
+		if ( is_user_logged_in() )
+			$classes[] = 'user-' . array_shift( wp_get_current_user()->roles );
 
 		return $classes;
 	}
@@ -51,7 +56,7 @@ class Calyx_Front_Filters {
 	/**
 	 * Filter: post_class
 	 *
-	 * - add post thumbnail's ID
+	 * - add post thumbnail ID class
 	 *
 	 * @param array $classes
 	 * @param array $class
