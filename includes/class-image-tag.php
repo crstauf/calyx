@@ -250,7 +250,9 @@ abstract class image_tag {
 	 * Determine and store image ratio (height divided by width).
 	 */
 	protected function set_ratio() {
-		$this->_ratio = $this->height / $this->width;
+		$this->_ratio = !empty( $this->width )
+			? $this->height / $this->width
+			: 0;
 	}
 
 }
