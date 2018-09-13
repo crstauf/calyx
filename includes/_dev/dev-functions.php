@@ -17,4 +17,29 @@ function _develop_action__theme__include_files() {
 }
 add_action( THEME_PREFIX . '/include_files', '_develop_action__theme__include_files' );
 
+function _develop_action__admin_bar_menu( $bar ) {
+	$bar->add_node( array(
+		'id' => THEME_PREFIX . '-style-guide',
+		'title' => 'View Style Guide',
+		'parent' => 'site-name',
+		'href' => add_query_arg( 'style-guide', 1, home_url() ),
+		'meta' => array(
+			'target' => '_blank',
+		),
+	) );
+}
+add_action( 'admin_bar_menu', '_develop_action__admin_bar_menu', 50 );
+
+function _develop_filter__template_include( $template ) {
+	if (
+		!is_front_page()
+		|| !array_key_exists( 'style-guide', $_GET )
+		|| !file_exists( __DIR__ . '/style-guide.php' )
+	)
+		return $template;
+
+	return __DIR__ . '/style-guide.php';
+}
+add_filter( 'template_include', '_develop_filter__template_include' );
+
 ?>

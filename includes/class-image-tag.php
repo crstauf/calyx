@@ -79,6 +79,32 @@ abstract class image_tag {
 	var $noscript;
 
 	/**
+	 * Create.
+	 *
+	 * @param mixed $source     Image source.
+	 * @param array $attributes Image attributes.
+	 * @param array $args       Image object arguments.
+	 * @param bool  $skip_cache Set true to skip cached object.
+	 *
+	 * @return image_tag
+	 */
+	public static function create( $source, $attributes = array(), $args = array(), $skip_cache = false ) {
+		$cache_key = md5( serialize( array( $source, $args ) ) );
+
+		if ( !$skip_cache )
+			$cache = wp_cache_get( $cache_key, __CLASS__, false, $found );
+
+		if ( !empty( $found ) )
+			return $cache;
+
+		$self = new static( $source, $attributes, $args );
+
+		wp_cache_add( $cache_key, $self, __CLASS__ );
+
+		return $self;
+	}
+
+	/**
 	 * Construct.
 	 *
 	 * @param mixed $source     Image source.
@@ -88,7 +114,7 @@ abstract class image_tag {
 	 * @uses image_tag::_maybe_create_noscript_object()
 	 * @uses image_tag::get_attributes()
 	 */
-	function __construct( $source, $attributes = array(), $args = array() ) {
+	protected function __construct( $source, $attributes = array(), $args = array() ) {
 		$this->_source = $this->src = $source;
 
 		array_key_exists( 'noscript', $args ) && $this->_noscript = $args['noscript'];
@@ -736,6 +762,38 @@ class image_tag__placeholder extends image_tag {
  */
 class image_tag__picsum extends image_tag {
 
+	public static function create( $source, $attributes = array(), $args = array(), $skip_cache = false ) {
+		static $_random = 1;
+
+		if (
+			    array_key_exists( 'width', $attributes )
+			&& !array_key_exists( 'width', $args )
+		)
+			$args['width'] = $attributes['width'];
+
+		if (
+			    array_key_exists( 'height', $attributes )
+			&& !array_key_exists( 'height', $args )
+		)
+			$args['height'] = $attributes['height'];
+
+		if ( empty( $args['random'] ) ) {
+			$cache_key = md5( serialize( array( $source, $args ) ) );
+			$cache = wp_cache_get( $cache_key, __CLASS__, false, $found );
+
+			if ( $found )
+				return $cache;
+		} else
+			$args['random'] = $_random++;
+
+		$self = new static( $source, $attributes, $args );
+
+		if ( empty( $args['random'] ) )
+			wp_cache_add( $cache_key, $self, __CLASS__ );
+
+		return $self;
+	}
+
 	/**
 	 * Construct.
 	 *
@@ -743,26 +801,19 @@ class image_tag__picsum extends image_tag {
 	 * @param array  $attributes Image attributes.
 	 * @param array  $args       Image object arguments.
 	 */
-	function __construct( $source, $attributes = array(), $args = array() ) {
+	protected function __construct( $source, $attributes = array(), $args = array() ) {
 		$source = 'https://picsum.photos/';
 
 		if ( !empty( $args['gray'] ) )
 			$source .= 'g/';
 
-		if ( array_key_exists( 'width', $args ) )
-			$source .= $args['width'];
-		else if ( array_key_exists( 'width', $attributes ) )
-			$source .= $attributes['width'];
-
-		if ( array_key_exists( 'height', $args ) )
-			$source .= '/' . $args['height'];
-		else if ( array_key_exists( 'height', $args ) )
-			$source .= '/' . $attributes['height'];
+		$source .= $args['width'];
+		$source .= '/' . $args['height'];
 
 		if ( !empty( $args['image'] ) )
 			$source = add_query_arg( 'image', $args['image'], $source );
 		else if ( !empty( $args['random'] ) )
-			$source = add_query_arg( 'random', 1, $source );
+			$source = add_query_arg( 'random', $args['random'], $source );
 
 		if ( !empty( $args['blur'] ) )
 			$source = add_query_arg( 'blur', 1, $source );
@@ -811,12 +862,6 @@ class image_tag__picsum extends image_tag {
 function get_image_tag_object( $source, $attributes = array(), $args = array(), $skip_cache = false ) {
 	static $_class_names = array();
 
-	$cache_key = md5( serialize( array( $source, $args ) ) );
-	$skip_cache || $cache = wp_cache_get( $cache_key, __FUNCTION__, false, $has_cache );
-
-	if ( !empty( $has_cache ) )
-		return $cache;
-
 	if ( false !== stripos( $source, 'http' ) )
 		$class = 'image_tag__external';
 
@@ -838,9 +883,7 @@ function get_image_tag_object( $source, $attributes = array(), $args = array(), 
 	if ( !array_key_exists( $class, $_class_names ) )
 		$_class_names[$class] = apply_filters( 'image_tag/' . $class, $class );
 
-	$_image_tag = new $_class_names[$class]( $source, $attributes, $args );
-
-	wp_cache_add( $cache_key, $_image_tag, __FUNCTION__ );
+	$_image_tag = $_class_names[$class]::create( $source, $attributes, $args );
 
 	return $_image_tag;
 }
