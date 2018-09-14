@@ -81,23 +81,21 @@ abstract class image_tag {
 	/**
 	 * Create.
 	 *
-	 * @param mixed $source     Image source.
-	 * @param array $attributes Image attributes.
-	 * @param array $args       Image object arguments.
-	 * @param bool  $skip_cache Set true to skip cached object.
+	 * @param mixed $source Image source.
+	 * @param array $args   Image object arguments.
 	 *
 	 * @return image_tag
 	 */
-	public static function create( $source, $attributes = array(), $args = array(), $skip_cache = false ) {
-		$cache_key = md5( serialize( array( $source, $args ) ) );
+	public static function create( $source, $args = array() ) {
+		$cache_key = $source;
 
-		if ( !$skip_cache )
+		if ( empty( $args['skip_cache'] ) )
 			$cache = wp_cache_get( $cache_key, __CLASS__, false, $found );
 
 		if ( !empty( $found ) )
 			return $cache;
 
-		$self = new static( $source, $attributes, $args );
+		$self = new static( $source, $args );
 
 		wp_cache_add( $cache_key, $self, __CLASS__ );
 
@@ -108,13 +106,12 @@ abstract class image_tag {
 	 * Construct.
 	 *
 	 * @param mixed $source     Image source.
-	 * @param array $attributes Image attributes.
 	 * @param array $args       Image object arguments.
 	 *
 	 * @uses image_tag::_maybe_create_noscript_object()
 	 * @uses image_tag::get_attributes()
 	 */
-	protected function __construct( $source, $attributes = array(), $args = array() ) {
+	protected function __construct( $source, $args = array() ) {
 		$this->_source = $this->src = $source;
 
 		array_key_exists( 'noscript', $args ) && $this->_noscript = $args['noscript'];
@@ -126,17 +123,17 @@ abstract class image_tag {
 		)
 			$this->_noscript = true;
 
-		$this->_maybe_create_noscript_object( $source, $attributes, $args );
+		$this->_maybe_create_noscript_object( $source, $args );
 
 		foreach ( array_keys( $this->get_attributes() ) as $attribute )
 			if (
-				array_key_exists( $attribute, $attributes )
+				array_key_exists( $attribute, $args )
 				&& property_exists( $this, $attribute )
 			)
-				$this->$attribute = $attributes[$attribute];
+				$this->$attribute = $args[$attribute];
 
-		if ( array_key_exists( 'data', $attributes ) )
-			$this->data = wp_parse_args( $attributes['data'], $this->data );
+		if ( array_key_exists( 'data', $args ) )
+			$this->data = wp_parse_args( $args['data'], $this->data );
 	}
 
 	/**
@@ -196,12 +193,11 @@ abstract class image_tag {
 	 * Maybe create noscript object.
 	 *
 	 * @param string $source     Image source.
-	 * @param array  $attributes Image tag attributes.
 	 * @param array  $args       Image object arguments.
 	 *
 	 * @uses get_image_tag_object()
 	 */
-	protected function _maybe_create_noscript_object( $source, $attributes, $args ) {
+	protected function _maybe_create_noscript_object( $source, $args ) {
 		if (
 			!$this->_noscript
 			|| !empty( $this->noscript )
@@ -209,7 +205,7 @@ abstract class image_tag {
 			return;
 
 		$args['noscript'] = $args['lazyload'] = false;
-		$this->noscript = get_image_tag_object( $source, $attributes, $args );
+		$this->noscript = get_image_tag_object( $source, $args );
 	}
 
 	/**
@@ -334,18 +330,17 @@ class image_tag__wp_attachment extends image_tag {
 	 * Construct.
 	 *
 	 * @param int   $source_id  Attachment image object ID.
-	 * @param array $attributes Image attributes.
 	 * @param array $args Image object arguments.
 	 *
 	 * @uses image_tag__wp_attachment::_add_size_data()
 	 * @uses image_tag::__construct()
 	 */
-	function __construct( $source_id, $attributes = array(), $args = array() ) {
+	function __construct( $source_id, $args = array() ) {
 		$this->_source_id = $source_id;
 		$this->_post = get_post( $source_id );
 
-		$this->_sizes = !empty( $args['image_sizes'] )
-			? $args['image_sizes']
+		$this->_sizes = !empty( $args['wordpress']['image_sizes'] )
+			? $args['wordpress']['image_sizes']
 			: array_merge( get_intermediate_image_sizes(), array( 'full' ) );
 
 		$this->_sizes_data['__largest']  = new _image_tag__wp_attachment_image_size__largest;
@@ -367,7 +362,9 @@ class image_tag__wp_attachment extends image_tag {
 			$this->srcset = implode( ', ', $srcset );
 		}
 
-		parent::__construct( $this->_sizes_data['__smallest']->get( 'src' ), $attributes, $args );
+		unset( $args['wordpress'] );
+
+		parent::__construct( $this->_sizes_data['__smallest']->get( 'src' ), $args );
 	}
 
 	/**
@@ -408,13 +405,12 @@ class image_tag__wp_attachment extends image_tag {
 	 * Maybe create noscript object.
 	 *
 	 * @param int   $source     Image attachment object ID.
-	 * @param array $attributes Image tag attributes.
 	 * @param array $args       Image object arguments.
 	 *
 	 * @uses imagee_tag::_maybe_create_noscript_object()
 	 */
-	protected function _maybe_create_noscript_object( $source, $attributes, $args ) {
-		parent::_maybe_create_noscript_object( $this->_source_id, $attributes, $args );
+	protected function _maybe_create_noscript_object( $source, $args ) {
+		parent::_maybe_create_noscript_object( $this->_source_id, $args );
 	}
 
 	/**
@@ -681,66 +677,54 @@ class image_tag__placeholder extends image_tag {
 	/**
 	 * Construct.
 	 *
-	 * @param string $source     Only 'placeholder'.
-	 * @param array  $attributes Image attributes.
-	 * @param array  $args       Image object arguments.
+	 * @param string $source Only 'placeholder'.
+	 * @param array  $args   Image object arguments.
 	 */
-	function __construct( $source = 'placeholder', $attributes = array(), $args = array() ) {
+	function __construct( $source = 'placeholder', $args = array() ) {
 		$source = 'http://via.placeholder.com/';
 
+		!empty( $args['width']  ) && empty( $args['placeholder']['width']  ) && $args['placeholder']['width']  = $args['width'];
+		!empty( $args['height'] ) && empty( $args['placeholder']['height'] ) && $args['placeholder']['height'] = $args['height'];
+
 		// add width dimension
-		if ( array_key_exists( 'width', $args ) )
-			$source .= $args['width'];
-		else if ( array_key_exists( 'width', $attributes ) )
-			$source .= $attributes['width'];
+		$source .= $args['placeholder']['width'];
 
 		// add height dimension
-		if ( array_key_exists( 'height', $args ) )
-			$source .= 'x' . $args['height'];
-		else if ( array_key_exists( 'height', $attributes ) )
-			$source .= 'x' . $attributes['height'];
+		$source .= 'x' . $args['placeholder']['height'];
 
 		// add background color
-		if ( array_key_exists( 'color-bg', $args ) ) {
-			$source .= '/' . $args['color-bg'];
+		if ( array_key_exists( 'color-bg', $args['placeholder'] ) ) {
+			$source .= '/' . $args['placeholder']['color-bg'];
 
 			// add text color (background color must be specified)
-			if ( array_key_exists( 'color-text', $args ) )
-				$source .= '/' . $args['color-text'];
+			if ( array_key_exists( 'color-text', $args['placeholder'] ) )
+				$source .= '/' . $args['placeholder']['color-text'];
 		}
 
 		// add image format (gif, jpeg, jpg, png)
-		if ( array_key_exists( 'format', $args ) )
-			$source .= '.' . $args['format'];
+		if ( array_key_exists( 'format', $args['placeholder'] ) )
+			$source .= '.' . $args['placeholder']['format'];
 
 		// add image text
-		if ( array_key_exists( 'text', $args ) )
-			$source = add_query_arg( 'text', $args['text'], $source );
+		if ( array_key_exists( 'text', $args['placeholder'] ) )
+			$source = add_query_arg( 'text', $args['placeholder']['text'], $source );
 
-		unset(
-			$args['width'],
-			$args['height'],
-			$args['color-bg'],
-			$args['color-text'],
-			$args['format'],
-			$args['text']
-		);
+		unset( $args['placeholder'] );
 
-		parent::__construct( $source, $attributes, $args );
+		parent::__construct( $source, $args );
 
 	}
 
 	/**
 	 * Maybe create noscript object.
 	 *
-	 * @param string $source     "Placeholder".
-	 * @param array  $attributes Image tag attributes.
-	 * @param array  $args       Image object arguments.
+	 * @param string $source "Placeholder".
+	 * @param array  $args   Image object arguments.
 	 *
 	 * @uses imagee_tag::_maybe_create_noscript_object()
 	 */
-	protected function _maybe_create_noscript_object( $source = 'placeholder', $attributes, $args ) {
-		parent::_maybe_create_noscript_object( 'placeholder', $attributes, $args );
+	protected function _maybe_create_noscript_object( $source = 'placeholder', $args ) {
+		parent::_maybe_create_noscript_object( 'placeholder', $args );
 	}
 
 }
@@ -762,33 +746,27 @@ class image_tag__placeholder extends image_tag {
  */
 class image_tag__picsum extends image_tag {
 
-	public static function create( $source, $attributes = array(), $args = array(), $skip_cache = false ) {
+	public static function create( $source, $args = array() ) {
 		static $_random = 1;
 
-		if (
-			    array_key_exists( 'width', $attributes )
-			&& !array_key_exists( 'width', $args )
-		)
-			$args['width'] = $attributes['width'];
+		empty( $args['width']  ) && !empty( $args['picsum']['width']  ) && $args['width']  = $args['picsum']['width'];
+		empty( $args['height'] ) && !empty( $args['picsum']['height'] ) && $args['height'] = $args['picsum']['height'];
 
-		if (
-			    array_key_exists( 'height', $attributes )
-			&& !array_key_exists( 'height', $args )
-		)
-			$args['height'] = $attributes['height'];
+		!empty( $args['width']  ) && empty( $args['picsum']['width']  ) && $args['picsum']['width']  = $args['width'];
+		!empty( $args['height'] ) && empty( $args['picsum']['height'] ) && $args['picsum']['height'] = $args['height'];
 
-		if ( empty( $args['random'] ) ) {
-			$cache_key = md5( serialize( array( $source, $args ) ) );
+		if ( empty( $args['picsum']['random'] ) ) {
+			$cache_key = md5( serialize( array( $source, $args['picsum'] ) ) );
 			$cache = wp_cache_get( $cache_key, __CLASS__, false, $found );
 
-			if ( $found )
+			if ( empty( $args['skip_cache'] ) && $found )
 				return $cache;
 		} else
-			$args['random'] = $_random++;
+			$args['picsum']['random'] = $_random++;
 
-		$self = new static( $source, $attributes, $args );
+		$self = new static( $source, $args );
 
-		if ( empty( $args['random'] ) )
+		if ( empty( $args['picsum']['random'] ) )
 			wp_cache_add( $cache_key, $self, __CLASS__ );
 
 		return $self;
@@ -797,54 +775,42 @@ class image_tag__picsum extends image_tag {
 	/**
 	 * Construct.
 	 *
-	 * @param string $source     Only 'picsum'.
-	 * @param array  $attributes Image attributes.
-	 * @param array  $args       Image object arguments.
+	 * @param string $source Only 'picsum'.
+	 * @param array  $args   Image object arguments.
 	 */
-	protected function __construct( $source, $attributes = array(), $args = array() ) {
+	protected function __construct( $source, $args = array() ) {
 		$source = 'https://picsum.photos/';
 
-		if ( !empty( $args['gray'] ) )
+		if ( !empty( $args['picsum']['gray'] ) )
 			$source .= 'g/';
 
-		$source .= $args['width'];
-		$source .= '/' . $args['height'];
+		$source .= $args['picsum']['width'];
+		$source .= '/' . $args['picsum']['height'];
 
-		if ( !empty( $args['image'] ) )
-			$source = add_query_arg( 'image', $args['image'], $source );
-		else if ( !empty( $args['random'] ) )
-			$source = add_query_arg( 'random', $args['random'], $source );
+		if ( !empty( $args['picsum']['image'] ) )
+			$source = add_query_arg( 'image', $args['picsum']['image'], $source );
+		else if ( !empty( $args['picsum']['random'] ) )
+			$source = add_query_arg( 'random', $args['picsum']['random'], $source );
 
-		if ( !empty( $args['blur'] ) )
-			$source = add_query_arg( 'blur', 1, $source );
+		!empty( $args['picsum']['blur']    ) && $source = add_query_arg( 'blur', 1, $source );
+		!empty( $args['picsum']['gravity'] ) && $source = add_query_arg( 'gravity', $args['picsum']['gravity'], $source );
 
-		if ( !empty( $args['gravity'] ) )
-			$source = add_query_arg( 'gravity', $args['gravity'], $source );
+		unset( $args['picsum'] );
 
-		unset(
-			$args['gray'],
-			$args['width'],
-			$args['height'],
-			$args['image'],
-			$args['blur'],
-			$args['gravity']
-		);
-
-		parent::__construct( $source, $attributes, $args );
+		parent::__construct( $source, $args );
 
 	}
 
 	/**
 	 * Maybe create noscript object.
 	 *
-	 * @param int   $source     "Picsum".
-	 * @param array $attributes Image tag attributes.
-	 * @param array $args       Image object arguments.
+	 * @param int   $source "Picsum".
+	 * @param array $args   Image object arguments.
 	 *
 	 * @uses imagee_tag::_maybe_create_noscript_object()
 	 */
-	protected function _maybe_create_noscript_object( $source = 'picsum', $attributes, $args ) {
-		parent::_maybe_create_noscript_object( 'picsum', $attributes, $args );
+	protected function _maybe_create_noscript_object( $source = 'picsum', $args ) {
+		parent::_maybe_create_noscript_object( 'picsum', $args );
 	}
 
 }
@@ -852,17 +818,15 @@ class image_tag__picsum extends image_tag {
 /**
  * Get image tag object.
  *
- * @param int|string $source     Image source.
- * @param array      $attributes Image attributes.
- * @param array      $args       Image object arguments.
- * @param bool       $skip_cache Skip the cached object.
+ * @param int|string $source Image source.
+ * @param array      $args   Image object arguments.
  *
  * @return image_tag
  */
-function get_image_tag_object( $source, $attributes = array(), $args = array(), $skip_cache = false ) {
+function get_image_tag_object( $source, $args = array() ) {
 	static $_class_names = array();
 
-	if ( false !== stripos( $source, 'http' ) )
+	if ( 'http' === substr( $source, 0, 4 ) )
 		$class = 'image_tag__external';
 
 	else if (
@@ -883,7 +847,7 @@ function get_image_tag_object( $source, $attributes = array(), $args = array(), 
 	if ( !array_key_exists( $class, $_class_names ) )
 		$_class_names[$class] = apply_filters( 'image_tag/' . $class, $class );
 
-	$_image_tag = $_class_names[$class]::create( $source, $attributes, $args );
+	$_image_tag = $_class_names[$class]::create( $source, $args );
 
 	return $_image_tag;
 }
@@ -891,15 +855,13 @@ function get_image_tag_object( $source, $attributes = array(), $args = array(), 
 /**
  * Print image tag.
  *
- * @param int|string $source     Image source.
- * @param array      $attributes Image attributes.
- * @param array      $args       Image object arguments.
- * @param bool       $skip_cache Skip the cached object.
+ * @param int|string $source Image source.
+ * @param array      $args   Image object arguments.
  *
  * @uses get_image_tag_object()
  */
-function image_tag( $source, $attributes = array(), $args = array(), $skip_cache = false ) {
-	echo get_image_tag_object( $source, $attributes, $args, $skip_cache );
+function image_tag( $source, $args = array() ) {
+	echo get_image_tag_object( $source, $args );
 }
 
 /**
@@ -907,9 +869,9 @@ function image_tag( $source, $attributes = array(), $args = array(), $skip_cache
  */
 function image_tag__debug() {
 	image_tag( 'https://images.unsplash.com/photo-1528485683898-7633212b3db6?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=dffe08428a166a76b5b6527aeae128ce&auto=format&fit=crop&w=4500&q=80', array( 'width' => 400 ) );
-	image_tag( 'placeholder', array( 'width' => 250, 'height' => 150 ), array( 'text' => 'Hello' ) );
-	image_tag( 'picsum', array( 'width' => 500, 'height' => 500 ), array( 'random' => 1 ) );
-	echo ( $wp = get_image_tag_object( 11, array( 'width' => 300, 'style' => 'width: auto; height: 500px;' ), array( 'image_sizes' => array( 'thumbnail', 'full' ) ) ) );
+	image_tag( 'placeholder', array( 'width' => 250, 'height' => 150, 'placeholder' => array( 'text' => 'Hello' ) ) );
+	image_tag( 'picsum', array( 'width' => 500, 'height' => 500, 'picsum' => array( 'random' => 1 ) ) );
+	echo ( $wp = get_image_tag_object( 11, array( 'width' => 300, 'style' => 'width: auto; height: 500px;', 'wordpress' => array( 'image_sizes' => array( 'thumbnail', 'full' ) ) ) ) );
 	echo $wp->get_mode_color();
 }
 
