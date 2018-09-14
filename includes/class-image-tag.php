@@ -20,7 +20,7 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
  */
 abstract class image_tag {
 
-	const VERSION = '0.0.7.0';
+	const VERSION = '0.0.8';
 	const DATAURI = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 	/** @var mixed $_source Image source. **/
