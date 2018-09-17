@@ -38,11 +38,16 @@ class Calyx_Front_Actions {
 	 */
 	function init() {
 
-		wp_register_style( THEME_PREFIX . '/styles', get_theme_file_uri( 'style.min.css'  ), array( THEME_PREFIX . '/copy' ), 'init' );
-		wp_register_script( THEME_PREFIX . '/scripts', get_theme_file_uri( 'assets/js/scripts.min.js' ), array(), 'init' );
+		wp_register_style( THEME_PREFIX . '/critical/site',   get_theme_file_url( 'assets/critical/site.min.css'   ), array( THEME_PREFIX . '/copy'          ), 'init' );
+		wp_register_style( THEME_PREFIX . '/critical/mobile', get_theme_file_url( 'assets/critical/mobile.min.css' ), array( THEME_PREFIX . '/critical/site' ), 'init' );
+		wp_register_style( THEME_PREFIX . '/styles',          get_theme_file_uri( 'style.min.css'                  ), array( THEME_PREFIX . '/critical/site' ), 'init' );
+		wp_register_style( THEME_PREFIX . '/login',           get_theme_file_uri( 'assets/critical/login.min.css'  ), array( 'login'                         ), 'init' );
 
-		wp_register_style( THEME_PREFIX . '/login',  get_theme_file_uri( 'assets/critical/login.min.css'), array( 'login' ), 'init' );
-			wp_style_add_data( THEME_PREFIX . '/login', 'critical', true );
+			wp_style_add_data( THEME_PREFIX . '/critical/site',   'critical', true );
+			wp_style_add_data( THEME_PREFIX . '/critical/mobile', 'critical', true );
+			wp_style_add_data( THEME_PREFIX . '/login',           'critical', true );
+
+		wp_register_script( THEME_PREFIX . '/scripts', get_theme_file_uri( 'assets/js/scripts.min.js' ), array(), 'init' );
 
 		Calyx()->front()->_register_vendor_assets();
 

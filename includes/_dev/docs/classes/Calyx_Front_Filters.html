@@ -106,7 +106,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">31</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">32</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1069920590"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1504593653"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1069920590" class="accordion-body collapse in">
+            <div id="namespace-1504593653" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -217,6 +217,7 @@
                                                                     <a href="../classes/Calyx_Singleton.html#method_create_instance" class="">create_instance()</a><br />
                                                                     <a href="../classes/Calyx_Front_Filters.html#method_body_class" class="">body_class()</a><br />
                                                                     <a href="../classes/Calyx_Front_Filters.html#method_post_class" class="">post_class()</a><br />
+                                                                    <a href="../classes/Calyx_Front_Filters.html#method_the_content" class="">the_content()</a><br />
                                                             </section>
                             <section class="span4">
                                                                     <em>No public properties found</em>
@@ -323,7 +324,10 @@
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">body_class(array  <span class="argument">$classes</span>) : array</pre>
                 <p><em>Filter: body_class</em></p>
-                
+                <ul>
+<li>add post thumbnail classes (set and ID)</li>
+<li>add user role class</li>
+</ul>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -360,7 +364,7 @@
                 <pre class="signature" style="margin-right: 54px;">post_class(array  <span class="argument">$classes</span>, array  <span class="argument">$class</span>, integer  <span class="argument">$post_id</span>) : array</pre>
                 <p><em>Filter: post_class</em></p>
                 <ul>
-<li>add post thumbnail's ID</li>
+<li>add post thumbnail ID class</li>
 </ul>
 
                                     <h4>Parameters</h4>
@@ -392,6 +396,46 @@
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
                                                                             </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_the_content" name="method_the_content" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">the_content()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">the_content(string  <span class="argument">$content</span>) : string</pre>
+                <p><em>Filter: the_content</em></p>
+                <ul>
+<li>add headline anchors</li>
+</ul>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$content </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>Calyx_Front::add_headline_anchors()</dd>
+                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -474,7 +518,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on September 10th, 2018 at 07:10.
+                    on September 17th, 2018 at 03:38.
                 </section>
             </section>
         </section>

@@ -123,6 +123,37 @@ class Calyx_Front {
 		return maybe_minify_js( ob_get_clean() );
 	}
 
+	/**
+	 * Get anchor headline.
+	 *
+	 * @return string
+	 */
+	function get_headline_anchor() {
+		static $_count = 1;
+
+		return '<i id="section-' . $_count . '" aria-hidden="true"></i>' .
+		       '<a class="_anchor" href="#section-' . $_count++ . '">#</a>';
+	}
+
+	/**
+	 * Add anchors to headlines.
+	 *
+	 * @param string $content
+	 *
+	 * @uses $this::get_headline_anchor()
+	 *
+	 * @return string
+	 */
+	function add_headline_anchors( $content ) {
+		return preg_replace_callback(
+			"/<\/h[0-9].*>/",
+			function ( $matches ) {
+				return $this->get_headline_anchor() . $matches[0];
+			},
+			$content
+		);
+	}
+
 }
 
 add_action( THEME_PREFIX . '/include_files/after_core', array( 'Calyx_Front', 'include_files' ) );

@@ -106,7 +106,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">31</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">32</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1276101727"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1365178480"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1276101727" class="accordion-body collapse in">
+            <div id="namespace-1365178480" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -214,6 +214,7 @@
                         </section>
                         <section class="row-fluid public">
                             <section class="span4">
+                                                                    <a href="../classes/image_tag.html#method_create" class="">create()</a><br />
                                                                     <a href="../classes/image_tag__wp_attachment.html#method___construct" class="">__construct()</a><br />
                                                                     <a href="../classes/image_tag.html#method___toString" class="">__toString()</a><br />
                                                                     <a href="../classes/image_tag.html#method_get" class="">get()</a><br />
@@ -923,11 +924,55 @@
 
                                     <div class="row-fluid">
         <div class="span8 content class">
+            <a id="method_create" name="method_create" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">create()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">create(mixed  <span class="argument">$source</span>, array  <span class="argument">$args = array()</span>) : \image_tag</pre>
+                <p><em>Create.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$source </td>
+                                <td><p>Image source.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$args </td>
+                                <td><p>Image object arguments.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/image_tag.html">\image_tag</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/image_tag.html"><div class="path-wrapper">\image_tag</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
             <a id="method___construct" name="method___construct" class="anchor"></a>
             <article class="method">
                 <h3 class="public ">__construct()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">__construct(integer  <span class="argument">$source_id</span>, array  <span class="argument">$attributes = array()</span>, array  <span class="argument">$args = array()</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">__construct(integer  <span class="argument">$source_id</span>, array  <span class="argument">$args = array()</span>) </pre>
                 <p><em>Construct.</em></p>
                 
 
@@ -937,11 +982,6 @@
                                 <td>integer</td>
                                 <td>$source_id </td>
                                 <td><p>Attachment image object ID.</p></td>
-                            </tr>
-                                                    <tr>
-                                <td>array</td>
-                                <td>$attributes </td>
-                                <td><p>Image attributes.</p></td>
                             </tr>
                                                     <tr>
                                 <td>array</td>
@@ -1347,13 +1387,15 @@
             <article class="method">
                 <h3 class="public ">get_mode_color()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">get_mode_color() </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">get_mode_color() : string</pre>
+                <p><em>Get most frequent color in image.</em></p>
                 
 
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    string
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -1403,7 +1445,7 @@
             <article class="method">
                 <h3 class="protected ">_maybe_create_noscript_object()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">_maybe_create_noscript_object(integer  <span class="argument">$source</span>, array  <span class="argument">$attributes</span>, array  <span class="argument">$args</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">_maybe_create_noscript_object(integer  <span class="argument">$source</span>, array  <span class="argument">$args</span>) </pre>
                 <p><em>Maybe create noscript object.</em></p>
                 
 
@@ -1413,11 +1455,6 @@
                                 <td>integer</td>
                                 <td>$source </td>
                                 <td><p>Image attachment object ID.</p></td>
-                            </tr>
-                                                    <tr>
-                                <td>array</td>
-                                <td>$attributes </td>
-                                <td><p>Image tag attributes.</p></td>
                             </tr>
                                                     <tr>
                                 <td>array</td>
@@ -1653,7 +1690,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on September 10th, 2018 at 07:10.
+                    on September 17th, 2018 at 03:38.
                 </section>
             </section>
         </section>

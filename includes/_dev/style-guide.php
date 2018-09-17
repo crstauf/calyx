@@ -406,32 +406,32 @@ United States</address>
 
 <p>On the topic of alignment, it should be noted that users can choose from the options of&nbsp;<em>None</em>,&nbsp;<em>Left</em>,&nbsp;<em>Right, </em>and&nbsp;<em>Center</em>. In addition, they also get the options of&nbsp;<em>Thumbnail</em>,&nbsp;<em>Medium</em>,&nbsp;<em>Large</em>&nbsp;&amp;&nbsp;<em>Fullsize</em>.</p>
 
-<p style="text-align: center;"><?php image_tag( 'picsum', array( 'width' => 580, 'height' => 300, 'class' => 'size-full aligncenter', 'alt' => 'Image Alignment 580x300' ), array( 'random' => 1 ) ); ?></p>
+<p style="text-align: center;"><?php image_tag( 'picsum', array( 'width' => 580, 'height' => 300, 'class' => 'size-full aligncenter', 'alt' => 'Image Alignment 580x300', 'picsum' => array( 'random' => 1 ) ) ); ?></p>
 
 <p>The image above happens to be&nbsp;<em><strong>centered</strong></em>.</p>
 
-<p><strong><?php image_tag( 'picsum', array( 'width' => 150, 'height' => 150, 'class' => 'size-full alignleft', 'alt' => 'Image Alignment 150x150' ), array( 'random' => 1 ) ); ?></strong>The rest of this paragraph is filler&nbsp;for the sake of seeing the text wrap around the 150×150 image, which is <em><strong>left aligned</strong></em>.</p>
+<p><strong><?php image_tag( 'picsum', array( 'width' => 150, 'height' => 150, 'class' => 'size-full alignleft', 'alt' => 'Image Alignment 150x150', 'picsum' => array( 'random' => 1 ) ) ); ?></strong>The rest of this paragraph is filler&nbsp;for the sake of seeing the text wrap around the 150×150 image, which is <em><strong>left aligned</strong></em>.</p>
 
 <p>As you can see the should be some space above, below, and to the right of the image. The text should not be creeping on the image. Creeping is just not right. Images need breathing room too. Let them speak like you words. Let them do their jobs without any hassle from the text. In about one more&nbsp;sentence&nbsp;here, we’ll see that the text moves from the right of the image down below the image in&nbsp;seamless&nbsp;transition. Again, letting the do it’s thang.&nbsp;Mission accomplished!</p>
 
 <p>And now for a <em><strong>massively large image</strong></em>. It also has <em><strong>no alignment</strong></em>.</p>
 
-<p><?php image_tag( 'picsum', array( 'width' => 1280, 'height' => 400, 'class' => 'alignnone', 'alt' => 'Image Alignment 1200x400' ), array( 'random' => 1 ) ); ?></p>
+<p><?php image_tag( 'picsum', array( 'width' => 1280, 'height' => 400, 'class' => 'alignnone', 'alt' => 'Image Alignment 1200x400', 'picsum' => array( 'random' => 1 ) ) ); ?></p>
 
 <p>The image above, though 1200px wide, should not overflow the content area. It should remain contained with no visible disruption to the flow of content.</p>
 
-<p><?php image_tag( 'picsum', array( 'width' => 300, 'height' => 200, 'class' => 'size-full alignright', 'alt' => 'Image Alignment 300x200' ), array( 'random' => 1 ) ); ?></p>
+<p><?php image_tag( 'picsum', array( 'width' => 300, 'height' => 200, 'class' => 'size-full alignright', 'alt' => 'Image Alignment 300x200', 'picsum' => array( 'random' => 1 ) ) ); ?></p>
 
 <p>And now we’re going to shift things to the <em><strong>right align</strong></em>. Again, there should be plenty of room above, below, and to the left of the image. Just look at him there… Hey guy! Way to rock that right side. I don’t care what the left aligned image says, you look great. Don’t let anyone else tell you differently.</p>
 
 <p>In just a bit here, you should see the text start to wrap below the right aligned image and settle in nicely. There should still be plenty of room and everything should be sitting pretty.&nbsp;Yeah… Just like that. It never felt so good to be right.</p>
 <p>And just when you thought we were done, we’re going to do them all over again with captions!</p>
 
-<div style="width: 590px" class="wp-caption aligncenter"><?php image_tag( 'picsum', array( 'width' => 580, 'height' => 300, 'class' => 'size-full', 'alt' => 'Image Alignment 580x300' ), array( 'random' => 1 ) ); ?><p class="wp-caption-text">Look at 580×300 getting some <a title="Image Settings" href="http://en.support.wordpress.com/images/image-settings/">caption</a> love.</p></div>
+<div style="width: 590px" class="wp-caption aligncenter"><?php image_tag( 'picsum', array( 'width' => 580, 'height' => 300, 'class' => 'size-full', 'alt' => 'Image Alignment 580x300', 'picsum' => array( 'random' => 1 ) ) ); ?><p class="wp-caption-text">Look at 580×300 getting some <a title="Image Settings" href="http://en.support.wordpress.com/images/image-settings/">caption</a> love.</p></div>
 
 <p>The image above happens to be&nbsp;<em><strong>centered</strong></em>. The caption also has a link in it, just to see if it does anything funky.</p>
 
-<div style="width: 160px" class="wp-caption alignleft"><?php image_tag( 'picsum', array( 'width' => 150, 'height' => 150, 'class' => 'size-full', 'alt' => 'Image Alignment 150x150' ), array( 'random' => 1 ) ); ?><p class="wp-caption-text">Itty-bitty caption.</p></div>
+<div style="width: 160px" class="wp-caption alignleft"><?php image_tag( 'picsum', array( 'width' => 150, 'height' => 150, 'class' => 'size-full', 'alt' => 'Image Alignment 150x150', 'picsum' => array( 'random' => 1 ) ) ); ?><p class="wp-caption-text">Itty-bitty caption.</p></div>
 
 <p>The rest of this paragraph is filler&nbsp;for the sake of seeing the text wrap around the 150×150 image, which is <em><strong>left aligned</strong></em>.</p>
 
@@ -439,11 +439,11 @@ United States</address>
 
 <p>And now for a <em><strong>massively large image</strong></em>. It also has <em><strong>no alignment</strong></em>.</p>
 
-<div style="width: 100%; max-width: 1200px" class="wp-caption alignnone"><?php image_tag( 'picsum', array( 'width' => 1200, 'height' => 400, 'alt' => 'Image Alignment 1200x400' ), array( 'random' => 1 ) ); ?><p class="wp-caption-text">Massive image comment for your eyeballs.</p></div>
+<div style="width: 100%; max-width: 1200px" class="wp-caption alignnone"><?php image_tag( 'picsum', array( 'width' => 1200, 'height' => 400, 'alt' => 'Image Alignment 1200x400', 'picsum' => array( 'random' => 1 ) ) ); ?><p class="wp-caption-text">Massive image comment for your eyeballs.</p></div>
 
 <p>The image above, though 1200px wide, should not overflow the content area. It should remain contained with no visible disruption to the flow of content.</p>
 
-<div style="width: 310px" class="wp-caption alignright"><?php image_tag( 'picsum', array( 'width' => 300, 'height' => 200, 'class' => 'size-full', 'alt' => 'Image Alignment 300x200' ), array( 'random' => 1 ) ); ?><p class="wp-caption-text">Feels good to be right all the time.</p></div>
+<div style="width: 310px" class="wp-caption alignright"><?php image_tag( 'picsum', array( 'width' => 300, 'height' => 200, 'class' => 'size-full', 'alt' => 'Image Alignment 300x200', 'picsum' => array( 'random' => 1 ) ) ); ?><p class="wp-caption-text">Feels good to be right all the time.</p></div>
 
 <p>And now we’re going to shift things to the <em><strong>right align</strong></em>. Again, there should be plenty of room above, below, and to the left of the image. Just look at him there… Hey guy! Way to rock that right side. I don’t care what the left aligned image says, you look great. Don’t let anyone else tell you differently.</p>
 

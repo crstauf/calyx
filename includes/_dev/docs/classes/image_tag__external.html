@@ -106,7 +106,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">31</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">32</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1008021182"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-535565320"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1008021182" class="accordion-body collapse in">
+            <div id="namespace-535565320" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -214,7 +214,7 @@
                         </section>
                         <section class="row-fluid public">
                             <section class="span4">
-                                                                    <a href="../classes/image_tag.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/image_tag.html#method_create" class="">create()</a><br />
                                                                     <a href="../classes/image_tag.html#method___toString" class="">__toString()</a><br />
                                                                     <a href="../classes/image_tag.html#method_get" class="">get()</a><br />
                                                                     <a href="../classes/image_tag.html#method_get_html" class="">get_html()</a><br />
@@ -241,6 +241,7 @@
                         </section>
                         <section class="row-fluid protected">
                             <section class="span4">
+                                                                    <a href="../classes/image_tag.html#method___construct" class="">__construct()</a><br />
                                                                     <a href="../classes/image_tag.html#method_get_attributes" class="">get_attributes()</a><br />
                                                                     <a href="../classes/image_tag.html#method__maybe_create_noscript_object" class="">_maybe_create_noscript_object()</a><br />
                                                                     <a href="../classes/image_tag.html#method_maybe_set_lazyload_attributes" class="">maybe_set_lazyload_attributes()</a><br />
@@ -812,12 +813,12 @@
 
                                     <div class="row-fluid">
         <div class="span8 content class">
-            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <a id="method_create" name="method_create" class="anchor"></a>
             <article class="method">
-                <h3 class="public ">__construct()</h3>
+                <h3 class="public ">create()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">__construct(mixed  <span class="argument">$source</span>, array  <span class="argument">$attributes = array()</span>, array  <span class="argument">$args = array()</span>) </pre>
-                <p><em>Construct.</em></p>
+                <pre class="signature" style="margin-right: 54px;">create(mixed  <span class="argument">$source</span>, array  <span class="argument">$args = array()</span>) : \image_tag</pre>
+                <p><em>Create.</em></p>
                 
 
                                     <h4>Parameters</h4>
@@ -829,29 +830,24 @@
                             </tr>
                                                     <tr>
                                 <td>array</td>
-                                <td>$attributes </td>
-                                <td><p>Image attributes.</p></td>
-                            </tr>
-                                                    <tr>
-                                <td>array</td>
                                 <td>$args </td>
                                 <td><p>Image object arguments.</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    <a href="../classes/image_tag.html">\image_tag</a>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
                                                             <dl>
                                                     <dt>Inherited from</dt>
                     <dd><a href="../classes/image_tag.html"><div class="path-wrapper">\image_tag</div></a></dd>
-                                                                                            <dt>Uses</dt>
-                                                                <dd>image_tag::_maybe_create_noscript_object()</dd>
-                                            <dd>image_tag::get_attributes()</dd>
-                                                </dl>
+                                                            </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -998,6 +994,50 @@
 
                                                     <div class="row-fluid">
         <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(mixed  <span class="argument">$source</span>, array  <span class="argument">$args = array()</span>) </pre>
+                <p><em>Construct.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$source </td>
+                                <td><p>Image source.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$args </td>
+                                <td><p>Image object arguments.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/image_tag.html"><div class="path-wrapper">\image_tag</div></a></dd>
+                                                                                            <dt>Uses</dt>
+                                                                <dd>image_tag::_maybe_create_noscript_object()</dd>
+                                            <dd>image_tag::get_attributes()</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
             <a id="method_get_attributes" name="method_get_attributes" class="anchor"></a>
             <article class="method">
                 <h3 class="protected ">get_attributes()</h3>
@@ -1032,7 +1072,7 @@
             <article class="method">
                 <h3 class="protected ">_maybe_create_noscript_object()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">_maybe_create_noscript_object(string  <span class="argument">$source</span>, array  <span class="argument">$attributes</span>, array  <span class="argument">$args</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">_maybe_create_noscript_object(string  <span class="argument">$source</span>, array  <span class="argument">$args</span>) </pre>
                 <p><em>Maybe create noscript object.</em></p>
                 
 
@@ -1042,11 +1082,6 @@
                                 <td>string</td>
                                 <td>$source </td>
                                 <td><p>Image source.</p></td>
-                            </tr>
-                                                    <tr>
-                                <td>array</td>
-                                <td>$attributes </td>
-                                <td><p>Image tag attributes.</p></td>
                             </tr>
                                                     <tr>
                                 <td>array</td>
@@ -1207,7 +1242,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on September 10th, 2018 at 07:10.
+                    on September 17th, 2018 at 03:38.
                 </section>
             </section>
         </section>

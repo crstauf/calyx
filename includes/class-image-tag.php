@@ -511,6 +511,11 @@ class image_tag__wp_attachment extends image_tag {
 		return !empty( $this->get_mode_color() );
 	}
 
+	/**
+	 * Get most frequent color in image.
+	 *
+	 * @return string
+	 */
 	function get_mode_color() {
 		if ( !empty( get_post_meta( $this->get_attachment_id(), '_mode_color', true ) ) )
 			  return get_post_meta( $this->get_attachment_id(), '_mode_color', true );
@@ -585,8 +590,8 @@ class _image_tag__wp_attachment_image_size {
 	/**
 	 * Get the properties of the image size.
 	 *
-	 * @param int    $source_id Source ID.
-	 * @param string $size      Size name.
+	 * @param image_tag__wp_attachment $image Image attachment object.
+	 * @param string                   $size  Size name.
 	 */
 	function __construct( image_tag__wp_attachment &$image, $size ) {
 		$attachment = wp_get_attachment_image_src( $image->get_attachment_id(), $size );
@@ -746,6 +751,14 @@ class image_tag__placeholder extends image_tag {
  */
 class image_tag__picsum extends image_tag {
 
+	/**
+	 * Create object.
+	 *
+	 * @param string $source
+	 * @param array  $args
+	 *
+	 * @return image_tag__picsum
+	 */
 	public static function create( $source, $args = array() ) {
 		static $_random = 1;
 

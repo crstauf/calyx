@@ -77,15 +77,16 @@ class Calyx_WooCommerce {
 		add_action( THEME_PREFIX . '/compatibility_monitor/__woocommerce', array( &$this, 'action__compatibility_monitor' ), 10, 2 );
 		add_action( THEME_PREFIX . '/woocommerce/features/add',            array( &$this, 'add_feature'                   ), 10, 2 );
 
-		add_action( 'admin_enqueue_scripts', array( &$this, '_enqueue_assets' ) );
-		add_action( 'wp_enqueue_scripts',    array( &$this, '_enqueue_assets' ) );
-		add_action( 'admin_menu',            array( &$this, '_maybe_remove_reports_page' ), 21 );
-		add_action( 'wp_dashboard_setup',    array( &$this, 'action__wp_dashboard_setup' ) );
-		add_action( 'admin_bar_menu',        array( &$this, 'action__admin_bar_menu'     ), 65 );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'action__admin_enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts',    array( &$this, 'action__wp_enqueue_scripts'    ) );
+		add_action( 'admin_menu',            array( &$this, 'action__admin_menu'            ), 21 );
+		add_action( 'wp_dashboard_setup',    array( &$this, 'action__wp_dashboard_setup'    ) );
+		add_action( 'admin_bar_menu',        array( &$this, 'action__admin_bar_menu'        ), 65 );
 
 		add_filter( 'request',                  array( &$this, 'filter__request'                  ) );
 		add_filter( 'dashboard_glance_items',   array( &$this, 'filter__dashboard_glance_items'   ) );
 		add_filter( 'edit_shop_order_per_page', array( &$this, 'filter__edit_shop_order_per_page' ) );
+		add_filter( 'schedule_event',           array( &$this, 'filter__schedule_event'           ) );
 
 	}
 
@@ -115,6 +116,33 @@ class Calyx_WooCommerce {
 	##     ## ##    ##    ##     ##  ##     ## ##   ### ##    ##
 	##     ##  ######     ##    ####  #######  ##    ##  ######
 	*/
+
+	/**
+	 * Action: admin_enqueue_scripts
+	 *
+	 * @uses $this::_enqueue_assets()
+	 */
+	function action__admin_enqueue_scripts() {
+		$this->_enqueue_assets();
+	}
+
+	/**
+	 * Action: wp_enqueue_scripts
+	 *
+	 * @uses $this::_enqueue_assets()
+	 */
+	function action__wp_enqueue_scripts() {
+		$this->_enqueue_assets();
+	}
+
+	/**
+	 * Action: admin_menu
+	 *
+	 * @uses $this::_maybe_remove_reports_page()
+	 */
+	function action__admin_menu() {
+		$this->_maybe_remove_reports_page();
+	}
 
 	/**
 	 * Hook: wp_dashboard_setup
@@ -197,7 +225,7 @@ class Calyx_WooCommerce {
 	*/
 
 	/**
-	 * Hook: request
+	 * Filter: request
 	 *
 	 * - add support for searching orders by billing email
 	 *
@@ -228,7 +256,9 @@ class Calyx_WooCommerce {
 	}
 
 	/**
-	 * Add count of CPTs to 'At a Glance' dashboard widget.
+	 * Filter: dashboard_glance_items
+	 *
+	 * - add count of CPTs to 'At a Glance' dashboard widget.
 	 *
 	 * @param array $items
 	 *
@@ -260,6 +290,19 @@ class Calyx_WooCommerce {
 		return $per_page <= 50
 			? $per_page
 			: 50;
+	}
+
+	/**
+	 * Filter: schedule_event
+	 *
+	 * - prevent scheduling of subscription report caching event
+	 *
+	 * @return false|object
+	 */
+	function filter__schedule_event( $event ) {
+		return 'wcs_report_update_cache' === $event->hook
+			? false
+			: $event;
 	}
 
 
@@ -405,7 +448,6 @@ class Calyx_WooCommerce {
 	/**
 	 * Remove WooCommerce Reports page during high load.
 	 *
-	 * @see 'admin_menu' action
 	 * @see WC_Admin_Menus::reports_menu()
 	 *
 	 * @uses Calyx_Server::is_high_load()

@@ -148,7 +148,7 @@ final class Calyx {
 		require_once CALYX_ABSPATH . 'includes/class-calyx-actions.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-filters.php';
 		include_once CALYX_ABSPATH . 'includes/class-calyx-customizer.php';
-		include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
+		current_theme_supports( 'woocommerce' ) && include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
 
 		/**
 		 * Enhancements class files.

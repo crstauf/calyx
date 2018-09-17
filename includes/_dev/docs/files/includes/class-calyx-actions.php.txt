@@ -45,7 +45,6 @@ class Calyx_Actions {
 	function init() {
 
 		wp_register_style( THEME_PREFIX . '/copy', get_theme_file_url( 'assets/critical/copy.min.css' ), null, 'init' );
-		wp_register_style( THEME_PREFIX . '/site', get_theme_file_url( 'assets/critical/site.min.css' ), array( THEME_PREFIX . '/copy' ), 'init' );
 
 		Calyx()->_register_vendor_assets();
 
