@@ -51,6 +51,41 @@ class Calyx_Admin {
 	function filters() { return $this->_filters; }
 
 	/**
+	 * If server is under high load, cap number of list items.
+	 *
+	 * Action: admin_init
+	 *
+	 * @uses Calyx::doing_ajax()
+	 * @uses Calyx_Server::is_high_load()
+	 * @uses Calyx_Admin_Filters::user_option_per_page()
+	 *
+	 * @usedby Calyx_Admin_Actions::admin_init()
+	 */
+	function _maybe_cap_num_list_table_items() {
+		if (
+			!doing_action( 'admin_init' )
+			|| Calyx()->doing_ajax()
+			|| !Calyx()->server()->is_high_load()
+		)
+			return;
+
+		$user_options_per_page = array(
+			'users',
+			'orders',
+			'redirection_log',
+			'gform_forms',
+			'upload',
+		);
+
+		foreach ( get_post_types() as $post_type )
+			$user_options_per_page[] = 'edit_' . $post_type;
+
+		foreach ( $user_options_per_page as $user_option )
+			add_filter( $user_option . '_per_page', array( Calyx()->admin( 'filters' ), 'user_option_per_page' ) );
+
+	}
+
+	/**
 	 * Load all registered ACF files.
 	 *
 	 * @uses Calyx::has_acf_files()

@@ -42,9 +42,9 @@ class Calyx_Admin_Filters {
 			$_once = true;
 		}
 
-		return $per_page <= 50
+		return $per_page <= 20
 			? $per_page
-			: 50;
+			: 20;
 	}
 
 }

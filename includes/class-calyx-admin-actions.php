@@ -21,14 +21,14 @@ class Calyx_Admin_Actions {
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
-		add_action( 'admin_init',         array( &$this, 'maybe_cap_num_list_table_items' ) );
-		add_action( 'wp_dashboard_setup', array( &$this, 'maybe_disable_dashboard_widgets' ) );
+		add_action( 'admin_init',         array( &$this, 'admin_init' ) );
+		add_action( 'wp_dashboard_setup', array( &$this, 'wp_dashboard_setup' ) );
 
 		if ( ACF_LITE ) {
 
-			add_action( 'load-post.php',                                array( &$this, 'maybe_load_acf_files' ) );
-			add_action( 'load-post-new.php',                            array( &$this, 'maybe_load_acf_files' ) );
-			add_action( 'wp_ajax_acf/location/match_field_groups_ajax', array( &$this, 'maybe_load_acf_files' ), 9 );
+			add_action( 'load-post.php',                                array( &$this, 'load_post_php' ) );
+			add_action( 'load-post-new.php',                            array( &$this, 'load_post_php' ) );
+			add_action( 'wp_ajax_acf/location/match_field_groups_ajax', array( &$this, 'load_post_php' ), 9 );
 
 		}
 
@@ -36,46 +36,28 @@ class Calyx_Admin_Actions {
 	}
 
 	/**
-	 * If server is under high load, cap number of list items.
+	 * Action: admin_init
 	 *
-	 * Action hook: admin_init
+	 * - add editor style
+	 * - set maximum number of table items if high load
 	 *
-	 * @uses Calyx::doing_ajax()
-	 * @uses Calyx_Server::is_high_load()
-	 * @uses Calyx_Admin_Filters::user_option_per_page()
+	 * @uses Calyx_Admin::_maybe_cap_num_list_table_items()
 	 */
-	function maybe_cap_num_list_table_items() {
-		if (
-			Calyx()->doing_ajax()
-			|| !Calyx()->server()->is_high_load()
-		)
-			return;
-
-		$user_options_per_page = array(
-			'users',
-			'orders',
-			'redirection_log',
-			'gform_forms',
-			'upload',
-		);
-
-		foreach ( get_post_types() as $post_type )
-			$user_options_per_page[] = 'edit_' . $post_type;
-
-		foreach ( $user_options_per_page as $user_option )
-			add_filter( $user_option . '_per_page', array( Calyx()->admin( 'filters' ), 'user_option_per_page' ) );
-
+	function admin_init() {
+		add_editor_style( 'assets/critical/copy.min.css' );
+		add_editor_style( 'assets/css/tinymce.min.css' );
+		Calyx()->admin()->_maybe_cap_num_list_table_items();
 	}
 
 	/**
-	 * If server is under high load, disable dashboard widgets.
+	 * Action: wp_dashboard_setup
 	 *
-	 * Action hook: wp_dashboard_setup
+	 * - disable specific Dashboard widgets if high load
 	 *
 	 * @uses Calyx_Server::is_high_load()
 	 * @uses Calyx_Server::add_notices()
 	 */
-	function maybe_disable_dashboard_widgets() {
+	function wp_dashboard_setup() {
 		if ( !Calyx()->server()->is_high_load() )
 			return;
 
@@ -91,14 +73,14 @@ class Calyx_Admin_Actions {
 	}
 
 	/**
-	 * Maybe load ACF PHP export files.
+	 * Actions: load_post.php, load-post-new.php, wp_ajax_acf/location/match_field_groups_ajax
 	 *
-	 * Action hooks: load-post.php, load-post-new.php, wp_ajax_acf/location/match_filed_groups_ajax
+	 * - maybe load ACF PHP files
 	 *
 	 * @uses Calyx_Admin::maybe_load_acf_files()
 	 */
-	function maybe_load_acf_files() {
-		calyx()->admin()->maybe_load_acf_files();
+	function load_post_php() {
+		Calyx()->admin()->maybe_load_acf_files();
 	}
 
 }
