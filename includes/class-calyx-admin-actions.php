@@ -24,14 +24,6 @@ class Calyx_Admin_Actions {
 		add_action( 'admin_init',         array( &$this, 'admin_init' ) );
 		add_action( 'wp_dashboard_setup', array( &$this, 'wp_dashboard_setup' ) );
 
-		if ( ACF_LITE ) {
-
-			add_action( 'load-post.php',                                array( &$this, 'load_post_php' ) );
-			add_action( 'load-post-new.php',                            array( &$this, 'load_post_php' ) );
-			add_action( 'wp_ajax_acf/location/match_field_groups_ajax', array( &$this, 'load_post_php' ), 9 );
-
-		}
-
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
 
@@ -70,17 +62,6 @@ class Calyx_Admin_Actions {
 			'Disabled Gravity Forms widget',
 			'Disabled WP Engine news feed widget',
 		) );
-	}
-
-	/**
-	 * Actions: load_post.php, load-post-new.php, wp_ajax_acf/location/match_field_groups_ajax
-	 *
-	 * - maybe load ACF PHP files
-	 *
-	 * @uses Calyx_Admin::maybe_load_acf_files()
-	 */
-	function load_post_php() {
-		Calyx()->admin()->maybe_load_acf_files();
 	}
 
 }

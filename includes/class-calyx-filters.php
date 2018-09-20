@@ -21,8 +21,10 @@ class Calyx_Filters {
 	protected function __construct() {
 		do_action( 'qm/start', __METHOD__ . '()' );
 
-		add_filter( 'http_request_args', array( &$this, 'http_request_args' ), 10, 2 );
-		add_filter( 'schedule_event',    array( &$this, 'schedule_event' ) );
+		add_filter( 'http_request_args',      array( &$this, 'http_request_args'      ), 10, 2 );
+		add_filter( 'schedule_event',         array( &$this, 'schedule_event'         ) );
+		add_filter( 'acf/settings/save_json', array( &$this, 'acf_settings_save_json' ) );
+		add_filter( 'acf/settings/load_json', array( &$this, 'acf_settings_load_json' ) );
 
 		do_action( 'qm/stop', __METHOD__ . '()' );
 	}
@@ -77,6 +79,36 @@ class Calyx_Filters {
 		Calyx()->server()->add_notice( 'Prevented scheduling of ping' );
 
 		return false;
+	}
+
+	/**
+	 * Filter: acf/settings/save_json
+	 *
+	 * Specify directory to save ACF JSON to.
+	 *
+	 * @link https://www.advancedcustomfields.com/resources/local-json/ Documentation.
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	function acf_settings_save_json( $path = '' ) {
+		return trailingslashit( __DIR__ ) . 'acf';
+	}
+
+	/**
+	 * Filter: acf/settings/load_json
+	 *
+	 * Specify directories to look for ACF JSON.
+	 *
+	 * @param array $paths
+	 *
+	 * @uses $this::acf_settings_save_json()
+	 *
+	 * @return array
+	 */
+	function acf_settings_load_json( $paths ) {
+		return array( $this->acf_settings_save_json() );
 	}
 
 }
