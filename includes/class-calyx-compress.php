@@ -143,7 +143,7 @@ class Calyx_Minify {
 	 */
 	protected function _js__spacing( $js ) {
 		$blocks = array( 'for', 'while', 'if', 'else' );
-		$js = preg_replace( '/([-\+])\s+\+([^\s;]*)/', '$1 (+$2)', $js );
+		$js = preg_replace( '/([-\+])\s+\+([^\s;]*)/', '$1 (+$2)', trim( $js ) );
 
 		// remove new line in statements
 		$js = preg_replace( '/\s+\|\|\s+/', ' || ', $js );
