@@ -123,7 +123,7 @@ if ( !function_exists( 'maybe_minify_js' ) ) {
 	 */
 	function maybe_minify_js( $js ) {
 		return !SCRIPT_DEBUG && COMPRESS_SCRIPTS
-			? calyx_minify()->js( $js )
+			? Calyx_Minify()->js( $js )
 			: $js;
 	}
 
@@ -142,7 +142,7 @@ if ( !function_exists( 'maybe_minify_css' ) ) {
 	 */
 	function maybe_minify_css( $css ) {
 		return !SCRIPT_DEBUG && COMPRESS_CSS
-			? calyx_minify()->css( $css )
+			? Calyx_Minify()->css( $css )
 			: $css;
 	}
 

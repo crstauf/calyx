@@ -149,6 +149,7 @@ final class Calyx {
 		 * Enhancements class files.
 		 */
 		require_once CALYX_ABSPATH . 'includes/class-image-tag.php';
+		require_once CALYX_ABSPATH . 'includes/class-calyx-compress.php';
 
 		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'core' );
 		do_action( THEME_PREFIX . '/include_files/after_core' );
