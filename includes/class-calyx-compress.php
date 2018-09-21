@@ -146,6 +146,7 @@ class Calyx_Minify {
 		$js = preg_replace( '/([-\+])\s+\+([^\s;]*)/', '$1 (+$2)', trim( $js ) );
 
 		// remove new line in statements
+		$js = preg_replace( '/[\n\r]/', '', $js );
 		$js = preg_replace( '/\s+\|\|\s+/', ' || ', $js );
 		$js = preg_replace( '/\s+\&\&\s+/', ' && ', $js );
 		$js = preg_replace( '/\s*([=+-\/\*:?])\s*/', '$1 ', $js );
