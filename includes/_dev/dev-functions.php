@@ -13,6 +13,7 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
  * Include files in development environment.
  */
 function _develop_action__theme__include_files() {
+	include_once __DIR__ . '/class-calyx-server-state.php';
 	include_once __DIR__ . '/samples/class-calyx-cpt-sample.php';
 }
 add_action( THEME_PREFIX . '/include_files', '_develop_action__theme__include_files' );
