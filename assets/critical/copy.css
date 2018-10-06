@@ -93,6 +93,7 @@ a,
 }
 
 b,
+.b,
 strong,
 .strong {
 	font-weight: 700;
@@ -243,7 +244,13 @@ img.lazyloaded {
 
 .btn,
 .btn--large,
-.btn--primary {
+.btn--primary,
+.btn--secondary {
+
+}
+
+/** Button hover effects */
+@media ( hover: hover ) and ( pointer: fine ) {
 
 }
 
@@ -258,17 +265,29 @@ img.lazyloaded {
  ######   #######  ########  #######  ##     ##  ######
 */
 
+a,
 .color--blue,
 .color--primary {
 	color: #369;
 }
 
-.color--black {
+html,
+body,
+.color--black,
+.color--secondary {
 	color: #000;
 }
 
 .color--white {
 	color: #FFF;
+}
+
+/** Color hover effects */
+@media ( hover: hover ) and ( pointer: fine ) {
+
+	a:hover,
+	.hover--color--black:hover { color: #000; }
+
 }
 
 
@@ -283,16 +302,28 @@ img.lazyloaded {
 */
 
 .bg--blue,
-.bg--primary {
+.bg--primary,
+.btn--primary {
 	background-color: #369;
 }
 
-.bg--black {
+.bg--black,
+.bg--secondary {
 	background-color: #000;
 }
 
+html,
+body,
 .bg--white {
 	background-color: #FFF;
+}
+
+/** Background hover effects */
+@media ( hover: hover ) and ( pointer: fine ) {
+
+	.btn--primary:hover,
+	.hover--bg--black:hover { background-color: #000; }
+
 }
 
 
@@ -317,4 +348,9 @@ img.lazyloaded {
 
 .border--white {
 	border-color: #FFF;
+}
+
+/** Border hover effects */
+@media ( hover: hover ) and ( pointer: fine ) {
+
 }

@@ -41,7 +41,7 @@ class Calyx_Front {
 	public static function include_files() {
 		require_once CALYX_ABSPATH . 'includes/class-calyx-front-actions.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-front-filters.php';
-		require_once CALYX_ABSPATH . 'includes/class-enhance-enqueues.php';
+		current_theme_supports( 'enhanced-enqueues' ) && require_once CALYX_ABSPATH . 'includes/class-enhance-enqueues.php';
 		include_once CALYX_ABSPATH . 'temporary/front.php';
 
 		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'front' );

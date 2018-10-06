@@ -430,7 +430,6 @@ class CSSLLC_EnhanceEnqueues {
 
 }
 
-if ( current_theme_supports( 'enhanced-enqueues' ) )
-	new CSSLLC_EnhanceEnqueues;
+new CSSLLC_EnhanceEnqueues;
 
 ?>

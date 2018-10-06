@@ -143,7 +143,7 @@ final class Calyx {
 		require_once CALYX_ABSPATH . 'includes/class-calyx-actions.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-filters.php';
 		include_once CALYX_ABSPATH . 'includes/class-calyx-customizer.php';
-		current_theme_supports( 'woocommerce' ) && include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
+		current_theme_supports( 'woocommerce' ) && class_exists( 'WooCommerce' ) && include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
 
 		/**
 		 * Enhancements class files.
@@ -440,13 +440,13 @@ final class Calyx {
 
 
 	/*
-	##     ## ####  ######   ######
-	###   ###  ##  ##    ## ##    ##
-	#### ####  ##  ##       ##
-	## ### ##  ##   ######  ##
-	##     ##  ##        ## ##
-	##     ##  ##  ##    ## ##    ##
-	##     ## ####  ######   ######
+	##     ## ######## ##    ## ########   #######  ########   ######
+	##     ## ##       ###   ## ##     ## ##     ## ##     ## ##    ##
+	##     ## ##       ####  ## ##     ## ##     ## ##     ## ##
+	##     ## ######   ## ## ## ##     ## ##     ## ########   ######
+	 ##   ##  ##       ##  #### ##     ## ##     ## ##   ##         ##
+	  ## ##   ##       ##   ### ##     ## ##     ## ##    ##  ##    ##
+	   ###    ######## ##    ## ########   #######  ##     ##  ######
 	*/
 
 	/**
@@ -564,6 +564,91 @@ final class Calyx {
 			foreach ( array_merge( $lazysizes_handles, array( 'lazysizes' ) ) as $handle )
 				CSSLLC_EnhanceEnqueues::enhance_script__critical( $handle );
 
+	}
+
+
+	/*
+	 ######     ###     ######  ##     ## #### ##    ##  ######
+	##    ##   ## ##   ##    ## ##     ##  ##  ###   ## ##    ##
+	##        ##   ##  ##       ##     ##  ##  ####  ## ##
+	##       ##     ## ##       #########  ##  ## ## ## ##   ####
+	##       ######### ##       ##     ##  ##  ##  #### ##    ##
+	##    ## ##     ## ##    ## ##     ##  ##  ##   ### ##    ##
+	 ######  ##     ##  ######  ##     ## #### ##    ##  ######
+	*/
+
+	/**
+	 * Add persistent cache data.
+	 *
+	 * @param string $key
+	 * @param mixed  $data
+	 * @param int    $life Data life in seconds.
+	 */
+	function persistent_cache_add( $key, $data, $life = 0 ) {
+		if ( !wp_using_ext_object_cache() ) {
+			set_transient( $key, $data, $life );
+			return;
+		}
+
+		$expiration = !empty( $life )
+			? time() + $life
+			: 0;
+
+		add_option( '_persistent_transient_' . $key, $data );
+		!empty( $expiration ) && add_option( '_persistent_transient_timeout_' . $key, $expiration );
+
+		wp_cache_add( $key, $data, 'transient/persistent', $expiration );
+	}
+
+	/**
+	 * Set persistent cache data.
+	 *
+	 * @param string $key
+	 * @param mixed  $data
+	 * @param int    $life Data life in seconds.
+	 */
+	function persistent_cache_set( $key, $data, $life = 0 ) {
+		if ( !wp_using_ext_object_cache() ) {
+			set_transient( $key, $data, $life );
+			return;
+		}
+
+		$expiration = !empty( $life )
+			? time() + $life
+			: 0;
+
+		update_option( '_persistent_transient_' . $key, $data );
+		!empty( $expiration ) && update_option( '_persistent_transient_timeout_' . $key, $expiration );
+
+		wp_cache_set( $key, $data, 'transient/persistent', $expiration );
+	}
+
+	/**
+	 * Get persistent cache data.
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	function persistent_cache_get( $key ) {
+		if ( !wp_using_ext_object_cache() )
+			return get_transient( $key );
+
+		$option  = get_option( '_persistent_transient_' . $key );
+		$timeout = get_option( '_persistent_transient_timeout_' . $key );
+
+		if (
+			!empty( $timeout )
+			&& time() > $timeout
+		) {
+			delete_option( '_persistent_transient_' . $key );
+			delete_option( '_persistent_transient_timeout_' . $key );
+			wp_cache_delete( $key, 'transient/persistent' );
+
+			return false;
+		}
+
+		return $option;
 	}
 
 }
