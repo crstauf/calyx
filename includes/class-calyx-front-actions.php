@@ -136,7 +136,7 @@ class Calyx_Front_Actions {
 			}
 
 			a[href="#"]::before {
-				content: 'Broken';
+				content: 'Empty link';
 				position: absolute;
 				left: 0;
 				top: 0;
