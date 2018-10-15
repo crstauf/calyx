@@ -38,6 +38,7 @@ class Calyx_Admin_Actions {
 	function admin_init() {
 		add_editor_style( 'assets/critical/copy.min.css' );
 		add_editor_style( 'assets/css/tinymce.min.css' );
+
 		Calyx()->admin()->_maybe_cap_num_list_table_items();
 	}
 

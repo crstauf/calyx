@@ -25,58 +25,71 @@ class Calyx_Data {
 	}
 
 	/**
-	* Set long life transient data.
-	*
-	* @param string $transient  Transient name.
-	* @param mixed  $value      Transient value.
-	* @param int    $expiration Transient expiration.
-	*/
-	function set_long_life_transient( $transient, $value, $expiration ) {
-		if ( !wp_using_ext_object_cache() )
-			return set_transient( $transient, $value, $expiration );
+	 * Add persistent cache data.
+	 *
+	 * @param string $key
+	 * @param mixed  $data
+	 * @param int    $life Data life in seconds.
+	 *
+	 * @uses $this::get_persistent_transient()
+	 * @uses $this::set_persistent_transient()
+	 */
+	function add_persistent_transient( $key, $data, $life = 0 ) {
+		if ( empty( $this->get_persistent_transient( $key ) ) )
+			return;
 
-		return (
-			   update_option( '_longlife_' . $transient, $value )
-			&& update_option( '_longlife_timeout_' . $transient, time() + $expiration )
-		);
+		$this->set_persistent_transient( $key, $data, $life );
 	}
 
 	/**
-	 * Get long life transient data.
+	 * Set persistent cache data.
 	 *
-	 * @param string $transient Transient name.
-	 *
-	 * @return bool|mixed
+	 * @param string $key
+	 * @param mixed  $data
+	 * @param int    $life Data life in seconds.
 	 */
-	function get_long_life_transient( $transient ) {
-		if ( !wp_using_ext_object_cache() )
-			return get_transient( $transient );
+	function set_persistent_transient( $key, $data, $life = 0 ) {
+		if ( !wp_using_ext_object_cache() ) {
+			set_transient( $key, $data, $life );
+			return;
+		}
 
-		$option = get_option( '_longlife_' . $transient );
-		$timeout = get_option( '_longlife_timeout_' . $transient );
+		$expiration = !empty( $life )
+			? time() + $life
+			: 0;
+
+		update_option( '_persistent_transient_' . $key, $data );
+		!empty( $expiration ) && update_option( '_persistent_transient_timeout_' . $key, $expiration );
+
+		wp_cache_set( $key, $data, 'transient/persistent', $expiration );
+	}
+
+	/**
+	 * Get persistent cache data.
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	function get_persistent_transient( $key ) {
+		if ( !wp_using_ext_object_cache() )
+			return get_transient( $key );
+
+		$option  = get_option( '_persistent_transient_' . $key );
+		$timeout = get_option( '_persistent_transient_timeout_' . $key );
 
 		if (
-			false !== $timeout
-			&& time() > $option['expiration']
+			!empty( $timeout )
+			&& time() > $timeout
 		) {
-			$this->delete_long_life_transient( $transient );
+			delete_option( '_persistent_transient_' . $key );
+			delete_option( '_persistent_transient_timeout_' . $key );
+			wp_cache_delete( $key, 'transient/persistent' );
+
 			return false;
 		}
 
 		return $option;
-	}
-
-	/**
-	 * Delete long life transient.
-	 *
-	 * @param string $transient Transient name.
-	 */
-	function delete_long_life_transient( $transient ) {
-		if ( !wp_using_ext_object_cache() )
-			return delete_transient( $tranient );
-
-		delete_option( '_longlife_timeout_' . $transient );
-		delete_option( '_longlife_' . $transient );
 	}
 
 	/**

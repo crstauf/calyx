@@ -61,12 +61,15 @@ if ( !function_exists( 'is_woocommerce_active' ) ) {
 
 	/**
 	 * Check if WooCommerce is active.
+	 *
+	 * @uses is_plugin_active()
+	 *
+	 * @return bool
 	 */
 	function is_woocommerce_active() {
-		return (
-			function_exists( 'is_plugin_active' )
-			&& is_plugin_active( 'woocommerce/woocommerce.php' )
-		);
+		return function_exists( 'is_plugin_active' )
+			? is_plugin_active( 'woocommerce/woocommerce.php' );
+			: class_exists( 'WooCommerce' );
 	}
 
 }
@@ -144,6 +147,21 @@ if ( !function_exists( 'maybe_minify_css' ) ) {
 		return !SCRIPT_DEBUG && COMPRESS_CSS
 			? Calyx_Minify()->css( $css )
 			: $css;
+	}
+
+}
+
+if ( !function_exists( 'trim_commit_hash' ) ) {
+
+	/**
+	 * Trim commit hash.
+	 *
+	 * @param string $commit_hash Full commit hash.
+	 *
+	 * @return string
+	 */
+	function trim_commit_hash( $commit_hash ) {
+		return substr( $commit_hash, 0, 9 );
 	}
 
 }

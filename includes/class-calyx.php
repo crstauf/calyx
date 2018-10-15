@@ -360,6 +360,43 @@ final class Calyx {
 		}
 	}
 
+	/**
+	 * Log wrong procedure.
+	 *
+	 * @param string $function Function used.
+	 * @param string $message Message to log.
+	 * @param string $version Version the message was added in.
+	 */
+	function doing_it_wrong( $function, $message, $version ) {
+		if ( $this->doing_ajax() ) {
+			do_action( 'doing_it_wrong_run', $function, $message, $version );
+			error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+		} else {
+			_doing_it_wrong( $function, $message, $version );
+		}
+	}
+
+	/**
+	 * Log use of deprecated function.
+	 *
+	 * @param string $function_name
+	 * @param string $commit_hash
+	 * @param string $replacement_function_name
+	 *
+	 * @uses $this::doing_ajax()
+	 * @uses trim_commit_hash()
+	 * @uses _deprecated_function()
+	 */
+	function deprecated_function( $function_name, $commit_hash, $replacement_function_name = '' ) {
+		if ( $this->doing_ajax() ) {
+			do_action( 'deprecated_function_run', $function_name, $replacement_function_name, $commit_hash );
+			!is_null( $replacement_function_name )
+				? error_log( sprintf( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', $function_name, $commit_hash, $replacement_function_name ) )
+				: error_log( sprintf( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', $function_name, trim_commit_hash( $commit_hash ) ) );
+		} else
+			_deprecated_function( $function_name, $commit_hash, $replacement_function_name );
+	}
+
 
 	/*
 	######## ##     ## ######## ##    ## ########  ######
@@ -373,6 +410,8 @@ final class Calyx {
 
 	/**
 	 * Check if doing AJAX.
+	 *
+	 * @return bool
 	 */
 	function doing_ajax() {
 		return !!(
@@ -390,6 +429,8 @@ final class Calyx {
 
 	/**
 	 * Check if doing cron.
+	 *
+	 * @return bool
 	 */
 	function doing_cron() {
 		return !!( defined( 'DOING_CRON' ) && DOING_CRON );
@@ -397,6 +438,8 @@ final class Calyx {
 
 	/**
 	 * Check if doing autosave.
+	 *
+	 * @return bool
 	 */
 	function doing_autosave() {
 		return !!( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE );
@@ -404,6 +447,8 @@ final class Calyx {
 
 	/**
 	 * Check if Query Monitor disabled.
+	 *
+	 * @return bool
 	 */
 	function QM_disabled() {
 		return !!( defined( 'QM_DISABLED' ) && QM_DISABLED );
@@ -411,6 +456,8 @@ final class Calyx {
 
 	/**
 	 * Check if is REST request.
+	 *
+	 * @return bool
 	 */
 	 function doing_rest() {
 		return !!(
@@ -564,91 +611,6 @@ final class Calyx {
 			foreach ( array_merge( $lazysizes_handles, array( 'lazysizes' ) ) as $handle )
 				CSSLLC_EnhanceEnqueues::enhance_script__critical( $handle );
 
-	}
-
-
-	/*
-	 ######     ###     ######  ##     ## #### ##    ##  ######
-	##    ##   ## ##   ##    ## ##     ##  ##  ###   ## ##    ##
-	##        ##   ##  ##       ##     ##  ##  ####  ## ##
-	##       ##     ## ##       #########  ##  ## ## ## ##   ####
-	##       ######### ##       ##     ##  ##  ##  #### ##    ##
-	##    ## ##     ## ##    ## ##     ##  ##  ##   ### ##    ##
-	 ######  ##     ##  ######  ##     ## #### ##    ##  ######
-	*/
-
-	/**
-	 * Add persistent cache data.
-	 *
-	 * @param string $key
-	 * @param mixed  $data
-	 * @param int    $life Data life in seconds.
-	 */
-	function persistent_cache_add( $key, $data, $life = 0 ) {
-		if ( !wp_using_ext_object_cache() ) {
-			set_transient( $key, $data, $life );
-			return;
-		}
-
-		$expiration = !empty( $life )
-			? time() + $life
-			: 0;
-
-		add_option( '_persistent_transient_' . $key, $data );
-		!empty( $expiration ) && add_option( '_persistent_transient_timeout_' . $key, $expiration );
-
-		wp_cache_add( $key, $data, 'transient/persistent', $expiration );
-	}
-
-	/**
-	 * Set persistent cache data.
-	 *
-	 * @param string $key
-	 * @param mixed  $data
-	 * @param int    $life Data life in seconds.
-	 */
-	function persistent_cache_set( $key, $data, $life = 0 ) {
-		if ( !wp_using_ext_object_cache() ) {
-			set_transient( $key, $data, $life );
-			return;
-		}
-
-		$expiration = !empty( $life )
-			? time() + $life
-			: 0;
-
-		update_option( '_persistent_transient_' . $key, $data );
-		!empty( $expiration ) && update_option( '_persistent_transient_timeout_' . $key, $expiration );
-
-		wp_cache_set( $key, $data, 'transient/persistent', $expiration );
-	}
-
-	/**
-	 * Get persistent cache data.
-	 *
-	 * @param string $key
-	 *
-	 * @return mixed
-	 */
-	function persistent_cache_get( $key ) {
-		if ( !wp_using_ext_object_cache() )
-			return get_transient( $key );
-
-		$option  = get_option( '_persistent_transient_' . $key );
-		$timeout = get_option( '_persistent_transient_timeout_' . $key );
-
-		if (
-			!empty( $timeout )
-			&& time() > $timeout
-		) {
-			delete_option( '_persistent_transient_' . $key );
-			delete_option( '_persistent_transient_timeout_' . $key );
-			wp_cache_delete( $key, 'transient/persistent' );
-
-			return false;
-		}
-
-		return $option;
 	}
 
 }
