@@ -14,22 +14,28 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
  * Class.
  */
 class Calyx_Credentials {
+	use Calyx_Singleton;
 
 	/**
 	 * Public getter.
+	 *
+	 * @param string $key Key to identify the credential.
+	 * @param string $group Group credential is in (optional).
+	 *
+	 * @return mixed
 	 */
-	public static function get( $group, $key ) {
-		$function = $group . '__' . $key;
+	function get( $key, $group = null ) {
+		$function = ( !empty( $group ) ? $group . '__' : null ) . $key;
 		
 		error_log( 'Credentials requested: ' . $function );
 		
-		if ( !is_callable( array( __CLASS__, $function ) ) )
+		if ( !is_callable( array( &$this, $function ) ) )
 			return null;
 			
-		return self::$function();
+		return $this->$function();
 	}
 	
-	/*protected static function group__key() {
+	/*protected function group__key() {
 		return 'foobar';
 	}*/
 

@@ -143,6 +143,7 @@ final class Calyx {
 		require_once CALYX_ABSPATH . 'includes/class-calyx-actions.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-filters.php';
 		include_once CALYX_ABSPATH . 'includes/class-calyx-customizer.php';
+		require_once CALYX_ABSPATH . 'includes/class-calyx-credentials.php';
 		current_theme_supports( 'woocommerce' ) && class_exists( 'WooCommerce' ) && include_once CALYX_ABSPATH . 'includes/class-calyx-woocommerce.php';
 
 		/**
@@ -185,11 +186,12 @@ final class Calyx {
 	 */
 	protected function initialize() {
 		do_action( THEME_PREFIX . '/before_init' );
-
-		$this->_data    = Calyx_Data::create_instance();
-		$this->_server  = Calyx_Server::create_instance();
-		$this->_actions = Calyx_Actions::create_instance();
-		$this->_filters = Calyx_Filters::create_instance();
+		
+		$this->_credentials = Calyx_Credentials::create_instance();
+		$this->_data        = Calyx_Data::create_instance();
+		$this->_server      = Calyx_Server::create_instance();
+		$this->_actions     = Calyx_Actions::create_instance();
+		$this->_filters     = Calyx_Filters::create_instance();
 
 		class_exists( 'Calyx_Admin' ) && $this->_admin = Calyx_Admin::create_instance();
 		class_exists( 'Calyx_Front' ) && $this->_front = Calyx_Front::create_instance();
@@ -240,11 +242,13 @@ final class Calyx {
 
 	/**
 	 * Public access to $_actions property.
+	 * @return Calyx_Actions
 	 */
 	function actions() { return $this->_actions; }
 
 	/**
 	 * Public access to $_filters property.
+	 * @return Calyx_Filters
 	 */
 	function filters() { return $this->_filters; }
 
