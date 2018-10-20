@@ -6,7 +6,7 @@
 get_header();
 ?>
 
-<div class="container">
+<main class="container">
 
 	<?php
 	if ( have_posts() )
@@ -14,7 +14,7 @@ get_header();
 			the_post()
 			?>
 
-			<main id="post-<?php the_ID() ?>"<?php post_class() ?>>
+			<article id="post-<?php the_ID() ?>" <?php post_class() ?>>
 
 				<h1><?php the_title() ?></h1>
 
@@ -22,13 +22,13 @@ get_header();
 					<?php the_content() ?>
 				</div>
 
-			</main>
+			</article>
 
 			<?php
 		}
 	?>
 
-</div>
+</main>
 
 <?php
 get_footer()
