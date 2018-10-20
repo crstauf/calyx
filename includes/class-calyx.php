@@ -196,7 +196,7 @@ final class Calyx {
 		class_exists( 'Calyx_Admin' ) && $this->_admin = Calyx_Admin::create_instance();
 		class_exists( 'Calyx_Front' ) && $this->_front = Calyx_Front::create_instance();
 
-		class_exists( 'Calyx_Customizer' ) && $this->_customizer = Calyx_Customizer::create_instance();
+		class_exists( 'Calyx_Customizer'  ) && $this->_customizer  = Calyx_Customizer::create_instance();
 		class_exists( 'Calyx_WooCommerce' ) && $this->_woocommerce = Calyx_WooCommerce::create_instance();
 
 		do_action( THEME_PREFIX . '/init' );
@@ -254,27 +254,34 @@ final class Calyx {
 
 	/**
 	 * Public access to $_server property.
+	 * @return Calyx_Server
 	 */
 	function server() { return $this->_server; }
 
 	/**
 	 * Public access to $_woocommerce property.
+	 * @return Calyx_WooCommerce
 	 */
 	function wc() { return $this->_woocommerce; }
-
+	
+	/** 
+	 * Alias.
+	 * @uses $this::wc()
+	 */
+	function woocommerce() { return $this->wc(); }
+	
 	/**
-	 * Manage theme data.
+	 * Get theme credential.
 	 *
-	 * @param string $key   ID of the data.
-	 * @param mixed  $value Data.
-	 * @param bool   $force Force update.
+	 * @param string $key
+	 * @param string $group
 	 *
-	 * @uses Calyx_Data::__data()
+	 * @uses Calyx_Credentials::get()
 	 *
 	 * @return mixed
 	 */
-	function data( $key = null, $value = null, $force = false ) {
-		return $this->_data->__data( $key, $value, $force );
+	function get_credential( $key, $group = null ) {
+		return $this->_credentials->get( $key, $group );
 	}
 
 
@@ -318,7 +325,7 @@ final class Calyx {
 	 *
 	 * @uses $this::has_cpt()
 	 *
-	 * @return null|_Calyx_Cpt
+	 * @return null|_Calyx_CPT
 	 */
 	function get_cpt( $type ) {
 		return $this->has_cpt( $type )
