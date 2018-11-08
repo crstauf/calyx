@@ -186,7 +186,7 @@ final class Calyx {
 	 */
 	protected function initialize() {
 		do_action( THEME_PREFIX . '/before_init' );
-		
+
 		$this->_credentials = Calyx_Credentials::create_instance();
 		$this->_data        = Calyx_Data::create_instance();
 		$this->_server      = Calyx_Server::create_instance();
@@ -263,13 +263,13 @@ final class Calyx {
 	 * @return Calyx_WooCommerce
 	 */
 	function wc() { return $this->_woocommerce; }
-	
-	/** 
+
+	/**
 	 * Alias.
 	 * @uses $this::wc()
 	 */
 	function woocommerce() { return $this->wc(); }
-	
+
 	/**
 	 * Get theme credential.
 	 *
