@@ -68,7 +68,7 @@ if ( !function_exists( 'is_woocommerce_active' ) ) {
 	 */
 	function is_woocommerce_active() {
 		return function_exists( 'is_plugin_active' )
-			? is_plugin_active( 'woocommerce/woocommerce.php' );
+			? is_plugin_active( 'woocommerce/woocommerce.php' )
 			: class_exists( 'WooCommerce' );
 	}
 
