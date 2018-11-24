@@ -65,7 +65,7 @@ class Calyx_Front {
 		 * @link https://modernizr.com/download?csspointerevents-touchevents-addtest-setclasses-shiv
 		 */
 		wp_register_script( 'modernizr', get_theme_file_uri( 'assets/js/modernizr.min.js' ), array(), '3.6.0' );
-		class_exists( 'CSSLLC_EnhanceEnqueues' ) && CSSLLC_EnhanceEnqueues::enhance_script__critical( 'modernizr' );
+		wp_script_add_data( 'modernizr', 'critical', true );
 
 		/**
 		 * Polyfill for rel="preload".
@@ -76,6 +76,7 @@ class Calyx_Front {
 		 * @link https://caniuse.com/#feat=link-rel-preload Browser support.
 		 */
 		wp_register_script( 'cssrelpreload', get_theme_file_uri( 'assets/js/cssrelpreload.min.js' ), array(), '2.0.1' );
+		wp_script_add_data( 'cssrelpreload', 'inline', true );
 
 		/**
 		 * Slider script: slick.

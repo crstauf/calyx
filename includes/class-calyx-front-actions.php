@@ -79,7 +79,7 @@ class Calyx_Front_Actions {
 	function wp_enqueue_scripts__0() {
 
 		wp_enqueue_script( 'modernizr' );
-		wp_enqueue_script( 'lazysizes' );
+		wp_enqueue_script( 'cssrelpreload' );
 
 		wp_add_inline_script( 'webfontloader', Calyx()->front()->_inlineScript_webfontloader( 'all' ) );
 
@@ -116,6 +116,7 @@ class Calyx_Front_Actions {
 	function wp_footer() {
 
 		wp_enqueue_script( 'webfontloader' );
+		wp_enqueue_script( 'lazysizes' );
 
 	}
 
@@ -150,7 +151,7 @@ class Calyx_Front_Actions {
 				white-space: nowrap;
 				letter-spacing: 2px;
 				font-weight: 600;
-				font-size: 0.5em;
+				font-size: 9px !important;
 				color: #FFF;
 				opacity: 1;
 

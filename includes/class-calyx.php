@@ -602,10 +602,7 @@ final class Calyx {
 		wp_register_script( 'lazysizes/respimg',     get_theme_file_uri( 'assets/js/lazysizes--respimg.min.js'     ), array( 'lazysizes/core' ), $version );
 
 		list( $src, $deps ) = (
-			(
-				SCRIPT_DEBUG
-				|| !CONCATENATE_SCRIPTS
-			)
+			!CONCATENATE_SCRIPTS
 			? array(
 				null,
 				$lazysizes_handles
@@ -620,7 +617,7 @@ final class Calyx {
 
 		if ( class_exists( 'CSSLLC_EnhanceEnqueues' ) )
 			foreach ( array_merge( $lazysizes_handles, array( 'lazysizes' ) ) as $handle )
-				CSSLLC_EnhanceEnqueues::enhance_script__critical( $handle );
+				wp_script_add_data( $handle, 'critical', true );
 
 	}
 
