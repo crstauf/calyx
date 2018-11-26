@@ -615,10 +615,6 @@ final class Calyx {
 
 		wp_register_script( 'lazysizes', $src, $deps, $version );
 
-		if ( class_exists( 'CSSLLC_EnhanceEnqueues' ) )
-			foreach ( array_merge( $lazysizes_handles, array( 'lazysizes' ) ) as $handle )
-				wp_script_add_data( $handle, 'critical', true );
-
 	}
 
 }
