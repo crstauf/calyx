@@ -47,8 +47,11 @@ class Calyx_Front_Actions {
 			wp_style_add_data( THEME_PREFIX . '/critical/site',   'critical', true );
 			wp_style_add_data( THEME_PREFIX . '/critical/mobile', 'critical', true );
 			wp_style_add_data( THEME_PREFIX . '/login',           'critical', true );
+			wp_style_add_data( THEME_PREFIX . '/styles',           'preload', true );
 
 		wp_register_script( THEME_PREFIX . '/scripts', get_theme_file_uri( 'assets/js/scripts.min.js' ), array(), 'init' );
+
+			wp_script_add_data( THEME_PREFIX . '/scripts', 'preload', true );
 
 		Calyx()->front()->_register_vendor_assets();
 

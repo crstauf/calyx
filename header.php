@@ -20,6 +20,9 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	wp_enqueue_style( THEME_PREFIX . '/copy' );
 	wp_enqueue_style( THEME_PREFIX . '/critical/site' );
 	wp_enqueue_style( THEME_PREFIX . '/critical/mobile' );
+	wp_enqueue_style( THEME_PREFIX . '/styles' );
+
+	wp_enqueue_script( THEME_PREFIX . '/scripts' );
 
 	wp_head();
 	?>

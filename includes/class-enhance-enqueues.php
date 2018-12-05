@@ -35,8 +35,87 @@ class CSSLLC_EnhanceEnqueues {
 		add_filter(  'style_loader_tag', array( &$this, 'filter__style_loader_tag'  ), 999, 4 );
 		add_filter( 'script_loader_tag', array( &$this, 'filter__script_loader_tag' ), 999, 3 );
 
-		add_action( 'wp_enqueue_scripts', array( &$this, '_debug_action__wp_enqueue_scripts' ) );
+		add_action( 'wp_head',            array( &$this, 'action__wp_head'                   ), 5 );
+		// add_action( 'wp_enqueue_scripts', array( &$this, '_debug_action__wp_enqueue_scripts' ) );
 
+	}
+
+
+	/*
+	   ###     ######  ######## ####  #######  ##    ##  ######
+	  ## ##   ##    ##    ##     ##  ##     ## ###   ## ##    ##
+	 ##   ##  ##          ##     ##  ##     ## ####  ## ##
+	##     ## ##          ##     ##  ##     ## ## ## ##  ######
+	######### ##          ##     ##  ##     ## ##  ####       ##
+	##     ## ##    ##    ##     ##  ##     ## ##   ### ##    ##
+	##     ##  ######     ##    ####  #######  ##    ##  ######
+	*/
+
+	/**
+	 * Action: wp_head
+	 *
+	 * - print rel="preload" link tags
+	 */
+	function action__wp_head() {
+
+		# Preload stylesheets
+		$stylesheets = array_filter( wp_styles()->registered, function( $stylesheet ) {
+			return (
+				array_key_exists( 'preload', $stylesheet->extra )
+				&& !empty( $stylesheet->extra['preload'] )
+			);
+		} );
+
+		if ( !empty( $stylesheets ) )
+			foreach ( $stylesheets as $handle => $stylesheet ) {
+				if ( null === $stylesheet->ver )
+					$ver = '';
+				else
+					$ver = $stylesheet->ver ? $stylesheet->ver : wp_styles()->default_version;
+
+				if ( isset( $stylesheet->args ) )
+					$media = esc_attr( $stylesheet->args );
+				else
+					$media = 'all';
+
+				$href = wp_styles()->_css_href( $stylesheet->src, $ver, $handle );
+
+				echo '<link rel="preload" href="' . $href . '" as="style" media="' . $media . '" />' . "\n";
+			}
+
+		# Preload scripts
+		$scripts = array_filter( wp_scripts()->registered, function( $script ) {
+			return (
+				array_key_exists( 'preload', $script->extra )
+				&& !empty( $script->extra['preload'] )
+			);
+		} );
+
+		if ( !empty( $scripts ) )
+			foreach ( $scripts as $handle => $script ) {
+				$src = $script->src;
+
+				if ( null === $script->ver ) {
+					$ver = '';
+				} else {
+					$ver = $script->ver ? $script->ver : wp_scripts()->default_version;
+				}
+
+				if ( isset( wp_scripts()->args[$handle] ) )
+					$ver = $ver ? $ver . '&amp;' . wp_scripts()->args[$handle] : wp_scripts()->args[$handle];
+
+				if ( ! preg_match( '|^(https?:)?//|', $src ) && ! ( wp_scripts()->content_url && 0 === strpos( $src, wp_scripts()->content_url ) ) ) {
+					$src = wp_scripts()->base_url . $src;
+				}
+
+				if ( ! empty( $ver ) )
+					$src = add_query_arg( 'ver', $ver, $src );
+
+				/** This filter is documented in wp-includes/class.wp-scripts.php */
+				$src = esc_url( apply_filters( 'script_loader_src', $src, $handle ) );
+
+				echo '<link rel="preload" href="' . $src . '" as="script" />' . "\n";
+			}
 	}
 
 
@@ -112,7 +191,6 @@ class CSSLLC_EnhanceEnqueues {
 			$this->enhancement__critical( $handle );
 
 		$enhancements = array(
-			'preload',
 			'inline',
 		);
 
@@ -154,11 +232,7 @@ class CSSLLC_EnhanceEnqueues {
 	 */
 	function enhancement__critical( $handle ) {
 		$function = 'style_loader_tag' === current_filter() ? 'wp_style_add_data' : 'wp_script_add_data';
-
-		if ( apply_filters( 'enhance-enqueues/critical/preload', true, current_filter() ) )
-			$function( $handle, 'preload', true );
-		else
-			$function( $handle, 'inline', true );
+		$function( $handle, 'inline', true );
 	}
 
 	/**
@@ -173,43 +247,6 @@ class CSSLLC_EnhanceEnqueues {
 	 */
 	function enhancement__noscript( $_tag, $handle = null, $href = null, $media = null ) {
 		return '<noscript>' . trim( $_tag ) . '</noscript>' . "\n";
-	}
-
-	/**
-	 * Enhancement: preload
-	 *
-	 * @param string $_tag
-	 * @param string $handle
-	 * @param string $href
-	 * @param string $media
-	 *
-	 * @uses $this::enhancement__noscript()
-	 *
-	 * @return string
-	 */
-	function enhancement__preload( $_tag, $handle, $href, $media ) {
-		if ( 'script_loader_tag' === current_filter() ) {
-			if ( !empty( wp_scripts()->get_data( $handle, 'after' ) ) )
-				trigger_error( 'Script `' . $handle . '` has inline script after the include; preloading may result in unpredictable behavior.', E_USER_NOTICE );
-
-			return str_replace(
-				"<script type='text/javascript' src='$href'></script>",
-				'<link ' .
-					'rel="preload" ' .
-					'href="' . $href . '" ' .
-					'as="script" ' .
-				'/>',
-				$_tag
-			);
-		} else
-			return '<link ' .
-				'rel="preload" ' .
-				'href="' . $href . '" ' .
-				'as="style" ' .
-				'media="' . $media . '" ' .
-				'onload="this.onload=null;this.rel=\'stylesheet\';" ' .
-			'/>' . "\n" .
-			$this->enhancement__noscript( $_tag );
 	}
 
 	/**
@@ -305,7 +342,7 @@ class CSSLLC_EnhanceEnqueues {
 		wp_enqueue_style( $handle, get_theme_file_url( 'includes/_dev/samples/style.css' ) );
 
 			wp_add_inline_style( $handle, '.' . $handle . '::after { content: "after"; }' );
-			wp_style_add_data( $handle, 'critical', true );
+			wp_style_add_data( $handle, 'preload', true );
 
 		wp_enqueue_script( $handle, get_theme_file_url( 'includes/_dev/samples/scripts.js' ) );
 
