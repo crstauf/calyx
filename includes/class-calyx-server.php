@@ -14,6 +14,9 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
  */
 class Calyx_Server {
 	use Calyx_Singleton;
+	
+	const LOW_TRAFFIC_HOURS__BEGIN = 0;
+	const LOW_TRAFFIC_HOURS__END   = 0;
 
 	/** @var array $_notices Array of notices for removed functionality. **/
 	protected $_notices = array();
@@ -246,6 +249,28 @@ class Calyx_Server {
 				)
 			)
 		) );
+	}
+	
+	/**
+	 * Check if in low-traffic hours.
+	 * @return bool
+	 * @todo Test.
+	 */
+	function in_low_traffic_hours() {
+		$_begin = $this::LOW_TRAFFIC_HOURS__BEGIN;
+		  $_end = $this::LOW_TRAFFIC_HOURS__END;
+		
+		if ( ( $_end - $_begin ) <= 0 )
+			return false;
+		
+		$today = new DateTime( 'today', new DateTimezone( 'UTC' ) );
+		$begin = $today->format( 'U' ) + $_begin;
+		  $end = $today->format( 'U' ) + $_end;
+		
+		return (
+			   time() >= $begin
+			&& time() <= $end
+		);
 	}
 
 }
