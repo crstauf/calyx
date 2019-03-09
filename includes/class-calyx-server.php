@@ -252,13 +252,42 @@ class Calyx_Server {
 	}
 	
 	/**
+	 * Get beginning time of low-traffic hours.
+	 * @return int
+	 */
+	function get_low_traffic_hours_begin() {
+		static $_cache = null;
+		
+		if ( !is_null( $_cache ) )
+			return $_cache;
+		
+		return $_cache = apply_filters( THEME_PREFIX . '/server/low_traffic/time/begin', $this::LOW_TRAFFIC_HOURS__BEGIN );
+	}
+	
+	/**
+	 * Get ending time of low-traffic hours.
+	 * @return int
+	 */
+	function get_low_traffic_hours_end() {
+		static $_cache = null;
+		
+		if ( !is_null( $_cache ) )
+			return $_cache;
+		
+		return $_cache = apply_filters( THEME_PREFIX . '/server/low_traffic/time/end', $this::LOW_TRAFFIC_HOURS__END );
+	}
+	
+	/**
 	 * Check if in low-traffic hours.
 	 * @return bool
 	 * @todo Test.
 	 */
 	function in_low_traffic_hours() {
-		$_begin = $this::LOW_TRAFFIC_HOURS__BEGIN;
-		  $_end = $this::LOW_TRAFFIC_HOURS__END;
+		if ( has_filter( THEME_PREFIX . '/server/low_traffic/in_hours' ) )
+			return apply_filters( THEME_PREFIX . '/server/low_traffic/in_hours', null );
+		
+		$_begin = $this->get_low_traffic_hours_begin();
+		  $_end = $this->get_low_traffic_hours_end();
 		
 		if ( ( $_end - $_begin ) <= 0 )
 			return false;
