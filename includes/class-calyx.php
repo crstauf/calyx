@@ -151,6 +151,7 @@ final class Calyx {
 		 */
 		require_once CALYX_ABSPATH . 'includes/class-image-tag.php';
 		require_once CALYX_ABSPATH . 'includes/class-calyx-compress.php';
+		include_once CALYX_ABSPATH . 'includes/class-action-scheduler.php';
 
 		do_action( 'qm/lap', THEME_PREFIX . '/' . __FUNCTION__ . '()', 'core' );
 		do_action( THEME_PREFIX . '/include_files/after_core' );
