@@ -14,7 +14,7 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
  */
 class Calyx_Server {
 	use Calyx_Singleton;
-	
+
 	const LOW_TRAFFIC_HOURS__BEGIN = 0;
 	const LOW_TRAFFIC_HOURS__END   = 0;
 
@@ -250,52 +250,72 @@ class Calyx_Server {
 			)
 		) );
 	}
-	
+
 	/**
 	 * Get beginning time of low-traffic hours.
 	 * @return int
 	 */
 	function get_low_traffic_hours_begin() {
 		static $_cache = null;
-		
+
 		if ( !is_null( $_cache ) )
 			return $_cache;
-		
-		return $_cache = apply_filters( THEME_PREFIX . '/server/low_traffic/time/begin', $this::LOW_TRAFFIC_HOURS__BEGIN );
+
+		return $_cache = apply_filters( THEME_PREFIX . '/server/low-traffic/time/begin', $this::LOW_TRAFFIC_HOURS__BEGIN );
 	}
-	
+
 	/**
 	 * Get ending time of low-traffic hours.
 	 * @return int
 	 */
 	function get_low_traffic_hours_end() {
 		static $_cache = null;
-		
+
 		if ( !is_null( $_cache ) )
 			return $_cache;
-		
-		return $_cache = apply_filters( THEME_PREFIX . '/server/low_traffic/time/end', $this::LOW_TRAFFIC_HOURS__END );
+
+		return $_cache = apply_filters( THEME_PREFIX . '/server/low-traffic/time/end', $this::LOW_TRAFFIC_HOURS__END );
 	}
-	
+
+	/**
+	 * Check if valid low-traffic hours are set.
+	 *
+	 * @uses $this::get_low_traffic_hours_begin()
+	 * @uses $this::get_low_traffic_hours_end()
+	 * @return bool
+	 */
+	function has_valid_low_traffic_hours() {
+		$begin = $this->get_low_traffic_hours_begin();
+		  $end = $this->get_low_traffic_hours_end();
+
+		return (
+			   !empty( $begin )
+			&& !empty( $end   )
+			&& ( $end - $begin ) >= 0
+		);
+	}
+
 	/**
 	 * Check if in low-traffic hours.
+	 *
+	 * @uses $this::has_valid_low_traffic_hours()
 	 * @return bool
 	 * @todo Test.
 	 */
 	function in_low_traffic_hours() {
-		if ( has_filter( THEME_PREFIX . '/server/low_traffic/in_hours' ) )
-			return apply_filters( THEME_PREFIX . '/server/low_traffic/in_hours', null );
-		
-		$_begin = $this->get_low_traffic_hours_begin();
-		  $_end = $this->get_low_traffic_hours_end();
-		
-		if ( ( $_end - $_begin ) <= 0 )
+		if ( has_filter( THEME_PREFIX . '/server/low-traffic/within-hours' ) )
+			return apply_filters( THEME_PREFIX . '/server/low-traffic/within-hours', null );
+
+		if ( get_option( THEME_PREFIX . '/server/low-traffic/within-hours', false ) )
+			return true;
+
+		if ( !$this->has_valid_low_traffic_hours() )
 			return false;
-		
+
 		$today = new DateTime( 'today', new DateTimezone( 'UTC' ) );
-		$begin = $today->format( 'U' ) + $_begin;
-		  $end = $today->format( 'U' ) + $_end;
-		
+		$begin = $today->format( 'U' ) + $this->get_low_traffic_hours_begin();
+		  $end = $today->format( 'U' ) + $this->get_low_traffic_hours_end();
+
 		return (
 			   time() >= $begin
 			&& time() <= $end
