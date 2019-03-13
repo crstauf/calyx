@@ -140,8 +140,26 @@ trait Calyx_ManageFeatures {
 	 * @return bool Feature exists or was registered.
 	 */
 	function add_feature( $name, $feature ) {
-		      !$this->has_feature( $name ) && $this->_features[$name] = $feature;
+		if ( $this->has_feature( $name ) )
+			return;
+
+		$this->_features[$name] = $feature;
+
+		if (
+			is_callable( $feature )
+			&& !has_action( THEME_PREFIX . '/init', array( &$this, 'init_features' ) )
+		)
+			add_action( THEME_PREFIX . '/init', array( &$this, 'init_features' ) );
+
 		return $this->has_feature( $name );
+	}
+
+	/**
+	 * Initialize callable features on 'init'.
+	 */
+	function init_features() {
+		foreach ( array_filter( $this->_features, 'is_callable' ) as $name => $feature )
+			$this->_features[$name] = call_user_func( $feature );
 	}
 
 	/**
