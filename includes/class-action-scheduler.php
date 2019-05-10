@@ -19,7 +19,7 @@ class Calyx_ActionScheduler {
 	/**
 	 * Construct.
 	 */
-	function __construct() {
+	protected function __construct() {
 
 	}
 
