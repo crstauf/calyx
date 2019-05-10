@@ -10,13 +10,13 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 }
 
 /**
- * Functions and actions to manage the server.
+ * Class.
  */
 class Calyx_Server {
 	use Calyx_Singleton;
 
-	const LOW_TRAFFIC_HOURS__BEGIN = 0;
-	const LOW_TRAFFIC_HOURS__END   = 0;
+	/** @var null|Calyx_Server_Low_Traffic */
+	protected $_low_traffic = null;
 
 	/** @var array $_notices Array of notices for removed functionality. **/
 	protected $_notices = array();
@@ -24,14 +24,22 @@ class Calyx_Server {
 	/**
 	 * Construct.
 	 */
-	function __construct() {
-		if ( !$this->is_high_load() )
-			return;
+	protected function __construct() {
+		$this->_low_traffic = Calyx_Server_Low_Traffic::create_instance();
 
-		add_action( 'admin_enqueue_scripts', array( &$this, '_enqueue_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, '_enqueue_styles' ) );
-		add_action( 'admin_bar_menu', array( &$this, 'action__admin_bar_menu' ), 999 );
+		if ( $this->is_high_load() ) {
+			add_action( 'admin_enqueue_scripts', array( &$this, '_enqueue_styles' ) );
+			add_action( 'wp_enqueue_scripts', array( &$this, '_enqueue_styles' ) );
+			add_action( 'admin_bar_menu', array( &$this, 'action__admin_bar_menu' ), 999 );
+		}
+	}
 
+	public static function include_files() {
+		include_once CALYX_ABSPATH . '/includes/class-calyx-server-low-traffic.php';
+	}
+
+	function low_traffic() {
+		return $this->_low_traffic;
 	}
 
 
@@ -251,77 +259,8 @@ class Calyx_Server {
 		) );
 	}
 
-	/**
-	 * Get beginning time of low-traffic hours.
-	 * @return int
-	 */
-	function get_low_traffic_hours_begin() {
-		static $_cache = null;
-
-		if ( !is_null( $_cache ) )
-			return $_cache;
-
-		return $_cache = apply_filters( THEME_PREFIX . '/server/low-traffic/time/begin', $this::LOW_TRAFFIC_HOURS__BEGIN );
-	}
-
-	/**
-	 * Get ending time of low-traffic hours.
-	 * @return int
-	 */
-	function get_low_traffic_hours_end() {
-		static $_cache = null;
-
-		if ( !is_null( $_cache ) )
-			return $_cache;
-
-		return $_cache = apply_filters( THEME_PREFIX . '/server/low-traffic/time/end', $this::LOW_TRAFFIC_HOURS__END );
-	}
-
-	/**
-	 * Check if valid low-traffic hours are set.
-	 *
-	 * @uses $this::get_low_traffic_hours_begin()
-	 * @uses $this::get_low_traffic_hours_end()
-	 * @return bool
-	 */
-	function has_valid_low_traffic_hours() {
-		$begin = $this->get_low_traffic_hours_begin();
-		  $end = $this->get_low_traffic_hours_end();
-
-		return (
-			   !empty( $begin )
-			&& !empty( $end   )
-			&& ( $end - $begin ) >= 0
-		);
-	}
-
-	/**
-	 * Check if in low-traffic hours.
-	 *
-	 * @uses $this::has_valid_low_traffic_hours()
-	 * @return bool
-	 * @todo Test.
-	 */
-	function in_low_traffic_hours() {
-		if ( has_filter( THEME_PREFIX . '/server/low-traffic/within-hours' ) )
-			return apply_filters( THEME_PREFIX . '/server/low-traffic/within-hours', null );
-
-		if ( get_option( THEME_PREFIX . '/server/low-traffic/within-hours', false ) )
-			return true;
-
-		if ( !$this->has_valid_low_traffic_hours() )
-			return false;
-
-		$today = new DateTime( 'today', new DateTimezone( 'UTC' ) );
-		$begin = $today->format( 'U' ) + $this->get_low_traffic_hours_begin();
-		  $end = $today->format( 'U' ) + $this->get_low_traffic_hours_end();
-
-		return (
-			   time() >= $begin
-			&& time() <= $end
-		);
-	}
-
 }
+
+add_action( THEME_PREFIX . '/include_files/after_core', array( 'Calyx_Server', 'include_files' ) );
 
 ?>
