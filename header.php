@@ -3,11 +3,7 @@
  * Default site header.
  */
 
-if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit;
-}
+defined( 'ABSPATH' ) || die();
 ?>
 
 <!DOCTYPE html>
@@ -18,11 +14,6 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 
 	<?php
 	wp_enqueue_style( THEME_PREFIX . '/copy' );
-	wp_enqueue_style( THEME_PREFIX . '/critical/site' );
-	wp_enqueue_style( THEME_PREFIX . '/critical/mobile' );
-	wp_enqueue_style( THEME_PREFIX . '/styles' );
-
-	wp_enqueue_script( THEME_PREFIX . '/scripts' );
 
 	wp_head();
 	?>
