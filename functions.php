@@ -1,36 +1,85 @@
 <?php
 /**
  * Load the theme.
+ *
+ * @package calyx
  */
 
-if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit;
-}
+defined( 'ABSPATH' ) || die();
+
+
+/*
+ ######  ######## ######## ##     ## ########
+##    ## ##          ##    ##     ## ##     ##
+##       ##          ##    ##     ## ##     ##
+ ######  ######      ##    ##     ## ########
+      ## ##          ##    ##     ## ##
+##    ## ##          ##    ##     ## ##
+ ######  ########    ##     #######  ##
+*/
 
 defined( 'THEME_PREFIX'   ) || define( 'THEME_PREFIX', 'calyx' );
-defined( 'THEME_ABSPATH'  ) || define( 'THEME_ABSPATH',  __DIR__ . '/' );
+defined( 'THEME_ABSPATH'  ) || define( 'THEME_ABSPATH',  trailingslashit( __DIR__ ) );
 defined( 'THEME_INCLUDES' ) || define( 'THEME_INCLUDES', THEME_ABSPATH . 'includes/' );
 
-	do_action( 'qm/start', THEME_PREFIX . '/setup' );
-
-add_theme_support( 'html5' );
+add_theme_support( 'html5', array( 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption', 'style', 'script' ) );
 add_theme_support( 'title-tag' );
-add_theme_support( 'woocommerce' );
 add_theme_support( 'post-thumbnails' );
-add_theme_support( 'enhanced-enqueues' );
 
-	do_action( 'qm/lap', THEME_PREFIX . '/setup', 'supports' );
+register_nav_menus( array(
+	'primary' => 'Primary',
+) );
 
-# Include files.
-require_once THEME_ABSPATH . 'includes/index.php';
 
-do_action( THEME_PREFIX . '/init' );
+/*
+######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######
+##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ##
+##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##
+######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######
+##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ##
+##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ##
+##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
+*/
 
-	do_action( 'qm/lap',  THEME_PREFIX . '/setup', 'init' );
-	do_action( 'qm/stop', THEME_PREFIX . '/setup' );
+/**
+ * Define empty helpers to gracefully handle missing plugins.
+ *
+ * @link https://github.com/crstauf/enhance-assets Enhance Assets
+ * @link https://gist.github.com/crstauf/9a2f412e48c6630e6de945bd1d0e9e53 CSSLLC Subresource Integrity
+ * @link https://gist.github.com/crstauf/46a29f046cfffcaf2829401ae0773c90 CSSLLC WordPress Helpers
+ */
+if ( !function_exists( 'enhance_asset'  ) ) { function enhance_asset(  string $handle, string $enhancement, $args = array(), bool $is_script = true ) {} }
+if ( !function_exists( 'enhance_script' ) ) { function enhance_script( string $handle, string $enhancement, array $args = array() ) {} }
+if ( !function_exists( 'enhance_style'  ) ) { function enhance_style(  string $handle, string $enhancement, array $args = array() ) {} }
+if ( !function_exists( 'wp_set_script_sri' ) ) { function wp_set_script_sri( string $handle, string $hash ) {} }
+if ( !function_exists( 'wp_set_style_sri'  ) ) { function wp_set_style_sri(  string $handle, string $hash ) {} }
+if ( !function_exists( 'prerender' ) ) { function prerender( $prerender_urls ) {} }
 
-do_action( THEME_PREFIX . '/initialized' );
+
+/*
+#### ##    ##  ######  ##       ##     ## ########  ########  ######
+ ##  ###   ## ##    ## ##       ##     ## ##     ## ##       ##    ##
+ ##  ####  ## ##       ##       ##     ## ##     ## ##       ##
+ ##  ## ## ## ##       ##       ##     ## ##     ## ######    ######
+ ##  ##  #### ##       ##       ##     ## ##     ## ##             ##
+ ##  ##   ### ##    ## ##       ##     ## ##     ## ##       ##    ##
+#### ##    ##  ######  ########  #######  ########  ########  ######
+*/
+
+require_once THEME_INCLUDES . 'class-calyx.php';
+
+
+/*
+#### ##    ## #### ########
+ ##  ###   ##  ##     ##
+ ##  ####  ##  ##     ##
+ ##  ## ## ##  ##     ##
+ ##  ##  ####  ##     ##
+ ##  ##   ###  ##     ##
+#### ##    ## ####    ##
+*/
+
+Calyx::instance();
+do_action( THEME_PREFIX . '/after_init' );
 
 ?>
