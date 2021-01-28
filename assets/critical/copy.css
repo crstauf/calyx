@@ -10,9 +10,10 @@
 html,
 body {
 	text-decoration-skip-ink: auto;
+	font-size: 16px; /* 1rem */
 }
 
-	@media ( min-width: 1025px ) {
+	@media ( min-width: 1024px ) {
 
 		html,
 		body {
@@ -36,14 +37,14 @@ h6,
 	font-weight: 700;
 }
 
-	h1, .h1 { font-size: 3.6rem; }
-	h2, .h2 { font-size: 1.6rem; }
-	h3, .h3 { font-size: 1.8rem; }
-	h4, .h4 { font-size: 1.7rem; }
-	h5, .h5 { font-size: 1.6rem; }
-	h6, .h6 { font-size: 1.5rem; }
+	h1, .h1 { font-size: 2rem; }
+	h2, .h2 { font-size: 1.5rem; }
+	h3, .h3 { font-size: 1.17rem; }
+	h4, .h4 { font-size: 1rem; }
+	h5, .h5 { font-size: 0.83rem; }
+	h6, .h6 { font-size: 0.67rem; }
 
-		@media ( min-width: 1025px ) {
+		@media ( min-width: 1024px ) {
 
 		}
 
@@ -57,7 +58,7 @@ h6,
 	* + .h4,
 	* + .h5,
 	* + .h6 {
-
+		margin-top: 1.25rem;
 	}
 
 p,
@@ -67,8 +68,9 @@ ul,
 li,
 td,
 pre,
+table,
 blockquote {
-
+	line-height: 1.2em;
 }
 
 	* + p,
@@ -132,7 +134,7 @@ hr,
 	width: 75%;
 	margin-left: auto;
 	margin-right: auto;
-	border: 1px solid #98844C;
+	border: 1px solid #999;
 }
 
 abbr,
@@ -146,6 +148,7 @@ acronym {
 
 hr,
 .hr,
+iframe,
 .container,
 #container,
 blockquote,
@@ -284,6 +287,10 @@ video.lazyloaded {
 		opacity: 1;
 	}
 
+iframe.lazyload {
+	display: none;
+}
+
 
 /*
 ########  ##     ## ######## ########  #######  ##    ##  ######
@@ -300,7 +307,7 @@ video.lazyloaded {
 	display: inline-block;
 }
 
-	@media ( min-width: 1025px ) {
+	@media ( min-width: 1024px ) {
 
 		.btn,
 		.button {
