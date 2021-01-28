@@ -55,6 +55,33 @@ if ( !function_exists( 'wp_set_script_sri' ) ) { function wp_set_script_sri( str
 if ( !function_exists( 'wp_set_style_sri'  ) ) { function wp_set_style_sri(  string $handle, string $hash ) {} }
 if ( !function_exists( 'prerender' ) ) { function prerender( $prerender_urls ) {} }
 
+/**
+ * Create image tag with fallbacks.
+ *
+ * @param int $image_id
+ * @param array $attributes
+ * @param array $settings
+ * @return Image_Tag
+ */
+function create_image_tag( int $image_id, array $attributes = array(), array $settings = array() ) : Image_Tag {
+	if ( !empty( $image_id ) )
+		$image = Image_Tag::create( $image_id, $attributes, $settings );
+	
+	if (
+		!empty( $image )
+		&& $image->is_valid()
+	)
+		return $image;
+		
+	if ( current_user_can( 'edit_post', get_queried_object_id() ) )
+		return Image_Tag::create( 'placeholder', $attributes, $settings );
+	
+	if ( 'production' !== wp_get_environment_type() )
+		return Image_Tag::create( 'picsum', $attributes, $settings );
+
+	return new Image_Tag;
+}
+
 
 /*
 #### ##    ##  ######  ##       ##     ## ########  ########  ######
