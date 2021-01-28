@@ -1,3 +1,0 @@
-/**
- * Sample script file.
- */
