@@ -1,36 +1,95 @@
 <?php
 /**
  * Load the theme.
+ *
+ * @package calyx
  */
 
-if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit;
+defined( 'ABSPATH' ) || die();
+
+
+/*
+ ######  ######## ######## ##     ## ########
+##    ## ##          ##    ##     ## ##     ##
+##       ##          ##    ##     ## ##     ##
+ ######  ######      ##    ##     ## ########
+      ## ##          ##    ##     ## ##
+##    ## ##          ##    ##     ## ##
+ ######  ########    ##     #######  ##
+*/
+
+defined( 'THEME_PREFIX'   ) || define( 'THEME_PREFIX', 'calyx' );
+defined( 'THEME_ABSPATH'  ) || define( 'THEME_ABSPATH',  trailingslashit( __DIR__ ) );
+defined( 'THEME_INCLUDES' ) || define( 'THEME_INCLUDES', THEME_ABSPATH . 'includes/' );
+
+add_theme_support( 'html5', array( 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption', 'style', 'script' ) );
+add_theme_support( 'title-tag' );
+add_theme_support( 'post-thumbnails' );
+
+register_nav_menus( array(
+	'primary' => __( 'Primary', 'calyx' ),
+) );
+
+if ( !function_exists( 'is_production' ) ) {
+
+	function is_production() : bool {
+		return 'production' === wp_get_environment_type();
+	}
+
 }
 
-add_theme_support( 'html5' );
-add_theme_support( 'title-tag' );
-add_theme_support( 'woocommerce' );
-add_theme_support( 'post-thumbnails' );
-add_theme_support( 'enhanced-enqueues' );
 
-define( 'THEME_PREFIX', 'calyx' );
-define( 'CALYX_ABSPATH', __DIR__ . '/' );
-
-!trait_exists( 'Calyx_Features' ) && require_once CALYX_ABSPATH . 'includes/traits.php';
-!class_exists( 'Calyx'          ) && require_once CALYX_ABSPATH . 'includes/class-calyx.php';
+/*
+######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######
+##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ##
+##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##
+######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######
+##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ##
+##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ##
+##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
+*/
 
 /**
- * Function to access theme helper singleton.
+ * Define empty helpers to gracefully handle missing plugins.
+ *
+ * @link https://github.com/crstauf/enhance-assets Enhance Assets
+ * @link https://gist.github.com/crstauf/9a2f412e48c6630e6de945bd1d0e9e53 CSSLLC Subresource Integrity
+ * @link https://gist.github.com/crstauf/46a29f046cfffcaf2829401ae0773c90 CSSLLC WordPress Helpers
  */
-function Calyx() {
-	return Calyx::get_instance();
-}
+if ( !function_exists( 'wp_enhance_asset'  ) ) { function wp_enhance_asset(  string $handle, string $enhancement, $args = array(), bool $is_script = true ) {} }
+if ( !function_exists( 'wp_enhance_script' ) ) { function wp_enhance_script( string $handle, string $enhancement, array $args = array() ) {} }
+if ( !function_exists( 'wp_dehance_script' ) ) { function wp_dehance_script( string $handle, string $enhancement = null ) {} }
+if ( !function_exists( 'wp_enhance_style'  ) ) { function wp_enhance_style(  string $handle, string $enhancement, array $args = array() ) {} }
+if ( !function_exists( 'wp_dehance_style'  ) ) { function wp_dehance_style(  string $handle, string $enhancement = null ) {} }
+if ( !function_exists( 'wp_set_script_sri' ) ) { function wp_set_script_sri( string $handle, string $hash ) {} }
+if ( !function_exists( 'wp_set_style_sri'  ) ) { function wp_set_style_sri(  string $handle, string $hash ) {} }
+if ( !function_exists( 'prerender' ) ) { function prerender( $prerender_urls ) {} }
 
-// Initialize!
-Calyx();
 
-do_action( THEME_PREFIX . '/initialized' );
+/*
+#### ##    ##  ######  ##       ##     ## ########  ########  ######
+ ##  ###   ## ##    ## ##       ##     ## ##     ## ##       ##    ##
+ ##  ####  ## ##       ##       ##     ## ##     ## ##       ##
+ ##  ## ## ## ##       ##       ##     ## ##     ## ######    ######
+ ##  ##  #### ##       ##       ##     ## ##     ## ##             ##
+ ##  ##   ### ##    ## ##       ##     ## ##     ## ##       ##    ##
+#### ##    ##  ######  ########  #######  ########  ########  ######
+*/
+
+require_once THEME_INCLUDES . 'class-calyx.php';
+
+
+/*
+#### ##    ## #### ########
+ ##  ###   ##  ##     ##
+ ##  ####  ##  ##     ##
+ ##  ## ## ##  ##     ##
+ ##  ##  ####  ##     ##
+ ##  ##   ###  ##     ##
+#### ##    ## ####    ##
+*/
+
+Calyx::instance();
+do_action( THEME_PREFIX . '/after_init' );
 
 ?>

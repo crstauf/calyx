@@ -1,31 +1,32 @@
 <?php
 /**
  * Default site header.
+ *
+ * @package calyx
  */
 
-if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit;
-}
+defined( 'ABSPATH' ) || die();
 ?>
 
 <!DOCTYPE html>
 <html <?php language_attributes() ?> class="no-js">
 <head>
 
-	<script type="text/javascript">document.documentElement.className = document.documentElement.className.replace( 'no-js', 'js' );</script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+	<script>document.documentElement.className = document.documentElement.className.replace( 'no-js', 'js' );</script>
 
 	<?php
+	wp_enqueue_style( THEME_PREFIX . '/fonts' );
 	wp_enqueue_style( THEME_PREFIX . '/copy' );
-	wp_enqueue_style( THEME_PREFIX . '/critical/site' );
-	wp_enqueue_style( THEME_PREFIX . '/critical/mobile' );
+	wp_enqueue_style( THEME_PREFIX . '/critical/styles' );
 	wp_enqueue_style( THEME_PREFIX . '/styles' );
 
-	wp_enqueue_script( THEME_PREFIX . '/scripts' );
+	wp_enqueue_script( 'lazysizes' );
 
 	wp_head();
 	?>
 
 </head>
 <body <?php body_class() ?>>
+
+	<?php wp_body_open() ?>
