@@ -32,6 +32,8 @@ class Calyx {
 	protected function __construct() {
 
 		add_action( 'init', array( $this, 'action__init' ) );
+		add_action( 'wp_default_scripts', array( $this, 'action__wp_default_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'action__wp_enqueue_scripts' ) );
 
 		add_filter( 'http_request_args', array( $this, 'filter__http_request_args' ), 10, 2 );
 
@@ -44,6 +46,43 @@ class Calyx {
 	 */
 	function action__init() : void {
 		require_once THEME_ABSPATH . 'assets/register.php';
+	}
+	
+	/**
+	 * Action: wp_default_scripts
+	 *
+	 * Don't include jQuery Migrate.
+	 *
+	 * @param \WP_Scripts $scripts
+	 * @return void
+	 */
+	function action__wp_default_scripts( \WP_Scripts $scripts ) : void {
+		if (
+			is_admin()
+			|| !isset( $scripts->registered['jquery'] )
+		)
+			return;
+
+		$key = array_search( 'jquery-migrate', $scripts->registered['jquery']->deps );
+
+		if ( empty( $key ) )
+			return;
+
+		unset( $scripts->registered['jquery']->deps[ $key ] );
+	}
+
+	/**
+	 * Action: wp_enqueue_scripts
+	 *
+	 * Dequeue block library styles.
+	 *
+	 * @return void
+	 */
+	function action__wp_enqueue_scripts() : void {
+
+		wp_dequeue_style( 'wp-block-library' );
+		wp_enhance_script( 'wp-embed', 'async' );
+
 	}
 
 	/**

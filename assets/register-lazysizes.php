@@ -1,4 +1,4 @@
-<?php
+<?php declare( strict_types=1 );
 /**
  * Register scripts for Lazysizes.
  *
@@ -7,47 +7,63 @@
  * @link https://github.com/aFarkas/lazysizes GitHub repository.
  */
 
-defined( 'ABSPATH' ) || die();
+defined( 'WPINC' ) || die();
+defined( 'CONCATENATE_SCRIPTS' ) || define( 'CONCATENATE_SCRIPTS', !WP_DEBUG || !SCRIPT_DEBUG );
 
 /**
  * Lazysizes core.
  */
-wp_register_script( 'lazysizes/core', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js', null, '5.2.2' );
-wp_set_script_sri(  'lazysizes/core', 'sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==' );
+wp_register_script( 'lazysizes/core', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js', null, '5.3.2' );
+wp_set_script_sri(  'lazysizes/core', 'sha512-q583ppKrCRc7N5O0n2nzUiJ+suUv7Et1JGels4bXOaMFQcamPk9HjdUknZuuFjBNs7tsMuadge5k9RzdmO+1GQ==' );
 
 /**
  * Lazysizes plugin: polyfill for fitting content to parent.
  */
-wp_register_script( 'lazysizes/parent-fit', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/plugins/parent-fit/ls.parent-fit.min.js', null, '5.2.2' );
-wp_set_script_sri(  'lazysizes/parent-fit', 'sha512-AGFYzeoBdwBg55nfE9a0WFn1TW0RY169KZxocaa5ItravYcR/C4kPmdo2DNv+Lq9u+9TMzQQaY+YwDf43S2SDQ==' );
+wp_register_script( 'lazysizes/parent-fit', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/plugins/parent-fit/ls.parent-fit.min.js', null, '5.3.2' );
+wp_set_script_sri(  'lazysizes/parent-fit', 'sha512-1oXBldvRhlG5dHYmpmBFccqjN+ncdNSs6uwLtxiOufvBQy4Or63PsXibQSuokBUcY8SN7eQ3uJ4SqPM+E4xcFQ==' );
 
 /**
  * Lazysizes plugin: polyfill for CSS object-fit property.
  */
-wp_register_script( 'lazysizes/object-fit', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/plugins/object-fit/ls.object-fit.min.js', null, '5.2.2' );
-wp_set_script_sri(  'lazysizes/object-fit', 'sha512-7sz1GUGqkW8+40bj2SYo+5EGDq41XcZ3pAJSxgYsBalekwnTe5aSMa2S96adYXjpFH6+pSjj4jz1A+aWIP604Q==' );
+wp_register_script( 'lazysizes/object-fit', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/plugins/object-fit/ls.object-fit.min.js', null, '5.3.2' );
+wp_set_script_sri(  'lazysizes/object-fit', 'sha512-uq8vhRSzhuN8xiniPi20LTGnDZs2UumLLjBHgwfAZnDtS4C/tNCqvr/ZZ4mzkt7BIKe1HB/O1o4zfiu5GX1S9g==' );
 
 /**
  * Lazysizes plugin: unveil hooks.
  */
-wp_register_script( 'lazysizes/unveilhooks', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/plugins/unveilhooks/ls.unveilhooks.min.js', null, '5.2.2' );
-wp_set_script_sri(  'lazysizes/unveilhooks', 'sha512-FQ0MgvxcxFX4MSh8AWiQT+McTjZkTVrzEdi4Gv5j5/VhGRvO3HNoH/ZO4ruhZTKVXvZippdjoeXk+7bns6jfTQ==' );
+wp_register_script( 'lazysizes/unveilhooks', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/plugins/unveilhooks/ls.unveilhooks.min.js', null, '5.3.2' );
+wp_set_script_sri(  'lazysizes/unveilhooks', 'sha512-hQ7LIAYhD17CZh6bDzdQI7NThUHmZGcAbGDfCWHO/sOEPRAdlkQFg4gTsKhWWbI1PMUvjD7JjA+5x3pH23Bnyg==' );
+
+/**
+ * Lazysizes core and plugins concatenated.
+ */
+$handle = CONCATENATE_SCRIPTS ? 'lazysizes' : 'lazysizes/combined';
+wp_register_script( $handle, get_stylesheet_directory_uri() . '/assets/js/lazysizes.min.js', null, '5.3.2' );
+ wp_enhance_script( $handle, 'async' );
 
 /**
  * Group core and plugins together.
  */
-wp_register_script( 'lazysizes', null, array(
+$handle = CONCATENATE_SCRIPTS ? 'lazysizes/separate' : 'lazysizes';
+wp_register_script( $handle, null, array(
 	'lazysizes/parent-fit',
 	'lazysizes/object-fit',
 	'lazysizes/unveilhooks',
 	'lazysizes/core',
-), '5.2.0' );
+), '5.3.2' );
 
-wp_add_inline_script( 'lazysizes/parent-fit', 'window.lazySizesConfig = window.lazySizesConfig || {};', 'before' ); // setup the config
+/**
+ * Defer the scripts.
+ */
+wp_enhance_script( 'lazysizes/parent-fit',  'defer' );
+wp_enhance_script( 'lazysizes/object-fit',  'defer' );
+wp_enhance_script( 'lazysizes/unveilhooks', 'defer' );
+wp_enhance_script( 'lazysizes/core',        'defer' );
 
-enhance_script( 'lazysizes/parent-fit',  'defer' );
-enhance_script( 'lazysizes/object-fit',  'defer' );
-enhance_script( 'lazysizes/unveilhooks', 'defer' );
-enhance_script( 'lazysizes/core', 'defer' );
+/**
+ * Setup the config.
+ */
+wp_add_inline_script( 'lazysizes/parent-fit', 'window.lazySizesConfig = window.lazySizesConfig || {};', 'before' );
+wp_add_inline_script( 'lazysizes',            'window.lazySizesConfig = window.lazySizesConfig || {};', 'before' );
 
 ?>

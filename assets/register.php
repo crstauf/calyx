@@ -42,12 +42,13 @@ $css_suffix = COMPRESS_CSS     ? '.min' : '';
 */
 
 wp_register_style( THEME_PREFIX . '/critical/copy', get_stylesheet_directory_uri() . '/assets/critical/copy' . $css_suffix . '.css', null, 'init' );
-    enhance_style( THEME_PREFIX . '/critical/copy', 'critical', array( 'always' => true ) );
+ wp_enhance_style( THEME_PREFIX . '/critical/copy', 'critical', array( 'always' => true ) );
 
 wp_register_style( THEME_PREFIX . '/critical/site', get_stylesheet_directory_uri() . '/assets/critical/site' . $css_suffix . '.css', array( THEME_PREFIX . '/critical/copy' ), 'init' );
-    enhance_style( THEME_PREFIX . '/critical/site', 'critical', array( 'always' => true ) );
+ wp_enhance_style( THEME_PREFIX . '/critical/site', 'critical', array( 'always' => true ) );
 
 wp_register_style( THEME_PREFIX . '/styles', get_stylesheet_directory_uri() . '/style' . $css_suffix . '.css', null, 'init' );
+ wp_enhance_style( THEME_PREFIX . '/styles', 'async' );
 
 
 /*
@@ -60,9 +61,13 @@ wp_register_style( THEME_PREFIX . '/styles', get_stylesheet_directory_uri() . '/
    ###    ######## ##    ## ########   #######  ##     ##  ######
 */
 
+/**
+ * When registering vendor assets that do not have a specific version, set the dependency version to null.
+ */
+
 require_once 'register-lazysizes.php';
 
 
-do_action( THEME_PREFIX . '/registered_assets' );
+do_action( THEME_PREFIX . '/registered_assets', $css_suffix, $js_suffix );
 
 ?>
