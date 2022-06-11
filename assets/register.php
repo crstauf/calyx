@@ -20,7 +20,7 @@ if ( !doing_action( 'init' ) ) {
  * @todo Add detection for REST request.
  * @see https://core.trac.wordpress.org/ticket/42061
  */
-if ( !apply_filters( THEME_PREFIX . '/register_assets', (
+if ( apply_filters( THEME_PREFIX . '/register_assets', (
 	   wp_doing_ajax()
 	|| wp_doing_cron()
 	|| wp_is_json_request()
