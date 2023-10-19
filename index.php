@@ -1,18 +1,16 @@
 <?php
 /**
  * Default template.
- *
- * @package calyx
  */
 
-defined( 'ABSPATH' ) || die();
+defined( 'WPINC' ) || die();
 
 global $wp;
 trigger_error( sprintf( 'Unable to find a template for <code>%s</code>.', site_url( $wp->request ) ), E_USER_WARNING );
 
 get_header();
 
-if ( have_posts() )
+if ( have_posts() ) {
 	while ( have_posts() ) {
 		the_post();
 		?>
@@ -29,6 +27,7 @@ if ( have_posts() )
 
 		<?php
 	}
+}
 
 get_footer();
 
