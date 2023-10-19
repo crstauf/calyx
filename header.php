@@ -1,11 +1,11 @@
 <?php
 /**
  * Default site header.
- *
- * @package calyx
  */
 
-defined( 'ABSPATH' ) || die();
+namespace Calyx;
+
+defined( 'WPINC' ) || die();
 ?>
 
 <!DOCTYPE html>
@@ -16,17 +16,12 @@ defined( 'ABSPATH' ) || die();
 	<script>document.documentElement.className = document.documentElement.className.replace( 'no-js', 'js' );</script>
 
 	<?php
-	wp_enqueue_style( THEME_PREFIX . '/fonts' );
-	wp_enqueue_style( THEME_PREFIX . '/copy' );
-	wp_enqueue_style( THEME_PREFIX . '/critical/styles' );
-	wp_enqueue_style( THEME_PREFIX . '/styles' );
-
 	wp_enqueue_script( 'lazysizes' );
-
 	wp_head();
 	?>
 
 </head>
 <body <?php body_class() ?>>
 
-	<?php wp_body_open() ?>
+	<?php
+	wp_body_open();

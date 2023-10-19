@@ -1,9 +1,9 @@
 <?php
 /**
  * Default site footer.
- *
- * @package calyx
  */
+
+namespace Calyx;
 
 defined( 'WPINC' ) || die();
 
